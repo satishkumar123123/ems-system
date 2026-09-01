@@ -7,22 +7,22 @@ import {
   FileSpreadsheet, X, Calendar, Lock, XCircle
 } from 'lucide-react';
 
-// 14 Equipments with Dedicated Custom Row Backgrounds and Distinct Text Colors
+// Har equipment ke liye exact vibrant solid colors
 const PERMANENT_EQUIPMENTS = [
-  { equipment: "6HI", enpiUnit: "KwH/MT", labelBg: "#bbf7d0", textCol: "#14532d" },
-  { equipment: "CGL", enpiUnit: "KwH/MT", labelBg: "#bfdbfe", textCol: "#1e3a8a" },
-  { equipment: "CCL", enpiUnit: "KwH/MT", labelBg: "#fef08a", textCol: "#713f12" },
-  { equipment: "HRS", enpiUnit: "KwH/MT", labelBg: "#fed7aa", textCol: "#7c2d12" },
-  { equipment: "PICKLING", enpiUnit: "KwH", labelBg: "#fecdd3", textCol: "#881337" },
-  { equipment: "COMPRESSOR", enpiUnit: "Kwh", labelBg: "#a5f3fc", textCol: "#164e63" },
-  { equipment: "CHILLER", enpiUnit: "KwH/MT", labelBg: "#ddd6fe", textCol: "#4c1d95" },
-  { equipment: "TRIMMER", enpiUnit: "KwH/MT", labelBg: "#99f6e4", textCol: "#134e4a" },
-  { equipment: "RGM", enpiUnit: "KwH/MT", labelBg: "#ffedd5", textCol: "#9a3412" },
-  { equipment: "CRS", enpiUnit: "KwH/MT", labelBg: "#e9d5ff", textCol: "#581c87" },
-  { equipment: "AUTO CTL", enpiUnit: "KwH/MT", labelBg: "#fbcfe8", textCol: "#831843" },
-  { equipment: "CORRUGATION", enpiUnit: "KwH/MT", labelBg: "#d9f99d", textCol: "#365314" },
-  { equipment: "OTHER AUX", enpiUnit: "KwH", labelBg: "#bae6fd", textCol: "#0c4a6e" },
-  { equipment: "MATERIAL HANDLING", enpiUnit: "KwH", labelBg: "#f5d0fe", textCol: "#701a75" }
+  { equipment: "6HI", enpiUnit: "KwH/MT", labelBg: "#0284c7", textCol: "#ffffff" },
+  { equipment: "CGL", enpiUnit: "KwH/MT", labelBg: "#16a34a", textCol: "#ffffff" },
+  { equipment: "CCL", enpiUnit: "KwH/MT", labelBg: "#ca8a04", textCol: "#ffffff" },
+  { equipment: "HRS", enpiUnit: "KwH/MT", labelBg: "#ea580c", textCol: "#ffffff" },
+  { equipment: "PICKLING", enpiUnit: "KwH", labelBg: "#e11d48", textCol: "#ffffff" },
+  { equipment: "COMPRESSOR", enpiUnit: "Kwh", labelBg: "#0891b2", textCol: "#ffffff" },
+  { equipment: "CHILLER", enpiUnit: "KwH/MT", labelBg: "#7c3aed", textCol: "#ffffff" },
+  { equipment: "TRIMMER", enpiUnit: "KwH/MT", labelBg: "#0d9488", textCol: "#ffffff" },
+  { equipment: "RGM", enpiUnit: "KwH/MT", labelBg: "#c2410c", textCol: "#ffffff" },
+  { equipment: "CRS", enpiUnit: "KwH/MT", labelBg: "#9333ea", textCol: "#ffffff" },
+  { equipment: "AUTO CTL", enpiUnit: "KwH/MT", labelBg: "#db2777", textCol: "#ffffff" },
+  { equipment: "CORRUGATION", enpiUnit: "KwH/MT", labelBg: "#65a30d", textCol: "#ffffff" },
+  { equipment: "OTHER AUX", enpiUnit: "KwH", labelBg: "#0369a1", textCol: "#ffffff" },
+  { equipment: "MATERIAL HANDLING", enpiUnit: "KwH", labelBg: "#a21caf", textCol: "#ffffff" }
 ];
 
 const getInitialBlankRows = () => {
@@ -282,33 +282,33 @@ export default function WiderPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6 bg-[#f1f5f9] min-h-screen text-slate-900 font-sans relative">
+    <div className="flex flex-col gap-6 p-6 bg-[#e2e8f0] min-h-screen text-slate-900 font-sans relative">
 
       {/* TOP TOOLBAR: Date -> Upload -> Sample -> Save -> YoY */}
-      <div className="no-print flex flex-wrap items-center gap-3 bg-white border-2 border-slate-300 rounded-2xl p-4 shadow-sm">
+      <div className="no-print flex flex-wrap items-center gap-3 bg-white border-2 border-slate-400 rounded-2xl p-4 shadow-md">
         
         {/* SELECT DATE / MONTH */}
-        <div className="flex flex-col gap-1 bg-cyan-50 border border-cyan-300 px-3 py-1 rounded-xl shadow-xs">
-          <span className="text-[10px] uppercase font-black text-cyan-900 tracking-wider">Select Month</span>
+        <div className="flex flex-col gap-1 bg-cyan-100 border border-cyan-400 px-3 py-1 rounded-xl shadow-xs">
+          <span className="text-[10px] uppercase font-black text-cyan-950 tracking-wider">Select Month</span>
           <div 
             onClick={() => dateInputRef.current?.showPicker?.() || dateInputRef.current?.focus()}
-            className="flex items-center gap-2 bg-white border border-cyan-400 rounded-lg px-2.5 py-1 cursor-pointer hover:border-cyan-600 transition-colors"
+            className="flex items-center gap-2 bg-white border border-cyan-500 rounded-lg px-2.5 py-1 cursor-pointer hover:border-cyan-700 transition-colors"
           >
             <input
               ref={dateInputRef}
               type="month"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="bg-transparent text-xs font-bold text-cyan-900 focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-cyan-950 focus:outline-none cursor-pointer"
             />
-            <Calendar size={15} className="text-cyan-700 flex-shrink-0" />
+            <Calendar size={15} className="text-cyan-800 flex-shrink-0" />
           </div>
         </div>
 
         {/* 1. UPLOAD EXCEL */}
         <button 
           onClick={() => setShowUploader((o) => !o)}
-          className="flex items-center gap-1.5 bg-[#059669] hover:bg-[#047857] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 bg-[#059669] hover:bg-[#047857] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md cursor-pointer border border-emerald-700"
         >
           <UploadCloud size={16} /> Upload Excel
         </button>
@@ -316,7 +316,7 @@ export default function WiderPage() {
         {/* 2. SAMPLE EXCEL */}
         <button 
           onClick={handleDownloadSample}
-          className="flex items-center gap-1.5 bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md cursor-pointer border border-blue-700"
         >
           <Download size={16} /> Sample Excel
         </button>
@@ -329,7 +329,7 @@ export default function WiderPage() {
             setShowPasswordModal(true);
           }}
           disabled={saving}
-          className="flex items-center gap-1.5 bg-[#4f46e5] hover:bg-[#4338ca] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer disabled:opacity-50"
+          className="flex items-center gap-1.5 bg-[#4f46e5] hover:bg-[#4338ca] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md cursor-pointer disabled:opacity-50 border border-indigo-700"
         >
           <Save size={16} /> {saving ? "Saving…" : "Save"}
         </button>
@@ -337,7 +337,7 @@ export default function WiderPage() {
         {/* 4. YOY ANALYTICS */}
         <button 
           onClick={() => navigate('/wider/yoy')}
-          className="flex items-center gap-1.5 bg-[#db2777] hover:bg-[#be185d] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 bg-[#db2777] hover:bg-[#be185d] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md cursor-pointer border border-pink-700"
         >
           <TrendingUp size={16} /> YoY Analytics
         </button>
@@ -347,7 +347,7 @@ export default function WiderPage() {
       {/* PASSWORD CONFIRMATION MODAL */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm border border-slate-300 shadow-2xl">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm border-2 border-slate-400 shadow-2xl">
             <div className="flex items-center gap-3 border-b border-slate-200 pb-3 mb-4">
               <div className="p-2.5 bg-indigo-100 text-indigo-700 rounded-xl">
                 <Lock size={22} />
@@ -376,7 +376,7 @@ export default function WiderPage() {
                     setPasswordError("");
                   }}
                   placeholder="••••"
-                  className="w-full bg-slate-50 border border-slate-300 focus:border-indigo-600 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none"
+                  className="w-full bg-slate-50 border-2 border-slate-300 focus:border-indigo-600 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none"
                 />
                 {passwordError && (
                   <p className="text-[11px] font-bold text-rose-600 mt-1.5 flex items-center gap-1">
@@ -407,9 +407,9 @@ export default function WiderPage() {
 
       {/* DYNAMIC UPLOAD MODAL */}
       {showUploader && (
-        <div className="p-5 border-2 border-dashed border-cyan-400 rounded-2xl bg-cyan-50 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+        <div className="p-5 border-2 border-dashed border-cyan-500 rounded-2xl bg-cyan-100 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
           <div className="flex items-center gap-3.5">
-            <div className="p-3 bg-cyan-200 text-cyan-800 rounded-xl">
+            <div className="p-3 bg-cyan-200 text-cyan-900 rounded-xl">
               <FileSpreadsheet size={26} />
             </div>
             <div>
@@ -423,11 +423,11 @@ export default function WiderPage() {
               type="file"
               accept=".xlsx, .xls"
               onChange={handleFileUpload}
-              className="text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-cyan-700 file:text-white hover:file:bg-cyan-800 cursor-pointer"
+              className="text-xs text-slate-700 file:mr-3 file:py-1.5 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-cyan-700 file:text-white hover:file:bg-cyan-800 cursor-pointer"
             />
             <button 
               onClick={() => setShowUploader(false)}
-              className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-slate-200"
+              className="p-1.5 text-slate-500 hover:text-rose-600 rounded-lg hover:bg-slate-200"
             >
               <X size={18} />
             </button>
@@ -435,55 +435,55 @@ export default function WiderPage() {
         </div>
       )}
 
-      {/* COMPLETE COLORFUL MATRIX TABLE (ALL ROWS & COLUMNS COLOR-CODED) */}
-      <div className="bg-white rounded-2xl border-[2px] border-slate-700 shadow-xl overflow-hidden">
+      {/* SOLID COLORFUL FULL-MATRIX TABLE */}
+      <div className="bg-white rounded-2xl border-[2.5px] border-[#1e293b] shadow-2xl overflow-hidden">
         {loading && (
-          <div className="p-2.5 bg-blue-50 text-blue-800 text-center font-black text-xs border-b-2 border-slate-700 animate-pulse">
+          <div className="p-2.5 bg-blue-100 text-blue-900 text-center font-black text-xs border-b-2 border-[#1e293b] animate-pulse">
             Loading data for {selectedMonth}…
           </div>
         )}
 
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-center border-collapse border-[2px] border-slate-700">
+          <table className="w-full text-xs text-center border-collapse border-[2.5px] border-[#1e293b]">
             
-            {/* 1. SOLID VIBRANT COLUMN HEADERS */}
+            {/* 1. DISTINCT VIBRANT SOLID HEADERS */}
             <thead>
-              <tr className="text-slate-900 font-black text-xs uppercase tracking-wide border-b-[2px] border-slate-700">
-                <th className="p-3.5 border-r-[2px] border-slate-700 w-12 text-center bg-[#cbd5e1] text-slate-900">#</th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 text-left min-w-[190px] bg-[#38bdf8] text-slate-950 font-black">
+              <tr className="text-black font-black text-xs uppercase tracking-wider border-b-[2.5px] border-[#1e293b]">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] w-12 text-center bg-[#94a3b8] text-black">#</th>
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] text-left min-w-[190px] bg-[#00a8e8] text-black">
                   Parameters / Equipment
                 </th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[110px] bg-[#fde047] text-slate-950 font-black">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] min-w-[110px] bg-[#facc15] text-black">
                   Month
                 </th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[130px] bg-[#5eead4] text-slate-950 font-black">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] min-w-[130px] bg-[#34d399] text-black">
                   Electricity (kWh)
                 </th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[110px] bg-[#fdba74] text-slate-950 font-black">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] min-w-[110px] bg-[#fb923c] text-black">
                   LNG (kWh)
                 </th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[110px] bg-[#d8b4fe] text-slate-950 font-black">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] min-w-[110px] bg-[#c084fc] text-black">
                   HSD (kWh)
                 </th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[140px] bg-[#86efac] text-slate-950 font-black">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] min-w-[140px] bg-[#4ade80] text-black">
                   Total Consumption
                 </th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[120px] bg-[#7dd3fc] text-slate-950 font-black">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] min-w-[120px] bg-[#38bdf8] text-black">
                   Production (MT)
                 </th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[100px] bg-[#c7d2fe] text-slate-950 font-black">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] min-w-[100px] bg-[#a5b4fc] text-black">
                   EnPI Unit
                 </th>
-                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[120px] bg-[#f9a8d4] text-slate-950 font-black">
+                <th className="p-3.5 border-r-[2px] border-[#1e293b] min-w-[120px] bg-[#f472b6] text-black">
                   EnPI Value(s)
                 </th>
-                <th className="p-3.5 min-w-[130px] bg-[#fef08a] text-slate-950 font-black">
+                <th className="p-3.5 min-w-[130px] bg-[#fde047] text-black">
                   % WRT to Total
                 </th>
               </tr>
             </thead>
 
-            {/* 2. EQUIPMENT ROWS (EVERY ROW & EVERY COLUMN FULLY COLOR-CODED) */}
+            {/* 2. FULLY SOLID COLORFUL ROWS & COLUMNS */}
             <tbody>
               {rows.map((r, idx) => {
                 const config = PERMANENT_EQUIPMENTS[idx] || {};
@@ -491,88 +491,88 @@ export default function WiderPage() {
                 return (
                   <tr 
                     key={idx} 
-                    className="border-b-[2px] border-slate-700 hover:brightness-95 transition-all font-bold"
+                    className="border-b-[2px] border-[#1e293b] hover:brightness-95 transition-all font-bold"
                   >
                     
                     {/* Index */}
-                    <td className="p-3 border-r-[2px] border-slate-700 text-center font-black text-slate-700 bg-[#e2e8f0]">
+                    <td className="p-3 border-r-[2px] border-[#1e293b] text-center font-black text-slate-800 bg-[#cbd5e1]">
                       {idx + 1}
                     </td>
 
-                    {/* Parameter / Equipment Label (Individual Unique Row Background) */}
+                    {/* Parameter / Equipment Name (Vibrant Solid Background per Row) */}
                     <td 
                       style={{ backgroundColor: config.labelBg, color: config.textCol }}
-                      className="p-3 border-r-[2px] border-slate-700 text-left font-black tracking-wide text-xs"
+                      className="p-3 border-r-[2px] border-[#1e293b] text-left font-black tracking-wide text-xs shadow-xs"
                     >
                       {r.equipment}
                     </td>
 
-                    {/* Month Column (Warm Amber Tint) */}
-                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#fef3c7] font-black text-amber-950">
+                    {/* Month Column (Solid Rich Yellow: #fef08a) */}
+                    <td className="p-2 border-r-[2px] border-[#1e293b] bg-[#fef08a] font-black text-slate-900">
                       {selectedMonth}
                     </td>
 
-                    {/* Electricity Column (Teal / Aqua Tint) */}
-                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#ccfbf1] text-teal-950">
+                    {/* Electricity Column (Solid Rich Mint/Emerald: #a7f3d0) */}
+                    <td className="p-2 border-r-[2px] border-[#1e293b] bg-[#a7f3d0] text-slate-950">
                       <input 
                         type="number"
                         value={r.electricity}
                         onChange={(e) => handleCellChange(idx, 'electricity', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-transparent font-black text-teal-950 outline-none focus:bg-white/70 rounded"
+                        className="w-full text-center bg-white/70 border border-emerald-600/40 rounded py-1 font-black text-slate-950 outline-none focus:bg-white"
                       />
                     </td>
 
-                    {/* LNG Column (Peach / Orange Tint) */}
-                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#ffedd5] text-orange-950">
+                    {/* LNG Column (Solid Warm Orange/Peach: #fed7aa) */}
+                    <td className="p-2 border-r-[2px] border-[#1e293b] bg-[#fed7aa] text-slate-950">
                       <input 
                         type="number"
                         value={r.lng}
                         onChange={(e) => handleCellChange(idx, 'lng', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-transparent font-black text-orange-950 outline-none focus:bg-white/70 rounded"
+                        className="w-full text-center bg-white/70 border border-orange-600/40 rounded py-1 font-black text-slate-950 outline-none focus:bg-white"
                       />
                     </td>
 
-                    {/* HSD Column (Lavender / Violet Tint) */}
-                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#f3e8ff] text-purple-950">
+                    {/* HSD Column (Solid Lavender/Purple: #e9d5ff) */}
+                    <td className="p-2 border-r-[2px] border-[#1e293b] bg-[#e9d5ff] text-slate-950">
                       <input 
                         type="number"
                         value={r.hsd}
                         onChange={(e) => handleCellChange(idx, 'hsd', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-transparent font-black text-purple-950 outline-none focus:bg-white/70 rounded"
+                        className="w-full text-center bg-white/70 border border-purple-600/40 rounded py-1 font-black text-slate-950 outline-none focus:bg-white"
                       />
                     </td>
 
-                    {/* Total Consumption Column (Bright Mint / Emerald Tint) */}
-                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#dcfce7] font-black text-emerald-950 text-xs">
+                    {/* Total Consumption Column (Solid Electric Green: #86efac) */}
+                    <td className="p-2 border-r-[2px] border-[#1e293b] bg-[#86efac] font-black text-emerald-950 text-xs">
                       {r.totalConsumption !== '' && r.totalConsumption != null ? Number(r.totalConsumption).toLocaleString() : '—'}
                     </td>
 
-                    {/* Production Column (Soft Sky Blue Tint) */}
-                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#e0f2fe] text-sky-950">
+                    {/* Production Column (Solid Sky Blue: #bae6fd) */}
+                    <td className="p-2 border-r-[2px] border-[#1e293b] bg-[#bae6fd] text-slate-950">
                       <input 
                         type="number"
                         value={r.production}
                         onChange={(e) => handleCellChange(idx, 'production', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-transparent font-black text-sky-950 outline-none focus:bg-white/70 rounded"
+                        className="w-full text-center bg-white/70 border border-sky-600/40 rounded py-1 font-black text-slate-950 outline-none focus:bg-white"
                       />
                     </td>
 
-                    {/* EnPI Unit Column (Soft Indigo Tint) */}
-                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#e0e7ff] text-indigo-950 font-bold">
+                    {/* EnPI Unit Column (Solid Indigo/Blue: #c7d2fe) */}
+                    <td className="p-2 border-r-[2px] border-[#1e293b] bg-[#c7d2fe] text-indigo-950 font-black">
                       {r.enpiUnit}
                     </td>
 
-                    {/* EnPI Value Column (Rose / Pink Tint) */}
-                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#fce7f3] font-black text-pink-950 text-xs">
+                    {/* EnPI Value Column (Solid Pink/Magenta: #fbcfe8) */}
+                    <td className="p-2 border-r-[2px] border-[#1e293b] bg-[#fbcfe8] font-black text-pink-950 text-xs">
                       {r.enpiValue !== '' && r.enpiValue != null ? r.enpiValue : '—'}
                     </td>
 
-                    {/* % WRT to Total KWH Column (Light Gold Tint) */}
-                    <td className="p-2 bg-[#fef9c3] font-black text-yellow-950 text-xs">
+                    {/* % WRT to Total KWH Column (Solid Warm Gold: #fde68a) */}
+                    <td className="p-2 bg-[#fde68a] font-black text-amber-950 text-xs">
                       {r.wrtKwh !== '' && r.wrtKwh != null ? (typeof r.wrtKwh === 'number' ? r.wrtKwh.toFixed(4) : r.wrtKwh) : '—'}
                     </td>
                   </tr>
@@ -580,19 +580,19 @@ export default function WiderPage() {
               })}
 
               {/* 3. TOTAL FACILITY SUMMARY ROW */}
-              <tr className="bg-[#1e293b] text-white font-black text-xs border-t-[3px] border-slate-900">
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-center font-black text-yellow-300">∑</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-left font-black tracking-wider uppercase text-yellow-300">
+              <tr className="bg-[#0f172a] text-white font-black text-xs border-t-[3px] border-[#1e293b]">
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-center font-black text-yellow-300">∑</td>
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-left font-black tracking-wider uppercase text-yellow-300">
                   Total Wider Facility
                 </td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-yellow-200">{selectedMonth}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-teal-300">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-orange-300">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-purple-300">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-emerald-300 text-sm font-black">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-sky-300">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-indigo-200"></td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-pink-300 text-sm font-black">{totalEnpiVal || '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-yellow-300 font-bold">{selectedMonth}</td>
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-emerald-300 font-black">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-orange-300 font-black">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-purple-300 font-black">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-emerald-400 text-sm font-black">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-sky-300 font-black">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-[#334155]"></td>
+                <td className="p-3.5 border-r-[2px] border-[#334155] text-pink-300 text-sm font-black">{totalEnpiVal || '—'}</td>
                 <td className="p-3.5 text-yellow-300 font-black">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
               </tr>
             </tbody>
