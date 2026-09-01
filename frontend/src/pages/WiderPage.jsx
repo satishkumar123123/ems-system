@@ -27,16 +27,16 @@ const PERMANENT_EQUIPMENTS = [
 
 // Fixed Solid Color Codes for Columns
 const COL_COLORS = {
-  index: "#f8fafc",
-  month: "#fffbeb",
-  electricity: "#ecfdf5",
-  lng: "#fff7ed",
-  hsd: "#faf5ff",
-  total: "#f0fdf4",
-  production: "#f0f9ff",
-  unit: "#eef2ff",
-  enpiVal: "#fdf2f8",
-  wrt: "#fefce8",
+  index: "#e2e8f0",
+  month: "#fef3c7",
+  electricity: "#bbf7d0",
+  lng: "#fed7aa",
+  hsd: "#e9d5ff",
+  total: "#86efac",
+  production: "#bae6fd",
+  unit: "#c7d2fe",
+  enpiVal: "#fbcfe8",
+  wrt: "#fde68a",
 };
 
 const getInitialBlankRows = () => {
@@ -298,7 +298,7 @@ export default function WiderPage() {
     <div className="flex flex-col gap-6 p-6 bg-slate-100 min-h-screen text-slate-900 font-sans relative">
 
       {/* TOP TOOLBAR: Date -> Upload -> Sample -> Save -> YoY */}
-      <div className="no-print flex items-center justify-between gap-5 overflow-x-auto bg-white border border-slate-200 rounded-2xl p-4 shadow-lg shadow-slate-200/70">
+      <div className="no-print flex items-center justify-start gap-3 overflow-x-auto bg-white border border-slate-200 rounded-2xl p-4 shadow-lg shadow-slate-200/70">
         
         {/* SELECT DATE / MONTH */}
         <div className="flex flex-shrink-0 flex-col gap-1 bg-gradient-to-br from-cyan-500 to-blue-600 border border-cyan-400 px-3 py-1.5 rounded-xl shadow-md shadow-cyan-200">
@@ -318,7 +318,7 @@ export default function WiderPage() {
           </div>
         </div>
 
-        <div className="ml-auto flex flex-shrink-0 items-center gap-3">
+        <div className="flex flex-shrink-0 items-center gap-3">
         {/* 1. UPLOAD EXCEL */}
         <button 
           onClick={() => setShowUploader((o) => !o)}
@@ -468,13 +468,13 @@ export default function WiderPage() {
                 <th style={{ backgroundColor: "#00a8e8" }} className="p-3.5 border-r-[2px] border-slate-900 text-left min-w-[190px] text-black">
                   Parameters / Equipment
                 </th>
-                <th style={{ backgroundColor: "#facc15" }} className="p-3.5 border-r-[2px] border-slate-900 min-w-[110px] text-black">
+                <th style={{ backgroundColor: "#facc15" }} className="p-3.5 border-r-[2px] border-slate-900 min-w-[155px] text-black">
                   Month
                 </th>
                 <th style={{ backgroundColor: "#34d399" }} className="p-3.5 border-r-[2px] border-slate-900 min-w-[130px] text-black">
                   Electricity (kWh)
                 </th>
-                <th style={{ backgroundColor: "#fb923c" }} className="p-3.5 border-r-[2px] border-slate-900 min-w-[110px] text-black">
+                <th style={{ backgroundColor: "#fb923c" }} className="p-3.5 border-r-[2px] border-slate-900 min-w-[82px] w-[82px] text-black">
                   LNG (kWh)
                 </th>
                 <th style={{ backgroundColor: "#c084fc" }} className="p-3.5 border-r-[2px] border-slate-900 min-w-[110px] text-black">
@@ -528,7 +528,7 @@ export default function WiderPage() {
                     {/* Month Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.month }}
-                      className="p-2 border-r-[2px] border-slate-900 font-black text-slate-900"
+                      className="p-2 border-r-[2px] border-slate-900 min-w-[155px] font-black text-slate-900"
                     >
                       {selectedMonth}
                     </td>
@@ -536,7 +536,7 @@ export default function WiderPage() {
                     {/* Electricity Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.electricity }}
-                      className="p-2 border-r-[2px] border-slate-900"
+                      className="p-2 border-r-[2px] border-slate-900 min-w-[130px]"
                     >
                       <input 
                         type="number"
@@ -550,7 +550,7 @@ export default function WiderPage() {
                     {/* LNG Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.lng }}
-                      className="p-2 border-r-[2px] border-slate-900"
+                      className="p-2 border-r-[2px] border-slate-900 w-[82px] min-w-[82px]"
                     >
                       <input 
                         type="number"
@@ -625,20 +625,20 @@ export default function WiderPage() {
               })}
 
               {/* 3. TOTAL FACILITY SUMMARY ROW */}
-              <tr style={{ backgroundColor: "#0f172a" }} className="text-white font-black text-xs border-t-[3px] border-slate-900">
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-center font-black text-yellow-300">∑</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-left font-black tracking-wider uppercase text-yellow-300">
+              <tr className="font-black text-xs border-t-[3px] border-slate-900 text-slate-950">
+                <td style={{ backgroundColor: COL_COLORS.index }} className="p-3.5 border-r-[2px] border-slate-900 text-center font-black">∑</td>
+                <td style={{ backgroundColor: '#0ea5e9' }} className="p-3.5 border-r-[2px] border-slate-900 text-left font-black tracking-wider uppercase text-white">
                   Total Wider Facility
                 </td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-yellow-300 font-bold">{selectedMonth}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-emerald-300 font-black">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-orange-300 font-black">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-purple-300 font-black">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-emerald-400 text-sm font-black">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-sky-300 font-black">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-indigo-200"></td>
-                <td className="p-3.5 border-r-[2px] border-slate-600 text-pink-300 text-sm font-black">{totalEnpiVal || '—'}</td>
-                <td className="p-3.5 text-yellow-300 font-black">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.month }} className="p-3.5 border-r-[2px] border-slate-900 min-w-[155px] font-bold">{selectedMonth}</td>
+                <td style={{ backgroundColor: COL_COLORS.electricity }} className="p-3.5 border-r-[2px] border-slate-900">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.lng }} className="p-3.5 border-r-[2px] border-slate-900 w-[82px] min-w-[82px]">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.hsd }} className="p-3.5 border-r-[2px] border-slate-900">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.total }} className="p-3.5 border-r-[2px] border-slate-900 text-sm">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.production }} className="p-3.5 border-r-[2px] border-slate-900">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.unit }} className="p-3.5 border-r-[2px] border-slate-900"></td>
+                <td style={{ backgroundColor: COL_COLORS.enpiVal }} className="p-3.5 border-r-[2px] border-slate-900 text-sm">{totalEnpiVal || '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.wrt }} className="p-3.5 font-black">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
               </tr>
             </tbody>
           </table>
