@@ -7,22 +7,22 @@ import {
   FileSpreadsheet, X, Calendar, Lock, XCircle
 } from 'lucide-react';
 
-// Har equipment ke liye exact custom pastel backgrounds (Jaise aapke HTML template me hai)
+// 14 Equipments with Dedicated Custom Row Backgrounds and Distinct Text Colors
 const PERMANENT_EQUIPMENTS = [
-  { equipment: "6HI", enpiUnit: "KwH/MT", labelBg: "#b3e5fc", textCol: "#0369a1" },
-  { equipment: "CGL", enpiUnit: "KwH/MT", labelBg: "#c8e6c9", textCol: "#15803d" },
-  { equipment: "CCL", enpiUnit: "KwH/MT", labelBg: "#fff59d", textCol: "#a16207" },
-  { equipment: "HRS", enpiUnit: "KwH/MT", labelBg: "#ffcc80", textCol: "#c2410c" },
-  { equipment: "PICKLING", enpiUnit: "KwH", labelBg: "#ffcdd2", textCol: "#be123c" },
-  { equipment: "COMPRESSOR", enpiUnit: "Kwh", labelBg: "#b2ebf2", textCol: "#0e7490" },
-  { equipment: "CHILLER", enpiUnit: "KwH/MT", labelBg: "#e1bee7", textCol: "#7e22ce" },
-  { equipment: "TRIMMER", enpiUnit: "KwH/MT", labelBg: "#b2dfdb", textCol: "#0f766e" },
-  { equipment: "RGM", enpiUnit: "KwH/MT", labelBg: "#ffe0b2", textCol: "#c2410c" },
-  { equipment: "CRS", enpiUnit: "KwH/MT", labelBg: "#d1c4e9", textCol: "#6d28d9" },
-  { equipment: "AUTO CTL", enpiUnit: "KwH/MT", labelBg: "#f8bbd0", textCol: "#be185d" },
-  { equipment: "CORRUGATION", enpiUnit: "KwH/MT", labelBg: "#dcedc8", textCol: "#4d7c0f" },
-  { equipment: "OTHER AUX", enpiUnit: "KwH", labelBg: "#cfd8dc", textCol: "#374151" },
-  { equipment: "MATERIAL HANDLING", enpiUnit: "KwH", labelBg: "#f3e5f5", textCol: "#86198f" }
+  { equipment: "6HI", enpiUnit: "KwH/MT", labelBg: "#bbf7d0", textCol: "#14532d" },
+  { equipment: "CGL", enpiUnit: "KwH/MT", labelBg: "#bfdbfe", textCol: "#1e3a8a" },
+  { equipment: "CCL", enpiUnit: "KwH/MT", labelBg: "#fef08a", textCol: "#713f12" },
+  { equipment: "HRS", enpiUnit: "KwH/MT", labelBg: "#fed7aa", textCol: "#7c2d12" },
+  { equipment: "PICKLING", enpiUnit: "KwH", labelBg: "#fecdd3", textCol: "#881337" },
+  { equipment: "COMPRESSOR", enpiUnit: "Kwh", labelBg: "#a5f3fc", textCol: "#164e63" },
+  { equipment: "CHILLER", enpiUnit: "KwH/MT", labelBg: "#ddd6fe", textCol: "#4c1d95" },
+  { equipment: "TRIMMER", enpiUnit: "KwH/MT", labelBg: "#99f6e4", textCol: "#134e4a" },
+  { equipment: "RGM", enpiUnit: "KwH/MT", labelBg: "#ffedd5", textCol: "#9a3412" },
+  { equipment: "CRS", enpiUnit: "KwH/MT", labelBg: "#e9d5ff", textCol: "#581c87" },
+  { equipment: "AUTO CTL", enpiUnit: "KwH/MT", labelBg: "#fbcfe8", textCol: "#831843" },
+  { equipment: "CORRUGATION", enpiUnit: "KwH/MT", labelBg: "#d9f99d", textCol: "#365314" },
+  { equipment: "OTHER AUX", enpiUnit: "KwH", labelBg: "#bae6fd", textCol: "#0c4a6e" },
+  { equipment: "MATERIAL HANDLING", enpiUnit: "KwH", labelBg: "#f5d0fe", textCol: "#701a75" }
 ];
 
 const getInitialBlankRows = () => {
@@ -282,7 +282,7 @@ export default function WiderPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6 bg-[#f4f6f8] min-h-screen text-slate-900 font-sans relative">
+    <div className="flex flex-col gap-6 p-6 bg-[#f1f5f9] min-h-screen text-slate-900 font-sans relative">
 
       {/* TOP TOOLBAR: Date -> Upload -> Sample -> Save -> YoY */}
       <div className="no-print flex flex-wrap items-center gap-3 bg-white border-2 border-slate-300 rounded-2xl p-4 shadow-sm">
@@ -435,55 +435,55 @@ export default function WiderPage() {
         </div>
       )}
 
-      {/* SOLID BORDERED RECTANGULAR TABLE (EXACT AS YOUR HTML/CSS SCHEMA) */}
-      <div className="bg-white rounded-2xl border-[2px] border-[#2d3748] shadow-lg overflow-hidden">
+      {/* COMPLETE COLORFUL MATRIX TABLE (ALL ROWS & COLUMNS COLOR-CODED) */}
+      <div className="bg-white rounded-2xl border-[2px] border-slate-700 shadow-xl overflow-hidden">
         {loading && (
-          <div className="p-2.5 bg-blue-50 text-blue-800 text-center font-black text-xs border-b-2 border-[#2d3748] animate-pulse">
+          <div className="p-2.5 bg-blue-50 text-blue-800 text-center font-black text-xs border-b-2 border-slate-700 animate-pulse">
             Loading data for {selectedMonth}…
           </div>
         )}
 
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-center border-collapse border-[2px] border-[#2d3748]">
+          <table className="w-full text-xs text-center border-collapse border-[2px] border-slate-700">
             
-            {/* 1. DISTINCT COLORFUL HEADERS */}
+            {/* 1. SOLID VIBRANT COLUMN HEADERS */}
             <thead>
-              <tr className="text-slate-900 font-black text-xs uppercase tracking-wide border-b-[2px] border-[#2d3748]">
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] w-12 text-center bg-[#e2e8f0]">#</th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] text-left min-w-[190px] bg-[#00a8e8] text-black">
+              <tr className="text-slate-900 font-black text-xs uppercase tracking-wide border-b-[2px] border-slate-700">
+                <th className="p-3.5 border-r-[2px] border-slate-700 w-12 text-center bg-[#cbd5e1] text-slate-900">#</th>
+                <th className="p-3.5 border-r-[2px] border-slate-700 text-left min-w-[190px] bg-[#38bdf8] text-slate-950 font-black">
                   Parameters / Equipment
                 </th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] min-w-[110px] bg-[#e2e8f0] text-black">
+                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[110px] bg-[#fde047] text-slate-950 font-black">
                   Month
                 </th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] min-w-[130px] bg-[#7bdcb5] text-black">
+                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[130px] bg-[#5eead4] text-slate-950 font-black">
                   Electricity (kWh)
                 </th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] min-w-[110px] bg-[#ff9f7f] text-black">
+                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[110px] bg-[#fdba74] text-slate-950 font-black">
                   LNG (kWh)
                 </th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] min-w-[110px] bg-[#c792ea] text-black">
+                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[110px] bg-[#d8b4fe] text-slate-950 font-black">
                   HSD (kWh)
                 </th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] min-w-[140px] bg-[#a7f3d0] text-black">
+                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[140px] bg-[#86efac] text-slate-950 font-black">
                   Total Consumption
                 </th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] min-w-[120px] bg-[#bae6fd] text-black">
+                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[120px] bg-[#7dd3fc] text-slate-950 font-black">
                   Production (MT)
                 </th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] min-w-[100px] bg-[#e2e8f0] text-black">
+                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[100px] bg-[#c7d2fe] text-slate-950 font-black">
                   EnPI Unit
                 </th>
-                <th className="p-3.5 border-r-[2px] border-[#2d3748] min-w-[120px] bg-[#fbcfe8] text-black">
+                <th className="p-3.5 border-r-[2px] border-slate-700 min-w-[120px] bg-[#f9a8d4] text-slate-950 font-black">
                   EnPI Value(s)
                 </th>
-                <th className="p-3.5 min-w-[130px] bg-[#fed7aa] text-black">
+                <th className="p-3.5 min-w-[130px] bg-[#fef08a] text-slate-950 font-black">
                   % WRT to Total
                 </th>
               </tr>
             </thead>
 
-            {/* 2. EQUIPMENT ROWS (PASTEL LABELS + TINTED PARAMETER COLUMNS) */}
+            {/* 2. EQUIPMENT ROWS (EVERY ROW & EVERY COLUMN FULLY COLOR-CODED) */}
             <tbody>
               {rows.map((r, idx) => {
                 const config = PERMANENT_EQUIPMENTS[idx] || {};
@@ -491,88 +491,88 @@ export default function WiderPage() {
                 return (
                   <tr 
                     key={idx} 
-                    className="border-b-[2px] border-[#2d3748] hover:brightness-95 transition-all font-semibold"
+                    className="border-b-[2px] border-slate-700 hover:brightness-95 transition-all font-bold"
                   >
                     
                     {/* Index */}
-                    <td className="p-3 border-r-[2px] border-[#2d3748] text-center font-bold text-slate-700 bg-slate-100">
+                    <td className="p-3 border-r-[2px] border-slate-700 text-center font-black text-slate-700 bg-[#e2e8f0]">
                       {idx + 1}
                     </td>
 
-                    {/* Parameter / Equipment Label (Unique Row Background) */}
+                    {/* Parameter / Equipment Label (Individual Unique Row Background) */}
                     <td 
-                      style={{ backgroundColor: config.labelBg }}
-                      className="p-3 border-r-[2px] border-[#2d3748] text-left font-black text-slate-900 tracking-wide text-xs"
+                      style={{ backgroundColor: config.labelBg, color: config.textCol }}
+                      className="p-3 border-r-[2px] border-slate-700 text-left font-black tracking-wide text-xs"
                     >
                       {r.equipment}
                     </td>
 
-                    {/* Month Column (bg: #f1f5f9) */}
-                    <td className="p-2 border-r-[2px] border-[#2d3748] bg-[#f1f5f9] font-bold text-slate-800">
+                    {/* Month Column (Warm Amber Tint) */}
+                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#fef3c7] font-black text-amber-950">
                       {selectedMonth}
                     </td>
 
-                    {/* Electricity Column (bg: #e0f2f1) */}
-                    <td className="p-2 border-r-[2px] border-[#2d3748] bg-[#e0f2f1]">
+                    {/* Electricity Column (Teal / Aqua Tint) */}
+                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#ccfbf1] text-teal-950">
                       <input 
                         type="number"
                         value={r.electricity}
                         onChange={(e) => handleCellChange(idx, 'electricity', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-transparent font-bold text-slate-900 outline-none"
+                        className="w-full text-center bg-transparent font-black text-teal-950 outline-none focus:bg-white/70 rounded"
                       />
                     </td>
 
-                    {/* LNG Column (bg: #ffe0b2) */}
-                    <td className="p-2 border-r-[2px] border-[#2d3748] bg-[#ffe0b2]">
+                    {/* LNG Column (Peach / Orange Tint) */}
+                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#ffedd5] text-orange-950">
                       <input 
                         type="number"
                         value={r.lng}
                         onChange={(e) => handleCellChange(idx, 'lng', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-transparent font-bold text-slate-900 outline-none"
+                        className="w-full text-center bg-transparent font-black text-orange-950 outline-none focus:bg-white/70 rounded"
                       />
                     </td>
 
-                    {/* HSD Column (bg: #ede7f6) */}
-                    <td className="p-2 border-r-[2px] border-[#2d3748] bg-[#ede7f6]">
+                    {/* HSD Column (Lavender / Violet Tint) */}
+                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#f3e8ff] text-purple-950">
                       <input 
                         type="number"
                         value={r.hsd}
                         onChange={(e) => handleCellChange(idx, 'hsd', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-transparent font-bold text-slate-900 outline-none"
+                        className="w-full text-center bg-transparent font-black text-purple-950 outline-none focus:bg-white/70 rounded"
                       />
                     </td>
 
-                    {/* Total Consumption Column (bg: #d1fae5) */}
-                    <td className="p-2 border-r-[2px] border-[#2d3748] bg-[#d1fae5] font-black text-emerald-950 text-xs">
+                    {/* Total Consumption Column (Bright Mint / Emerald Tint) */}
+                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#dcfce7] font-black text-emerald-950 text-xs">
                       {r.totalConsumption !== '' && r.totalConsumption != null ? Number(r.totalConsumption).toLocaleString() : '—'}
                     </td>
 
-                    {/* Production Column (bg: #e0f2fe) */}
-                    <td className="p-2 border-r-[2px] border-[#2d3748] bg-[#e0f2fe]">
+                    {/* Production Column (Soft Sky Blue Tint) */}
+                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#e0f2fe] text-sky-950">
                       <input 
                         type="number"
                         value={r.production}
                         onChange={(e) => handleCellChange(idx, 'production', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-transparent font-bold text-slate-900 outline-none"
+                        className="w-full text-center bg-transparent font-black text-sky-950 outline-none focus:bg-white/70 rounded"
                       />
                     </td>
 
-                    {/* EnPI Unit Column (bg: #f8fafc) */}
-                    <td className="p-2 border-r-[2px] border-[#2d3748] bg-[#f8fafc] text-slate-700 font-bold">
+                    {/* EnPI Unit Column (Soft Indigo Tint) */}
+                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#e0e7ff] text-indigo-950 font-bold">
                       {r.enpiUnit}
                     </td>
 
-                    {/* EnPI Value Column (bg: #fce7f3) */}
-                    <td className="p-2 border-r-[2px] border-[#2d3748] bg-[#fce7f3] font-black text-pink-950 text-xs">
+                    {/* EnPI Value Column (Rose / Pink Tint) */}
+                    <td className="p-2 border-r-[2px] border-slate-700 bg-[#fce7f3] font-black text-pink-950 text-xs">
                       {r.enpiValue !== '' && r.enpiValue != null ? r.enpiValue : '—'}
                     </td>
 
-                    {/* % WRT to Total KWH Column (bg: #ffedd5) */}
-                    <td className="p-2 bg-[#ffedd5] font-bold text-amber-950 text-xs">
+                    {/* % WRT to Total KWH Column (Light Gold Tint) */}
+                    <td className="p-2 bg-[#fef9c3] font-black text-yellow-950 text-xs">
                       {r.wrtKwh !== '' && r.wrtKwh != null ? (typeof r.wrtKwh === 'number' ? r.wrtKwh.toFixed(4) : r.wrtKwh) : '—'}
                     </td>
                   </tr>
@@ -580,20 +580,20 @@ export default function WiderPage() {
               })}
 
               {/* 3. TOTAL FACILITY SUMMARY ROW */}
-              <tr className="bg-[#2d3748] text-white font-black text-xs border-t-[3px] border-[#1a202c]">
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-center font-black text-yellow-300">∑</td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-left font-black tracking-wider uppercase text-yellow-300">
+              <tr className="bg-[#1e293b] text-white font-black text-xs border-t-[3px] border-slate-900">
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-center font-black text-yellow-300">∑</td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-left font-black tracking-wider uppercase text-yellow-300">
                   Total Wider Facility
                 </td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-slate-200">{selectedMonth}</td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-[#7bdcb5]">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-[#ff9f7f]">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-[#c792ea]">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-emerald-300 text-sm font-black">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-sky-300">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568]"></td>
-                <td className="p-3.5 border-r-[2px] border-[#4a5568] text-pink-300 text-sm font-black">{totalEnpiVal || '—'}</td>
-                <td className="p-3.5 text-amber-300 font-black">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-yellow-200">{selectedMonth}</td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-teal-300">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-orange-300">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-purple-300">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-emerald-300 text-sm font-black">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-sky-300">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-indigo-200"></td>
+                <td className="p-3.5 border-r-[2px] border-slate-600 text-pink-300 text-sm font-black">{totalEnpiVal || '—'}</td>
+                <td className="p-3.5 text-yellow-300 font-black">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
               </tr>
             </tbody>
           </table>
