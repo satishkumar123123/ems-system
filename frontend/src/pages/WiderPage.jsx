@@ -27,16 +27,16 @@ const PERMANENT_EQUIPMENTS = [
 
 // Fixed Solid Color Codes for Columns
 const COL_COLORS = {
-  index: "#e2e8f0",
-  month: "#fef08a",        // Rich Yellow
-  electricity: "#a7f3d0",  // Emerald Mint Green
-  lng: "#fed7aa",          // Warm Orange Peach
-  hsd: "#e9d5ff",          // Light Purple Lavender
-  total: "#86efac",        // Bright Electric Green
-  production: "#bae6fd",   // Sky Blue
-  unit: "#c7d2fe",         // Soft Indigo
-  enpiVal: "#fbcfe8",      // Soft Pink
-  wrt: "#fde68a",          // Gold
+  index: "#f8fafc",
+  month: "#fffbeb",
+  electricity: "#ecfdf5",
+  lng: "#fff7ed",
+  hsd: "#faf5ff",
+  total: "#f0fdf4",
+  production: "#f0f9ff",
+  unit: "#eef2ff",
+  enpiVal: "#fdf2f8",
+  wrt: "#fefce8",
 };
 
 const getInitialBlankRows = () => {
@@ -298,14 +298,14 @@ export default function WiderPage() {
     <div className="flex flex-col gap-6 p-6 bg-slate-100 min-h-screen text-slate-900 font-sans relative">
 
       {/* TOP TOOLBAR: Date -> Upload -> Sample -> Save -> YoY */}
-      <div className="no-print flex flex-wrap items-center gap-3 bg-white border-2 border-slate-300 rounded-2xl p-4 shadow-sm">
+      <div className="no-print flex items-center justify-between gap-5 overflow-x-auto bg-white border border-slate-200 rounded-2xl p-4 shadow-lg shadow-slate-200/70">
         
         {/* SELECT DATE / MONTH */}
-        <div className="flex flex-col gap-1 bg-cyan-50 border border-cyan-300 px-3 py-1 rounded-xl shadow-xs">
-          <span className="text-[10px] uppercase font-black text-cyan-900 tracking-wider">Select Month</span>
+        <div className="flex flex-shrink-0 flex-col gap-1 bg-gradient-to-br from-cyan-500 to-blue-600 border border-cyan-400 px-3 py-1.5 rounded-xl shadow-md shadow-cyan-200">
+          <span className="text-[10px] uppercase font-black text-white tracking-wider">Select Month</span>
           <div 
             onClick={() => dateInputRef.current?.showPicker?.() || dateInputRef.current?.focus()}
-            className="flex items-center gap-2 bg-white border border-cyan-400 rounded-lg px-2.5 py-1 cursor-pointer hover:border-cyan-600 transition-colors"
+            className="flex items-center gap-2 bg-white border border-white rounded-lg px-2.5 py-1 cursor-pointer hover:bg-cyan-50 transition-colors"
           >
             <input
               ref={dateInputRef}
@@ -318,10 +318,11 @@ export default function WiderPage() {
           </div>
         </div>
 
+        <div className="ml-auto flex flex-shrink-0 items-center gap-3">
         {/* 1. UPLOAD EXCEL */}
         <button 
           onClick={() => setShowUploader((o) => !o)}
-          className="flex items-center gap-1.5 bg-[#059669] hover:bg-[#047857] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 active:scale-95 text-white font-extrabold text-xs px-4 py-3 rounded-xl transition-all shadow-md shadow-emerald-200 cursor-pointer whitespace-nowrap"
         >
           <UploadCloud size={16} /> Upload Excel
         </button>
@@ -329,7 +330,7 @@ export default function WiderPage() {
         {/* 2. SAMPLE EXCEL */}
         <button 
           onClick={handleDownloadSample}
-          className="flex items-center gap-1.5 bg-[#2563eb] hover:bg-[#1d4ed8] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 active:scale-95 text-white font-extrabold text-xs px-4 py-3 rounded-xl transition-all shadow-md shadow-orange-200 cursor-pointer whitespace-nowrap"
         >
           <Download size={16} /> Sample Excel
         </button>
@@ -342,7 +343,7 @@ export default function WiderPage() {
             setShowPasswordModal(true);
           }}
           disabled={saving}
-          className="flex items-center gap-1.5 bg-[#4f46e5] hover:bg-[#4338ca] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer disabled:opacity-50"
+          className="flex items-center gap-1.5 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 active:scale-95 text-white font-extrabold text-xs px-4 py-3 rounded-xl transition-all shadow-md shadow-purple-200 cursor-pointer whitespace-nowrap disabled:opacity-50"
         >
           <Save size={16} /> {saving ? "Saving…" : "Save"}
         </button>
@@ -350,10 +351,11 @@ export default function WiderPage() {
         {/* 4. YOY ANALYTICS */}
         <button 
           onClick={() => navigate('/wider/yoy')}
-          className="flex items-center gap-1.5 bg-[#db2777] hover:bg-[#be185d] active:scale-95 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 active:scale-95 text-white font-extrabold text-xs px-4 py-3 rounded-xl transition-all shadow-md shadow-pink-200 cursor-pointer whitespace-nowrap"
         >
           <TrendingUp size={16} /> YoY Analytics
         </button>
+        </div>
 
       </div>
 
@@ -449,7 +451,7 @@ export default function WiderPage() {
       )}
 
       {/* FULL SOLID COLORFUL TABLE WITH DIRECT INLINE STYLES */}
-      <div className="bg-white rounded-2xl border-[2.5px] border-slate-900 shadow-2xl overflow-hidden">
+      <div className="bg-gradient-to-br from-white via-slate-50 to-blue-50 rounded-2xl border border-slate-200 shadow-xl shadow-slate-300/50 overflow-hidden">
         {loading && (
           <div className="p-2.5 bg-blue-100 text-blue-900 text-center font-black text-xs border-b-2 border-slate-900 animate-pulse">
             Loading data for {selectedMonth}…
@@ -457,11 +459,11 @@ export default function WiderPage() {
         )}
 
         <div className="overflow-x-auto">
-          <table className="w-full text-xs text-center border-collapse border-[2.5px] border-slate-900">
+          <table className="w-full text-xs text-center border-collapse">
             
             {/* 1. SOLID VIBRANT HEADERS */}
             <thead>
-              <tr className="text-slate-950 font-black text-xs uppercase tracking-wider border-b-[2.5px] border-slate-900">
+              <tr className="text-slate-950 font-black text-xs uppercase tracking-wider border-b-2 border-slate-300">
                 <th style={{ backgroundColor: "#94a3b8" }} className="p-3.5 border-r-[2px] border-slate-900 w-12 text-center text-black">#</th>
                 <th style={{ backgroundColor: "#00a8e8" }} className="p-3.5 border-r-[2px] border-slate-900 text-left min-w-[190px] text-black">
                   Parameters / Equipment
@@ -504,7 +506,7 @@ export default function WiderPage() {
                 return (
                   <tr 
                     key={idx} 
-                    className="border-b-[2px] border-slate-900 font-bold"
+                    className="border-b border-slate-200 font-bold transition-colors hover:bg-blue-50/60"
                   >
                     
                     {/* Index */}
