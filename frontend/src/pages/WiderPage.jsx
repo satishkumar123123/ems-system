@@ -308,7 +308,25 @@ export default function WiderPage() {
   return (
     <div className="flex flex-col gap-6 p-6 bg-slate-950 min-h-screen text-slate-100 font-sans relative">
 
-      {/* TOP TOOLBAR: STRICT SINGLE ROW FORCED (No wrapping, every block unique color) */}
+      {/* TOP BRAND HEADING: "W I D E R" (Har letter alag radiant neon color) */}
+      <div className="flex items-center justify-between pb-1 border-b border-slate-800/80">
+        <div className="flex items-center gap-2">
+          <span className="text-4xl font-black tracking-widest text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]">W</span>
+          <span className="text-4xl font-black tracking-widest text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.6)]">I</span>
+          <span className="text-4xl font-black tracking-widest text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.6)]">D</span>
+          <span className="text-4xl font-black tracking-widest text-orange-500 drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]">E</span>
+          <span className="text-4xl font-black tracking-widest text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.6)]">R</span>
+          <span className="ml-3 px-3 py-1 text-xs font-black uppercase rounded-lg bg-indigo-950/80 border border-indigo-500/50 text-indigo-300">
+            Facility System
+          </span>
+        </div>
+        <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs font-black">
+          <Activity size={16} className="text-emerald-400 animate-pulse" />
+          <span className="text-teal-300 uppercase tracking-wide">Live Monitoring Dashboard</span>
+        </div>
+      </div>
+
+      {/* 5-BLOCK ACTION ROW: ALL 5 BLOCKS HAVE DIFFERENT VIBRANT GRADIENTS IN ONE SINGLE LINE */}
       <div 
         className="no-print bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-3 shadow-2xl overflow-x-auto"
         style={{ width: '100%' }}
@@ -317,13 +335,13 @@ export default function WiderPage() {
           style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', gap: '14px', minWidth: 'max-content' }}
         >
           
-          {/* 1. SELECT MONTH BLOCK (Gradient Sky-Blue / Indigo) */}
+          {/* BLOCK 1: SELECT MONTH (Cyan / Sky Blue Gradient) */}
           <div 
             style={{ flexShrink: 0 }}
-            className="flex items-center gap-2 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 p-2 px-3.5 rounded-xl border border-sky-300/40 shadow-lg shadow-sky-950/40"
+            className="flex items-center gap-2.5 bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-600 p-2 px-3.5 rounded-xl border border-cyan-300/40 shadow-lg shadow-cyan-950/50"
           >
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase font-black text-amber-200 tracking-wider">Select Month</span>
+              <span className="text-[10px] uppercase font-black text-cyan-100 tracking-wider">Select Month</span>
               <div 
                 onClick={() => dateInputRef.current?.showPicker?.() || dateInputRef.current?.focus()}
                 className="flex items-center gap-2 bg-slate-950/70 border border-white/30 rounded-lg px-2.5 py-1 cursor-pointer hover:bg-slate-950/90 transition-all mt-0.5"
@@ -335,32 +353,32 @@ export default function WiderPage() {
                   onChange={(e) => setSelectedMonth(e.target.value)}
                   className="bg-transparent text-xs font-black text-cyan-300 focus:outline-none cursor-pointer"
                 />
-                <Calendar size={15} className="text-amber-300 flex-shrink-0" />
+                <Calendar size={15} className="text-cyan-200 flex-shrink-0" />
               </div>
             </div>
           </div>
 
-          {/* 2. UPLOAD EXCEL BLOCK (Gradient Neon Emerald-Green) */}
+          {/* BLOCK 2: UPLOAD EXCEL (Emerald / Lime Gradient) */}
           <button 
             style={{ flexShrink: 0 }}
             onClick={() => setShowUploader((o) => !o)}
-            className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-green-600 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-950/40 border border-emerald-300/40 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-green-600 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-950/50 border border-emerald-300/40 cursor-pointer whitespace-nowrap"
           >
             <UploadCloud size={18} className="stroke-[2.5] text-emerald-100" />
             <span className="tracking-wide">Upload Excel</span>
           </button>
 
-          {/* 3. SAMPLE EXCEL BLOCK (Gradient Vivid Amber-Orange) */}
+          {/* BLOCK 3: SAMPLE EXCEL (Amber / Orange Gradient) */}
           <button 
             style={{ flexShrink: 0 }}
             onClick={handleDownloadSample}
-            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-lg shadow-orange-950/40 border border-amber-300/40 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-lg shadow-orange-950/50 border border-amber-300/40 cursor-pointer whitespace-nowrap"
           >
             <Download size={18} className="stroke-[2.5] text-amber-100" />
             <span className="tracking-wide">Sample Excel</span>
           </button>
 
-          {/* 4. SAVE BLOCK (Gradient Royal Purple-Violet) */}
+          {/* BLOCK 4: SAVE (Royal Purple / Violet / Fuchsia Gradient) */}
           <button 
             style={{ flexShrink: 0 }}
             onClick={() => {
@@ -369,30 +387,21 @@ export default function WiderPage() {
               setShowPasswordModal(true);
             }}
             disabled={saving}
-            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-lg shadow-purple-950/40 border border-purple-300/40 cursor-pointer whitespace-nowrap disabled:opacity-50"
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-lg shadow-purple-950/50 border border-purple-300/40 cursor-pointer whitespace-nowrap disabled:opacity-50"
           >
             <Save size={18} className="stroke-[2.5] text-purple-100" />
             <span className="tracking-wide">{saving ? "Saving…" : "Save Data"}</span>
           </button>
 
-          {/* 5. YOY ANALYTICS BLOCK (Gradient Hot Pink-Rose) */}
+          {/* BLOCK 5: YOY ANALYTICS (Rose / Hot Pink / Red Gradient) */}
           <button 
             style={{ flexShrink: 0 }}
             onClick={() => navigate('/wider/yoy')}
-            className="flex items-center gap-2 bg-gradient-to-r from-rose-500 via-pink-600 to-red-500 hover:from-rose-400 hover:to-pink-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-lg shadow-rose-950/40 border border-pink-300/40 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-rose-500 via-pink-600 to-red-500 hover:from-rose-400 hover:to-pink-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-lg shadow-rose-950/50 border border-pink-300/40 cursor-pointer whitespace-nowrap"
           >
             <TrendingUp size={18} className="stroke-[2.5] text-pink-100" />
             <span className="tracking-wide">YoY Analytics</span>
           </button>
-
-          {/* Live Status Indicator (Gold / Lime accent) */}
-          <div 
-            style={{ flexShrink: 0 }}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-900 border border-amber-500/40 rounded-xl text-xs font-black shadow-inner"
-          >
-            <Activity size={16} className="text-emerald-400 animate-pulse" />
-            <span className="text-amber-300 uppercase tracking-wider">Facility Active</span>
-          </div>
 
         </div>
       </div>
@@ -697,32 +706,33 @@ export default function WiderPage() {
         </div>
       </div>
 
-      {/* CHARTS ANALYTICS GRID: BIG, VIBRANT & 100% COLORFUL TEXT */}
+      {/* CHARTS ANALYTICS GRID: ALL HEADINGS IN DISTINCT RADIANT COLORS */}
       <div>
-        <h2 className="text-xl font-black mb-5 tracking-wide flex items-center gap-2.5">
+        <h2 className="text-xl font-black mb-5 tracking-wide flex items-center gap-2">
           <span className="text-fuchsia-400 text-2xl animate-pulse">▍</span> 
-          <span className="text-cyan-400">WIDER FACILITY</span>
+          <span className="text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.4)]">WIDER</span>
+          <span className="text-blue-400">FACILITY</span>
           <span className="text-amber-400">&amp;</span>
-          <span className="text-orange-400">CONSUMPTION</span>
-          <span className="text-emerald-400">ANALYTICS</span>
+          <span className="text-orange-400 drop-shadow-[0_0_10px_rgba(249,115,22,0.4)]">CONSUMPTION</span>
+          <span className="text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.4)]">ANALYTICS</span>
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* 1. TOTAL CONSUMPTION BREAKDOWN */}
           <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-cyan-950/40 border-2 border-cyan-500/50 rounded-3xl p-5 shadow-2xl shadow-cyan-950/50 flex flex-col items-center backdrop-blur-md">
-            {/* COLORFUL TITLE */}
             <div className="w-full flex items-center justify-between border-b border-cyan-500/30 pb-3 mb-2">
-              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2 text-cyan-300">
-                <span className="w-3 h-3 rounded-full bg-cyan-400 shadow-md shadow-cyan-400 animate-ping"></span>
-                Total Consumption Breakdown
+              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-md shadow-cyan-400 animate-ping mr-1"></span>
+                <span className="text-cyan-400">Total</span>
+                <span className="text-sky-300">Consumption</span>
+                <span className="text-yellow-400">Breakdown</span>
               </h3>
-              <span className="text-[11px] font-black text-cyan-400 bg-cyan-950/80 border border-cyan-500/40 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] font-black text-cyan-400 bg-cyan-950/80 border border-cyan-500/40 px-2.5 py-0.5 rounded-full">
                 kWh
               </span>
             </div>
 
-            {/* BIG PIE CHART */}
             <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -770,20 +780,20 @@ export default function WiderPage() {
             </div>
           </div>
 
-          {/* 2. PRODUCTION BREAKDOWN (MT) */}
+          {/* 2. PRODUCTION BREAKDOWN */}
           <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-emerald-950/40 border-2 border-emerald-500/50 rounded-3xl p-5 shadow-2xl shadow-emerald-950/50 flex flex-col items-center backdrop-blur-md">
-            {/* COLORFUL TITLE */}
             <div className="w-full flex items-center justify-between border-b border-emerald-500/30 pb-3 mb-2">
-              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2 text-emerald-300">
-                <span className="w-3 h-3 rounded-full bg-emerald-400 shadow-md shadow-emerald-400 animate-ping"></span>
-                Production Breakdown
+              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-md shadow-emerald-400 animate-ping mr-1"></span>
+                <span className="text-emerald-400">Production</span>
+                <span className="text-teal-300">Breakdown</span>
+                <span className="text-lime-400">(MT)</span>
               </h3>
-              <span className="text-[11px] font-black text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] font-black text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-0.5 rounded-full">
                 MT
               </span>
             </div>
 
-            {/* BIG PIE CHART */}
             <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -833,18 +843,18 @@ export default function WiderPage() {
 
           {/* 3. ENPI VALUE BREAKDOWN */}
           <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-purple-950/40 border-2 border-purple-500/50 rounded-3xl p-5 shadow-2xl shadow-purple-950/50 flex flex-col items-center backdrop-blur-md">
-            {/* COLORFUL TITLE */}
             <div className="w-full flex items-center justify-between border-b border-purple-500/30 pb-3 mb-2">
-              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2 text-purple-300">
-                <span className="w-3 h-3 rounded-full bg-purple-400 shadow-md shadow-purple-400 animate-ping"></span>
-                EnPI Value Breakdown
+              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-400 shadow-md shadow-purple-400 animate-ping mr-1"></span>
+                <span className="text-purple-400">EnPI</span>
+                <span className="text-fuchsia-400">Value</span>
+                <span className="text-pink-400">Breakdown</span>
               </h3>
-              <span className="text-[11px] font-black text-pink-300 bg-purple-950/80 border border-purple-500/40 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] font-black text-pink-300 bg-purple-950/80 border border-purple-500/40 px-2.5 py-0.5 rounded-full">
                 Index
               </span>
             </div>
 
-            {/* BIG PIE CHART */}
             <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
