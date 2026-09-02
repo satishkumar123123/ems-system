@@ -53,7 +53,18 @@ const getInitialBlankRows = () => {
   }));
 };
 
-const PIE_COLORS = ['#0284c7', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
+// Vibrant & Glowing Palette for Big Pie Charts
+const PIE_COLORS = [
+  '#38bdf8', // Neon Sky Blue
+  '#10b981', // Emerald Green
+  '#f59e0b', // Amber Orange
+  '#f43f5e', // Rose Red
+  '#a855f7', // Vivid Purple
+  '#06b6d4', // Cyan
+  '#ec4899', // Pink
+  '#84cc16'  // Lime Green
+];
+
 const SAVE_AUTH_PASSWORD = "1234";
 
 export default function WiderPage() {
@@ -297,17 +308,17 @@ export default function WiderPage() {
   return (
     <div className="flex flex-col gap-6 p-6 bg-slate-900 min-h-screen text-slate-100 font-sans relative">
 
-      {/* TOP TOOLBAR: Same row multi-color stylish action blocks */}
-      <div className="no-print flex items-center justify-between gap-4 overflow-x-auto bg-slate-800/95 backdrop-blur-md border border-slate-700 rounded-2xl p-3.5 shadow-2xl">
-        
-        <div className="flex items-center gap-3 overflow-x-auto">
-          {/* 1. SELECT DATE / MONTH BLOCK */}
-          <div className="flex flex-shrink-0 items-center gap-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 p-2 px-3.5 rounded-xl border border-indigo-400/30 shadow-md">
+      {/* TOP TOOLBAR: All action items in ONE SINGLE ROW with distinct vibrant colors */}
+      <div className="no-print bg-slate-800/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-3 shadow-2xl overflow-x-auto">
+        <div className="flex flex-nowrap items-center gap-3.5 min-w-max">
+          
+          {/* 1. SELECT MONTH (Vibrant Cyan-Blue Gradient Block) */}
+          <div className="flex items-center gap-2.5 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 p-2 px-3.5 rounded-xl border border-cyan-400/40 shadow-md flex-shrink-0">
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase font-black text-indigo-100 tracking-wider">Select Month</span>
+              <span className="text-[10px] uppercase font-black text-cyan-100 tracking-wider">Select Month</span>
               <div 
                 onClick={() => dateInputRef.current?.showPicker?.() || dateInputRef.current?.focus()}
-                className="flex items-center gap-2 bg-slate-950/50 border border-white/20 rounded-lg px-2.5 py-1 cursor-pointer hover:bg-slate-950/70 transition-all mt-0.5"
+                className="flex items-center gap-2 bg-slate-950/60 border border-white/20 rounded-lg px-2.5 py-1 cursor-pointer hover:bg-slate-950/80 transition-all mt-0.5"
               >
                 <input
                   ref={dateInputRef}
@@ -316,30 +327,30 @@ export default function WiderPage() {
                   onChange={(e) => setSelectedMonth(e.target.value)}
                   className="bg-transparent text-xs font-black text-white focus:outline-none cursor-pointer"
                 />
-                <Calendar size={14} className="text-indigo-300 flex-shrink-0" />
+                <Calendar size={14} className="text-cyan-300 flex-shrink-0" />
               </div>
             </div>
           </div>
 
-          {/* 2. UPLOAD EXCEL BLOCK */}
+          {/* 2. UPLOAD EXCEL (Vibrant Emerald-Green Gradient Block) */}
           <button 
             onClick={() => setShowUploader((o) => !o)}
-            className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-md border border-emerald-400/30 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-md shadow-emerald-950/40 border border-emerald-400/40 cursor-pointer whitespace-nowrap flex-shrink-0"
           >
-            <UploadCloud size={17} className="stroke-[2.5]" />
+            <UploadCloud size={18} className="stroke-[2.5]" />
             <span>Upload Excel</span>
           </button>
 
-          {/* 3. SAMPLE EXCEL BLOCK */}
+          {/* 3. SAMPLE EXCEL (Vibrant Amber-Orange Gradient Block) */}
           <button 
             onClick={handleDownloadSample}
-            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-md border border-amber-400/30 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-md shadow-orange-950/40 border border-amber-400/40 cursor-pointer whitespace-nowrap flex-shrink-0"
           >
-            <Download size={17} className="stroke-[2.5]" />
+            <Download size={18} className="stroke-[2.5]" />
             <span>Sample Excel</span>
           </button>
 
-          {/* 4. SAVE BLOCK */}
+          {/* 4. SAVE (Vibrant Violet-Purple Gradient Block) */}
           <button 
             onClick={() => {
               setPasswordError("");
@@ -347,24 +358,27 @@ export default function WiderPage() {
               setShowPasswordModal(true);
             }}
             disabled={saving}
-            className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 active:scale-95 text-white font-black text-xs px-5 py-3 rounded-xl transition-all shadow-md border border-violet-400/30 cursor-pointer whitespace-nowrap disabled:opacity-50"
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-md shadow-purple-950/40 border border-purple-400/40 cursor-pointer whitespace-nowrap disabled:opacity-50 flex-shrink-0"
           >
-            <Save size={17} className="stroke-[2.5]" />
+            <Save size={18} className="stroke-[2.5]" />
             <span>{saving ? "Saving…" : "Save"}</span>
           </button>
 
-          {/* 5. YOY ANALYTICS BLOCK */}
+          {/* 5. YOY ANALYTICS (Vibrant Rose-Pink Gradient Block) */}
           <button 
             onClick={() => navigate('/wider/yoy')}
-            className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-md border border-pink-400/30 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600 hover:from-rose-400 hover:to-pink-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-md shadow-rose-950/40 border border-pink-400/40 cursor-pointer whitespace-nowrap flex-shrink-0"
           >
-            <TrendingUp size={17} className="stroke-[2.5]" />
+            <TrendingUp size={18} className="stroke-[2.5]" />
             <span>YoY Analytics</span>
           </button>
-        </div>
 
-        <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 bg-slate-900/80 border border-slate-700 rounded-xl text-xs text-slate-400 font-bold">
-          <Sparkles size={14} className="text-amber-400" /> Facility Monitoring
+          {/* Live Status Badge */}
+          <div className="ml-auto flex items-center gap-2 px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-300 font-bold flex-shrink-0">
+            <Sparkles size={15} className="text-amber-400 animate-spin" />
+            <span>Facility Hub</span>
+          </div>
+
         </div>
       </div>
 
@@ -669,24 +683,25 @@ export default function WiderPage() {
         </div>
       </div>
 
-      {/* CHARTS ANALYTICS GRID */}
+      {/* CHARTS ANALYTICS GRID: BIG & EXTRA COLOURFUL */}
       <div>
-        <h2 className="text-base font-black text-slate-100 mb-4 tracking-wide flex items-center gap-2">
-          <span className="text-purple-400 animate-pulse">▍</span> 
+        <h2 className="text-lg font-black text-slate-100 mb-5 tracking-wide flex items-center gap-2.5">
+          <span className="text-purple-400 text-xl animate-pulse">▍</span> 
           <span className="text-cyan-400">WIDER FACILITY</span> &amp; 
           <span className="text-amber-400">CONSUMPTION</span> 
           <span className="text-emerald-400">ANALYTICS</span>
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* TOTAL CONSUMPTION BREAKDOWN */}
-          <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-xl flex flex-col items-center backdrop-blur-sm">
-            <h3 className="text-xs font-black text-slate-200 uppercase tracking-wide mb-3 flex items-center gap-1.5 self-start">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+          {/* 1. TOTAL CONSUMPTION BREAKDOWN (BIG & VIBRANT) */}
+          <div className="bg-gradient-to-b from-slate-800/90 to-slate-900/90 border-2 border-cyan-500/30 rounded-3xl p-5 shadow-2xl shadow-cyan-950/20 flex flex-col items-center backdrop-blur-md hover:border-cyan-400/50 transition-all">
+            <h3 className="text-sm font-black text-cyan-300 uppercase tracking-wide mb-2 flex items-center gap-2 self-start">
+              <span className="w-3 h-3 rounded-full bg-cyan-400 shadow-md shadow-cyan-400/60 animate-ping"></span>
               Total Consumption Breakdown
             </h3>
-            <div style={{ width: '100%', height: 260 }}>
+            {/* Height badha kar 360px kiya gaya */}
+            <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -694,33 +709,52 @@ export default function WiderPage() {
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    innerRadius={42}
-                    paddingAngle={3}
+                    cy="48%"
+                    outerRadius={115}
+                    innerRadius={60}
+                    paddingAngle={4}
+                    labelLine={true}
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {getCategorizedData('totalConsumption').map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={PIE_COLORS[index % PIE_COLORS.length]} 
+                        stroke="#0f172a" 
+                        strokeWidth={2}
+                      />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff', fontSize: '11px', fontWeight: 'bold' }}
+                    contentStyle={{ 
+                      backgroundColor: '#0f172a', 
+                      borderColor: '#38bdf8', 
+                      borderRadius: '14px', 
+                      color: '#fff', 
+                      fontSize: '12px', 
+                      fontWeight: 'bold',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                    }}
                     formatter={(value) => [Number(value).toLocaleString() + ' kWh', 'Consumption']} 
                   />
-                  <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px', color: '#cbd5e1' }} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    iconType="circle"
+                    wrapperStyle={{ fontSize: '12px', fontWeight: 'bold', paddingTop: '10px', color: '#e2e8f0' }} 
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* PRODUCTION BREAKDOWN */}
-          <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-xl flex flex-col items-center backdrop-blur-sm">
-            <h3 className="text-xs font-black text-slate-200 uppercase tracking-wide mb-3 flex items-center gap-1.5 self-start">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+          {/* 2. PRODUCTION BREAKDOWN (BIG & VIBRANT) */}
+          <div className="bg-gradient-to-b from-slate-800/90 to-slate-900/90 border-2 border-emerald-500/30 rounded-3xl p-5 shadow-2xl shadow-emerald-950/20 flex flex-col items-center backdrop-blur-md hover:border-emerald-400/50 transition-all">
+            <h3 className="text-sm font-black text-emerald-300 uppercase tracking-wide mb-2 flex items-center gap-2 self-start">
+              <span className="w-3 h-3 rounded-full bg-emerald-400 shadow-md shadow-emerald-400/60 animate-ping"></span>
               Production Breakdown (MT)
             </h3>
-            <div style={{ width: '100%', height: 260 }}>
+            {/* Height badha kar 360px kiya gaya */}
+            <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -728,33 +762,52 @@ export default function WiderPage() {
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    innerRadius={42}
-                    paddingAngle={3}
+                    cy="48%"
+                    outerRadius={115}
+                    innerRadius={60}
+                    paddingAngle={4}
+                    labelLine={true}
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {getCategorizedData('production').map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={PIE_COLORS[(index + 2) % PIE_COLORS.length]} 
+                        stroke="#0f172a" 
+                        strokeWidth={2}
+                      />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff', fontSize: '11px', fontWeight: 'bold' }}
+                    contentStyle={{ 
+                      backgroundColor: '#0f172a', 
+                      borderColor: '#10b981', 
+                      borderRadius: '14px', 
+                      color: '#fff', 
+                      fontSize: '12px', 
+                      fontWeight: 'bold',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                    }}
                     formatter={(value) => [Number(value).toLocaleString() + ' MT', 'Production']} 
                   />
-                  <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px', color: '#cbd5e1' }} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    iconType="circle"
+                    wrapperStyle={{ fontSize: '12px', fontWeight: 'bold', paddingTop: '10px', color: '#e2e8f0' }} 
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* ENPI VALUE BREAKDOWN */}
-          <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-xl flex flex-col items-center backdrop-blur-sm">
-            <h3 className="text-xs font-black text-slate-200 uppercase tracking-wide mb-3 flex items-center gap-1.5 self-start">
-              <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+          {/* 3. ENPI VALUE BREAKDOWN (BIG & VIBRANT) */}
+          <div className="bg-gradient-to-b from-slate-800/90 to-slate-900/90 border-2 border-purple-500/30 rounded-3xl p-5 shadow-2xl shadow-purple-950/20 flex flex-col items-center backdrop-blur-md hover:border-purple-400/50 transition-all">
+            <h3 className="text-sm font-black text-purple-300 uppercase tracking-wide mb-2 flex items-center gap-2 self-start">
+              <span className="w-3 h-3 rounded-full bg-purple-400 shadow-md shadow-purple-400/60 animate-ping"></span>
               EnPI Value Breakdown
             </h3>
-            <div style={{ width: '100%', height: 260 }}>
+            {/* Height badha kar 360px kiya gaya */}
+            <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -762,21 +815,39 @@ export default function WiderPage() {
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    innerRadius={42}
-                    paddingAngle={3}
+                    cy="48%"
+                    outerRadius={115}
+                    innerRadius={60}
+                    paddingAngle={4}
+                    labelLine={true}
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {getCategorizedData('enpiValue').map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={PIE_COLORS[(index + 4) % PIE_COLORS.length]} 
+                        stroke="#0f172a" 
+                        strokeWidth={2}
+                      />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff', fontSize: '11px', fontWeight: 'bold' }}
+                    contentStyle={{ 
+                      backgroundColor: '#0f172a', 
+                      borderColor: '#a855f7', 
+                      borderRadius: '14px', 
+                      color: '#fff', 
+                      fontSize: '12px', 
+                      fontWeight: 'bold',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                    }}
                     formatter={(value) => [Number(value).toLocaleString(), 'EnPI Value']} 
                   />
-                  <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px', color: '#cbd5e1' }} />
+                  <Legend 
+                    verticalAlign="bottom" 
+                    iconType="circle"
+                    wrapperStyle={{ fontSize: '12px', fontWeight: 'bold', paddingTop: '10px', color: '#e2e8f0' }} 
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
