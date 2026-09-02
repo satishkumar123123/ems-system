@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import {
-  UploadCloud, Download, Save, TrendingUp,
+  ArrowLeft, UploadCloud, Download, Save, TrendingUp,
   FileSpreadsheet, X, Calendar, Lock, XCircle, Activity
 } from 'lucide-react';
 
@@ -308,9 +308,18 @@ export default function WiderPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
-      {/* 1. TOP BRAND HEADING: "W I D E R" (STRICT INLINE STYLES WITH GLOW) */}
+      {/* 1. TOP BRAND HEADING: BACK BUTTON + "W I D E R" (STRICT INLINE STYLES) */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          
+          {/* BACK BUTTON TO FIRST / HOME PAGE */}
+          <button 
+            onClick={() => navigate('/')}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '7px 14px', color: '#38bdf8', fontSize: '12px', fontWeight: '900', cursor: 'pointer', marginRight: '6px', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }}
+          >
+            <ArrowLeft size={16} color="#38bdf8" /> Back
+          </button>
+
           <span style={{ fontSize: '42px', fontWeight: '900', letterSpacing: '3px', color: '#00e5ff', textShadow: '0 0 16px rgba(0,229,255,0.8)' }}>W</span>
           <span style={{ fontSize: '42px', fontWeight: '900', letterSpacing: '3px', color: '#00e676', textShadow: '0 0 16px rgba(0,230,118,0.8)' }}>I</span>
           <span style={{ fontSize: '42px', fontWeight: '900', letterSpacing: '3px', color: '#ffea00', textShadow: '0 0 16px rgba(255,234,0,0.8)' }}>D</span>
@@ -320,6 +329,7 @@ export default function WiderPage() {
             Facility Operations
           </span>
         </div>
+        
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '12px', fontSize: '12px', fontWeight: '900' }}>
           <Activity size={16} color="#00e676" />
           <span style={{ color: '#2dd4bf', textTransform: 'uppercase', letterSpacing: '1px' }}>Real-time Monitoring</span>
