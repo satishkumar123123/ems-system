@@ -7,7 +7,7 @@ import {
   FileSpreadsheet, X, Calendar, Lock, XCircle, Sparkles
 } from 'lucide-react';
 
-// Equipment Definitions with Stylish Badges
+// Equipment Definitions with Badges
 const PERMANENT_EQUIPMENTS = [
   { equipment: "6HI", enpiUnit: "KwH/MT", labelBg: "#0284c7", textCol: "#ffffff" },
   { equipment: "CGL", enpiUnit: "KwH/MT", labelBg: "#059669", textCol: "#ffffff" },
@@ -25,7 +25,7 @@ const PERMANENT_EQUIPMENTS = [
   { equipment: "MATERIAL HANDLING", enpiUnit: "KwH", labelBg: "#c026d3", textCol: "#ffffff" }
 ];
 
-// Refined Modern Column Colors
+// Refined Column Pastel Colors
 const COL_COLORS = {
   index: "#f1f5f9",
   month: "#fef08a",
@@ -298,16 +298,16 @@ export default function WiderPage() {
     <div className="flex flex-col gap-6 p-6 bg-slate-900 min-h-screen text-slate-100 font-sans relative">
 
       {/* TOP TOOLBAR: Same row multi-color stylish action blocks */}
-      <div className="no-print flex items-center justify-between gap-4 overflow-x-auto bg-slate-800/90 backdrop-blur-md border border-slate-700/80 rounded-2xl p-3.5 shadow-2xl">
+      <div className="no-print flex items-center justify-between gap-4 overflow-x-auto bg-slate-800/95 backdrop-blur-md border border-slate-700 rounded-2xl p-3.5 shadow-2xl">
         
         <div className="flex items-center gap-3 overflow-x-auto">
           {/* 1. SELECT DATE / MONTH BLOCK */}
-          <div className="flex flex-shrink-0 items-center gap-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 p-2 px-3.5 rounded-xl border border-indigo-400/30 shadow-lg shadow-indigo-950/40">
+          <div className="flex flex-shrink-0 items-center gap-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 p-2 px-3.5 rounded-xl border border-indigo-400/30 shadow-md">
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase font-black text-indigo-200 tracking-wider">Select Month</span>
+              <span className="text-[10px] uppercase font-black text-indigo-100 tracking-wider">Select Month</span>
               <div 
                 onClick={() => dateInputRef.current?.showPicker?.() || dateInputRef.current?.focus()}
-                className="flex items-center gap-2 bg-slate-950/40 border border-white/20 rounded-lg px-2.5 py-1 cursor-pointer hover:bg-slate-950/60 transition-all mt-0.5"
+                className="flex items-center gap-2 bg-slate-950/50 border border-white/20 rounded-lg px-2.5 py-1 cursor-pointer hover:bg-slate-950/70 transition-all mt-0.5"
               >
                 <input
                   ref={dateInputRef}
@@ -324,7 +324,7 @@ export default function WiderPage() {
           {/* 2. UPLOAD EXCEL BLOCK */}
           <button 
             onClick={() => setShowUploader((o) => !o)}
-            className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-lg shadow-emerald-950/40 border border-emerald-400/30 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-md border border-emerald-400/30 cursor-pointer whitespace-nowrap"
           >
             <UploadCloud size={17} className="stroke-[2.5]" />
             <span>Upload Excel</span>
@@ -333,7 +333,7 @@ export default function WiderPage() {
           {/* 3. SAMPLE EXCEL BLOCK */}
           <button 
             onClick={handleDownloadSample}
-            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-lg shadow-orange-950/40 border border-amber-400/30 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-md border border-amber-400/30 cursor-pointer whitespace-nowrap"
           >
             <Download size={17} className="stroke-[2.5]" />
             <span>Sample Excel</span>
@@ -347,7 +347,7 @@ export default function WiderPage() {
               setShowPasswordModal(true);
             }}
             disabled={saving}
-            className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 active:scale-95 text-white font-black text-xs px-5 py-3 rounded-xl transition-all shadow-lg shadow-purple-950/40 border border-violet-400/30 cursor-pointer whitespace-nowrap disabled:opacity-50"
+            className="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 active:scale-95 text-white font-black text-xs px-5 py-3 rounded-xl transition-all shadow-md border border-violet-400/30 cursor-pointer whitespace-nowrap disabled:opacity-50"
           >
             <Save size={17} className="stroke-[2.5]" />
             <span>{saving ? "Saving…" : "Save"}</span>
@@ -356,14 +356,14 @@ export default function WiderPage() {
           {/* 5. YOY ANALYTICS BLOCK */}
           <button 
             onClick={() => navigate('/wider/yoy')}
-            className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-lg shadow-rose-950/40 border border-pink-400/30 cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 active:scale-95 text-white font-black text-xs px-4 py-3 rounded-xl transition-all shadow-md border border-pink-400/30 cursor-pointer whitespace-nowrap"
           >
             <TrendingUp size={17} className="stroke-[2.5]" />
             <span>YoY Analytics</span>
           </button>
         </div>
 
-        <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 bg-slate-900/60 border border-slate-700 rounded-xl text-xs text-slate-400 font-bold">
+        <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 bg-slate-900/80 border border-slate-700 rounded-xl text-xs text-slate-400 font-bold">
           <Sparkles size={14} className="text-amber-400" /> Facility Monitoring
         </div>
       </div>
@@ -459,7 +459,7 @@ export default function WiderPage() {
         </div>
       )}
 
-      {/* COLORFUL STYLIST TABLE */}
+      {/* SOLID COLORFUL TABLE */}
       <div className="bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl overflow-hidden">
         {loading && (
           <div className="p-2.5 bg-indigo-600 text-white text-center font-black text-xs border-b-2 border-slate-900 animate-pulse">
@@ -467,43 +467,57 @@ export default function WiderPage() {
           </div>
         )}
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs text-center border-collapse">
+        <div className="overflow-x-auto w-full">
+          {/* table-fixed aur min-w-[1300px] se exact width strict follow hogi */}
+          <table className="w-full text-xs text-center border-collapse table-fixed min-w-[1300px]">
             
-            {/* SOLID VIBRANT HEADERS */}
+            {/* STRICT COLUMN SIZING VIA COLGROUP */}
+            <colgroup>
+              <col style={{ width: "45px" }} />  {/* # */}
+              <col style={{ width: "175px" }} /> {/* Equipment */}
+              <col style={{ width: "190px" }} /> {/* Month (BADA KIYA GAYA) */}
+              <col style={{ width: "135px" }} /> {/* Electricity */}
+              <col style={{ width: "70px" }} />  {/* LNG (CHOTA KIYA GAYA) */}
+              <col style={{ width: "110px" }} /> {/* HSD */}
+              <col style={{ width: "140px" }} /> {/* Total Consumption */}
+              <col style={{ width: "125px" }} /> {/* Production */}
+              <col style={{ width: "100px" }} /> {/* Unit */}
+              <col style={{ width: "115px" }} /> {/* EnPI Value */}
+              <col style={{ width: "125px" }} /> {/* % WRT */}
+            </colgroup>
+
+            {/* HEADERS */}
             <thead>
               <tr className="text-slate-950 font-black text-xs uppercase tracking-wider border-b-2 border-slate-900">
-                <th style={{ backgroundColor: "#94a3b8" }} className="p-3 border-r-2 border-slate-900 w-12 text-center text-slate-950">#</th>
-                <th style={{ backgroundColor: "#38bdf8" }} className="p-3 border-r-2 border-slate-900 text-left min-w-[200px] text-slate-950">
+                <th style={{ backgroundColor: "#94a3b8" }} className="p-3 border-r-2 border-slate-900 text-center">#</th>
+                <th style={{ backgroundColor: "#38bdf8" }} className="p-3 border-r-2 border-slate-900 text-left">
                   Parameters / Equipment
                 </th>
-                {/* Month column expanded */}
-                <th style={{ backgroundColor: "#fde047" }} className="p-3 border-r-2 border-slate-900 min-w-[190px] w-[190px] text-slate-950">
+                <th style={{ backgroundColor: "#fde047" }} className="p-3 border-r-2 border-slate-900">
                   Month
                 </th>
-                <th style={{ backgroundColor: "#4ade80" }} className="p-3 border-r-2 border-slate-900 min-w-[130px] text-slate-950">
+                <th style={{ backgroundColor: "#4ade80" }} className="p-3 border-r-2 border-slate-900">
                   Electricity (kWh)
                 </th>
-                {/* LNG column reduced */}
-                <th style={{ backgroundColor: "#fb923c" }} className="p-3 border-r-2 border-slate-900 min-w-[70px] w-[70px] text-slate-950">
+                <th style={{ backgroundColor: "#fb923c" }} className="p-3 border-r-2 border-slate-900">
                   LNG (kWh)
                 </th>
-                <th style={{ backgroundColor: "#c084fc" }} className="p-3 border-r-2 border-slate-900 min-w-[110px] text-slate-950">
+                <th style={{ backgroundColor: "#c084fc" }} className="p-3 border-r-2 border-slate-900">
                   HSD (kWh)
                 </th>
-                <th style={{ backgroundColor: "#2dd4bf" }} className="p-3 border-r-2 border-slate-900 min-w-[140px] text-slate-950">
+                <th style={{ backgroundColor: "#2dd4bf" }} className="p-3 border-r-2 border-slate-900">
                   Total Consumption
                 </th>
-                <th style={{ backgroundColor: "#60a5fa" }} className="p-3 border-r-2 border-slate-900 min-w-[120px] text-slate-950">
+                <th style={{ backgroundColor: "#60a5fa" }} className="p-3 border-r-2 border-slate-900">
                   Production (MT)
                 </th>
-                <th style={{ backgroundColor: "#a5b4fc" }} className="p-3 border-r-2 border-slate-900 min-w-[100px] text-slate-950">
+                <th style={{ backgroundColor: "#a5b4fc" }} className="p-3 border-r-2 border-slate-900">
                   EnPI Unit
                 </th>
-                <th style={{ backgroundColor: "#f472b6" }} className="p-3 border-r-2 border-slate-900 min-w-[120px] text-slate-950">
+                <th style={{ backgroundColor: "#f472b6" }} className="p-3 border-r-2 border-slate-900">
                   EnPI Value(s)
                 </th>
-                <th style={{ backgroundColor: "#facc15" }} className="p-3 min-w-[130px] text-slate-950">
+                <th style={{ backgroundColor: "#facc15" }} className="p-3">
                   % WRT to Total
                 </th>
               </tr>
@@ -519,11 +533,10 @@ export default function WiderPage() {
                     key={idx} 
                     className="border-b border-slate-900 font-bold"
                   >
-                    
                     {/* Index */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.index }}
-                      className="p-2.5 border-r-2 border-slate-900 text-center font-black text-slate-900"
+                      className="p-2.5 border-r-2 border-slate-900 text-center font-black text-slate-900 truncate"
                     >
                       {idx + 1}
                     </td>
@@ -531,15 +544,15 @@ export default function WiderPage() {
                     {/* Parameter / Equipment Name */}
                     <td 
                       style={{ backgroundColor: config.labelBg, color: config.textCol }}
-                      className="p-2.5 border-r-2 border-slate-900 text-left font-black tracking-wide text-xs shadow-inner"
+                      className="p-2.5 border-r-2 border-slate-900 text-left font-black tracking-wide text-xs truncate"
                     >
                       {r.equipment}
                     </td>
 
-                    {/* Month Column (Increased Width) */}
+                    {/* Month Column (Expanded) */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.month }}
-                      className="p-2 border-r-2 border-slate-900 min-w-[190px] w-[190px] font-black text-slate-900"
+                      className="p-2 border-r-2 border-slate-900 font-black text-slate-900 truncate"
                     >
                       {selectedMonth}
                     </td>
@@ -547,7 +560,7 @@ export default function WiderPage() {
                     {/* Electricity Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.electricity }}
-                      className="p-1.5 border-r-2 border-slate-900 min-w-[130px]"
+                      className="p-1.5 border-r-2 border-slate-900"
                     >
                       <input 
                         type="number"
@@ -558,17 +571,17 @@ export default function WiderPage() {
                       />
                     </td>
 
-                    {/* LNG Column (Reduced Width) */}
+                    {/* LNG Column (Reduced to 70px) */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.lng }}
-                      className="p-1.5 border-r-2 border-slate-900 w-[70px] min-w-[70px]"
+                      className="p-1 border-r-2 border-slate-900"
                     >
                       <input 
                         type="number"
                         value={r.lng}
                         onChange={(e) => handleCellChange(idx, 'lng', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-white/90 border border-orange-800/40 rounded-lg py-1 font-black text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-orange-600"
+                        className="w-full text-center bg-white/90 border border-orange-800/40 rounded-lg py-1 font-black text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-orange-600 text-xs px-0.5"
                       />
                     </td>
 
@@ -589,7 +602,7 @@ export default function WiderPage() {
                     {/* Total Consumption Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.total }}
-                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950 text-xs"
+                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950 text-xs truncate"
                     >
                       {r.totalConsumption !== '' && r.totalConsumption != null ? Number(r.totalConsumption).toLocaleString() : '—'}
                     </td>
@@ -611,7 +624,7 @@ export default function WiderPage() {
                     {/* EnPI Unit Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.unit }}
-                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950"
+                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950 truncate"
                     >
                       {r.enpiUnit}
                     </td>
@@ -619,7 +632,7 @@ export default function WiderPage() {
                     {/* EnPI Value Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.enpiVal }}
-                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950 text-xs"
+                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950 text-xs truncate"
                     >
                       {r.enpiValue !== '' && r.enpiValue != null ? r.enpiValue : '—'}
                     </td>
@@ -627,7 +640,7 @@ export default function WiderPage() {
                     {/* % WRT to Total KWH Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.wrt }}
-                      className="p-2 font-black text-slate-950 text-xs"
+                      className="p-2 font-black text-slate-950 text-xs truncate"
                     >
                       {r.wrtKwh !== '' && r.wrtKwh != null ? (typeof r.wrtKwh === 'number' ? r.wrtKwh.toFixed(4) : r.wrtKwh) : '—'}
                     </td>
@@ -638,18 +651,18 @@ export default function WiderPage() {
               {/* TOTAL FACILITY SUMMARY ROW */}
               <tr className="font-black text-xs border-t-4 border-slate-900 text-slate-950">
                 <td style={{ backgroundColor: COL_COLORS.index }} className="p-3 border-r-2 border-slate-900 text-center font-black">∑</td>
-                <td style={{ backgroundColor: '#0284c7' }} className="p-3 border-r-2 border-slate-900 text-left font-black tracking-wider uppercase text-white shadow-inner">
+                <td style={{ backgroundColor: '#0284c7' }} className="p-3 border-r-2 border-slate-900 text-left font-black tracking-wider uppercase text-white truncate">
                   Total Wider Facility
                 </td>
-                <td style={{ backgroundColor: COL_COLORS.month }} className="p-3 border-r-2 border-slate-900 min-w-[190px] w-[190px] font-black">{selectedMonth}</td>
-                <td style={{ backgroundColor: COL_COLORS.electricity }} className="p-3 border-r-2 border-slate-900">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.lng }} className="p-3 border-r-2 border-slate-900 w-[70px] min-w-[70px]">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.hsd }} className="p-3 border-r-2 border-slate-900">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.total }} className="p-3 border-r-2 border-slate-900 text-sm">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.production }} className="p-3 border-r-2 border-slate-900">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.month }} className="p-3 border-r-2 border-slate-900 font-black truncate">{selectedMonth}</td>
+                <td style={{ backgroundColor: COL_COLORS.electricity }} className="p-3 border-r-2 border-slate-900 truncate">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.lng }} className="p-3 border-r-2 border-slate-900 truncate">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.hsd }} className="p-3 border-r-2 border-slate-900 truncate">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.total }} className="p-3 border-r-2 border-slate-900 text-sm truncate">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.production }} className="p-3 border-r-2 border-slate-900 truncate">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
                 <td style={{ backgroundColor: COL_COLORS.unit }} className="p-3 border-r-2 border-slate-900"></td>
-                <td style={{ backgroundColor: COL_COLORS.enpiVal }} className="p-3 border-r-2 border-slate-900 text-sm">{totalEnpiVal || '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.wrt }} className="p-3 font-black">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.enpiVal }} className="p-3 border-r-2 border-slate-900 text-sm truncate">{totalEnpiVal || '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.wrt }} className="p-3 font-black truncate">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
               </tr>
             </tbody>
           </table>
@@ -670,7 +683,7 @@ export default function WiderPage() {
           {/* TOTAL CONSUMPTION BREAKDOWN */}
           <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-xl flex flex-col items-center backdrop-blur-sm">
             <h3 className="text-xs font-black text-slate-200 uppercase tracking-wide mb-3 flex items-center gap-1.5 self-start">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
               Total Consumption Breakdown
             </h3>
             <div style={{ width: '100%', height: 260 }}>
@@ -704,7 +717,7 @@ export default function WiderPage() {
           {/* PRODUCTION BREAKDOWN */}
           <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-xl flex flex-col items-center backdrop-blur-sm">
             <h3 className="text-xs font-black text-slate-200 uppercase tracking-wide mb-3 flex items-center gap-1.5 self-start">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
               Production Breakdown (MT)
             </h3>
             <div style={{ width: '100%', height: 260 }}>
@@ -738,7 +751,7 @@ export default function WiderPage() {
           {/* ENPI VALUE BREAKDOWN */}
           <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 shadow-xl flex flex-col items-center backdrop-blur-sm">
             <h3 className="text-xs font-black text-slate-200 uppercase tracking-wide mb-3 flex items-center gap-1.5 self-start">
-              <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-sm shadow-purple-500/50"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
               EnPI Value Breakdown
             </h3>
             <div style={{ width: '100%', height: 260 }}>
