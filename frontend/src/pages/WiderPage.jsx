@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import {
   UploadCloud, Download, Save, TrendingUp,
-  FileSpreadsheet, X, Calendar, Lock, XCircle, Sparkles
+  FileSpreadsheet, X, Calendar, Lock, XCircle, Sparkles, Activity
 } from 'lucide-react';
 
 // Equipment Definitions with Badges
@@ -53,16 +53,16 @@ const getInitialBlankRows = () => {
   }));
 };
 
-// Vibrant & Glowing Palette for Big Pie Charts
+// Vibrant Colors for Big Pie Charts
 const PIE_COLORS = [
-  '#38bdf8', // Neon Sky Blue
+  '#38bdf8', // Cyan
   '#10b981', // Emerald Green
-  '#f59e0b', // Amber Orange
+  '#f59e0b', // Amber
   '#f43f5e', // Rose Red
-  '#a855f7', // Vivid Purple
-  '#06b6d4', // Cyan
+  '#a855f7', // Purple
+  '#06b6d4', // Teal
   '#ec4899', // Pink
-  '#84cc16'  // Lime Green
+  '#84cc16'  // Lime
 ];
 
 const SAVE_AUTH_PASSWORD = "1234";
@@ -306,77 +306,92 @@ export default function WiderPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6 bg-slate-900 min-h-screen text-slate-100 font-sans relative">
+    <div className="flex flex-col gap-6 p-6 bg-slate-950 min-h-screen text-slate-100 font-sans relative">
 
-      {/* TOP TOOLBAR: All action items in ONE SINGLE ROW with distinct vibrant colors */}
-      <div className="no-print bg-slate-800/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-3 shadow-2xl overflow-x-auto">
-        <div className="flex flex-nowrap items-center gap-3.5 min-w-max">
+      {/* TOP TOOLBAR: STRICT SINGLE ROW FORCED (No wrapping, every block unique color) */}
+      <div 
+        className="no-print bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-3 shadow-2xl overflow-x-auto"
+        style={{ width: '100%' }}
+      >
+        <div 
+          style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', gap: '14px', minWidth: 'max-content' }}
+        >
           
-          {/* 1. SELECT MONTH (Vibrant Cyan-Blue Gradient Block) */}
-          <div className="flex items-center gap-2.5 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 p-2 px-3.5 rounded-xl border border-cyan-400/40 shadow-md flex-shrink-0">
+          {/* 1. SELECT MONTH BLOCK (Gradient Sky-Blue / Indigo) */}
+          <div 
+            style={{ flexShrink: 0 }}
+            className="flex items-center gap-2 bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 p-2 px-3.5 rounded-xl border border-sky-300/40 shadow-lg shadow-sky-950/40"
+          >
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase font-black text-cyan-100 tracking-wider">Select Month</span>
+              <span className="text-[10px] uppercase font-black text-amber-200 tracking-wider">Select Month</span>
               <div 
                 onClick={() => dateInputRef.current?.showPicker?.() || dateInputRef.current?.focus()}
-                className="flex items-center gap-2 bg-slate-950/60 border border-white/20 rounded-lg px-2.5 py-1 cursor-pointer hover:bg-slate-950/80 transition-all mt-0.5"
+                className="flex items-center gap-2 bg-slate-950/70 border border-white/30 rounded-lg px-2.5 py-1 cursor-pointer hover:bg-slate-950/90 transition-all mt-0.5"
               >
                 <input
                   ref={dateInputRef}
                   type="month"
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="bg-transparent text-xs font-black text-white focus:outline-none cursor-pointer"
+                  className="bg-transparent text-xs font-black text-cyan-300 focus:outline-none cursor-pointer"
                 />
-                <Calendar size={14} className="text-cyan-300 flex-shrink-0" />
+                <Calendar size={15} className="text-amber-300 flex-shrink-0" />
               </div>
             </div>
           </div>
 
-          {/* 2. UPLOAD EXCEL (Vibrant Emerald-Green Gradient Block) */}
+          {/* 2. UPLOAD EXCEL BLOCK (Gradient Neon Emerald-Green) */}
           <button 
+            style={{ flexShrink: 0 }}
             onClick={() => setShowUploader((o) => !o)}
-            className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-400 hover:to-teal-500 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-md shadow-emerald-950/40 border border-emerald-400/40 cursor-pointer whitespace-nowrap flex-shrink-0"
+            className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-green-600 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-lg shadow-emerald-950/40 border border-emerald-300/40 cursor-pointer whitespace-nowrap"
           >
-            <UploadCloud size={18} className="stroke-[2.5]" />
-            <span>Upload Excel</span>
+            <UploadCloud size={18} className="stroke-[2.5] text-emerald-100" />
+            <span className="tracking-wide">Upload Excel</span>
           </button>
 
-          {/* 3. SAMPLE EXCEL (Vibrant Amber-Orange Gradient Block) */}
+          {/* 3. SAMPLE EXCEL BLOCK (Gradient Vivid Amber-Orange) */}
           <button 
+            style={{ flexShrink: 0 }}
             onClick={handleDownloadSample}
-            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-md shadow-orange-950/40 border border-amber-400/40 cursor-pointer whitespace-nowrap flex-shrink-0"
+            className="flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 active:scale-95 text-white font-black text-xs px-4 py-3.5 rounded-xl transition-all shadow-lg shadow-orange-950/40 border border-amber-300/40 cursor-pointer whitespace-nowrap"
           >
-            <Download size={18} className="stroke-[2.5]" />
-            <span>Sample Excel</span>
+            <Download size={18} className="stroke-[2.5] text-amber-100" />
+            <span className="tracking-wide">Sample Excel</span>
           </button>
 
-          {/* 4. SAVE (Vibrant Violet-Purple Gradient Block) */}
+          {/* 4. SAVE BLOCK (Gradient Royal Purple-Violet) */}
           <button 
+            style={{ flexShrink: 0 }}
             onClick={() => {
               setPasswordError("");
               setEnteredPassword("");
               setShowPasswordModal(true);
             }}
             disabled={saving}
-            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-md shadow-purple-950/40 border border-purple-400/40 cursor-pointer whitespace-nowrap disabled:opacity-50 flex-shrink-0"
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-lg shadow-purple-950/40 border border-purple-300/40 cursor-pointer whitespace-nowrap disabled:opacity-50"
           >
-            <Save size={18} className="stroke-[2.5]" />
-            <span>{saving ? "Saving…" : "Save"}</span>
+            <Save size={18} className="stroke-[2.5] text-purple-100" />
+            <span className="tracking-wide">{saving ? "Saving…" : "Save Data"}</span>
           </button>
 
-          {/* 5. YOY ANALYTICS (Vibrant Rose-Pink Gradient Block) */}
+          {/* 5. YOY ANALYTICS BLOCK (Gradient Hot Pink-Rose) */}
           <button 
+            style={{ flexShrink: 0 }}
             onClick={() => navigate('/wider/yoy')}
-            className="flex items-center gap-2 bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600 hover:from-rose-400 hover:to-pink-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-md shadow-rose-950/40 border border-pink-400/40 cursor-pointer whitespace-nowrap flex-shrink-0"
+            className="flex items-center gap-2 bg-gradient-to-r from-rose-500 via-pink-600 to-red-500 hover:from-rose-400 hover:to-pink-500 active:scale-95 text-white font-black text-xs px-5 py-3.5 rounded-xl transition-all shadow-lg shadow-rose-950/40 border border-pink-300/40 cursor-pointer whitespace-nowrap"
           >
-            <TrendingUp size={18} className="stroke-[2.5]" />
-            <span>YoY Analytics</span>
+            <TrendingUp size={18} className="stroke-[2.5] text-pink-100" />
+            <span className="tracking-wide">YoY Analytics</span>
           </button>
 
-          {/* Live Status Badge */}
-          <div className="ml-auto flex items-center gap-2 px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-xs text-slate-300 font-bold flex-shrink-0">
-            <Sparkles size={15} className="text-amber-400 animate-spin" />
-            <span>Facility Hub</span>
+          {/* Live Status Indicator (Gold / Lime accent) */}
+          <div 
+            style={{ flexShrink: 0 }}
+            className="flex items-center gap-2 px-3 py-2 bg-slate-900 border border-amber-500/40 rounded-xl text-xs font-black shadow-inner"
+          >
+            <Activity size={16} className="text-emerald-400 animate-pulse" />
+            <span className="text-amber-300 uppercase tracking-wider">Facility Active</span>
           </div>
 
         </div>
@@ -385,16 +400,16 @@ export default function WiderPage() {
       {/* PASSWORD CONFIRMATION MODAL */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+          <div className="bg-slate-900 border-2 border-indigo-500/50 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
             <div className="flex items-center gap-3 border-b border-slate-800 pb-3 mb-4">
               <div className="p-2.5 bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-xl">
                 <Lock size={22} />
               </div>
               <div>
-                <h3 className="text-sm font-black text-white uppercase tracking-wide">
+                <h3 className="text-sm font-black text-cyan-400 uppercase tracking-wide">
                   Authorization Required
                 </h3>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-amber-300 font-bold">
                   Data save karne ke liye password (1234) enter karein.
                 </p>
               </div>
@@ -402,7 +417,7 @@ export default function WiderPage() {
 
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1">
+                <label className="block text-xs font-bold text-teal-300 mb-1">
                   Enter Password
                 </label>
                 <input
@@ -427,7 +442,7 @@ export default function WiderPage() {
                 <button
                   type="button"
                   onClick={() => setShowPasswordModal(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:bg-slate-800 transition-all cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-rose-400 hover:bg-slate-800 transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -445,14 +460,14 @@ export default function WiderPage() {
 
       {/* DYNAMIC UPLOAD MODAL */}
       {showUploader && (
-        <div className="p-4 border-2 border-dashed border-emerald-500/50 rounded-2xl bg-emerald-950/20 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg backdrop-blur-md">
+        <div className="p-4 border-2 border-dashed border-emerald-400 rounded-2xl bg-emerald-950/30 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg backdrop-blur-md">
           <div className="flex items-center gap-3.5">
-            <div className="p-3 bg-emerald-500/20 text-emerald-300 rounded-xl border border-emerald-500/30">
+            <div className="p-3 bg-emerald-500/20 text-emerald-300 rounded-xl border border-emerald-400/40">
               <FileSpreadsheet size={26} />
             </div>
             <div>
-              <p className="text-xs font-black text-emerald-200 uppercase">Select Excel (.xlsx, .xls) File</p>
-              <p className="text-[11px] font-semibold text-slate-400">Values automatically map to the {selectedMonth} dataset.</p>
+              <p className="text-xs font-black text-emerald-300 uppercase">Select Excel (.xlsx, .xls) File</p>
+              <p className="text-[11px] font-bold text-teal-200">Values automatically map to the {selectedMonth} dataset.</p>
             </div>
           </div>
 
@@ -465,7 +480,7 @@ export default function WiderPage() {
             />
             <button 
               onClick={() => setShowUploader(false)}
-              className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-slate-800 transition-colors"
+              className="p-1.5 text-rose-400 hover:text-rose-300 rounded-lg hover:bg-slate-800 transition-colors"
             >
               <X size={18} />
             </button>
@@ -474,18 +489,17 @@ export default function WiderPage() {
       )}
 
       {/* SOLID COLORFUL TABLE */}
-      <div className="bg-slate-950 rounded-2xl border-2 border-slate-700 shadow-2xl overflow-hidden">
+      <div className="bg-slate-950 rounded-2xl border-2 border-slate-800 shadow-2xl overflow-hidden">
         {loading && (
-          <div className="p-2.5 bg-indigo-600 text-white text-center font-black text-xs border-b-2 border-slate-900 animate-pulse">
+          <div className="p-2.5 bg-indigo-600 text-yellow-300 text-center font-black text-xs border-b-2 border-slate-900 animate-pulse">
             Loading data for {selectedMonth}…
           </div>
         )}
 
         <div className="overflow-x-auto w-full">
-          {/* table-fixed aur min-w-[1300px] se exact width strict follow hogi */}
           <table className="w-full text-xs text-center border-collapse table-fixed min-w-[1300px]">
             
-            {/* STRICT COLUMN SIZING VIA COLGROUP */}
+            {/* STRICT COLUMN SIZING */}
             <colgroup>
               <col style={{ width: "45px" }} />  {/* # */}
               <col style={{ width: "175px" }} /> {/* Equipment */}
@@ -503,35 +517,35 @@ export default function WiderPage() {
             {/* HEADERS */}
             <thead>
               <tr className="text-slate-950 font-black text-xs uppercase tracking-wider border-b-2 border-slate-900">
-                <th style={{ backgroundColor: "#94a3b8" }} className="p-3 border-r-2 border-slate-900 text-center">#</th>
-                <th style={{ backgroundColor: "#38bdf8" }} className="p-3 border-r-2 border-slate-900 text-left">
+                <th style={{ backgroundColor: "#94a3b8" }} className="p-3 border-r-2 border-slate-900 text-center text-slate-950">#</th>
+                <th style={{ backgroundColor: "#38bdf8" }} className="p-3 border-r-2 border-slate-900 text-left text-slate-950">
                   Parameters / Equipment
                 </th>
-                <th style={{ backgroundColor: "#fde047" }} className="p-3 border-r-2 border-slate-900">
+                <th style={{ backgroundColor: "#fde047" }} className="p-3 border-r-2 border-slate-900 text-slate-950">
                   Month
                 </th>
-                <th style={{ backgroundColor: "#4ade80" }} className="p-3 border-r-2 border-slate-900">
+                <th style={{ backgroundColor: "#4ade80" }} className="p-3 border-r-2 border-slate-900 text-slate-950">
                   Electricity (kWh)
                 </th>
-                <th style={{ backgroundColor: "#fb923c" }} className="p-3 border-r-2 border-slate-900">
+                <th style={{ backgroundColor: "#fb923c" }} className="p-3 border-r-2 border-slate-900 text-slate-950">
                   LNG (kWh)
                 </th>
-                <th style={{ backgroundColor: "#c084fc" }} className="p-3 border-r-2 border-slate-900">
+                <th style={{ backgroundColor: "#c084fc" }} className="p-3 border-r-2 border-slate-900 text-slate-950">
                   HSD (kWh)
                 </th>
-                <th style={{ backgroundColor: "#2dd4bf" }} className="p-3 border-r-2 border-slate-900">
+                <th style={{ backgroundColor: "#2dd4bf" }} className="p-3 border-r-2 border-slate-900 text-slate-950">
                   Total Consumption
                 </th>
-                <th style={{ backgroundColor: "#60a5fa" }} className="p-3 border-r-2 border-slate-900">
+                <th style={{ backgroundColor: "#60a5fa" }} className="p-3 border-r-2 border-slate-900 text-slate-950">
                   Production (MT)
                 </th>
-                <th style={{ backgroundColor: "#a5b4fc" }} className="p-3 border-r-2 border-slate-900">
+                <th style={{ backgroundColor: "#a5b4fc" }} className="p-3 border-r-2 border-slate-900 text-slate-950">
                   EnPI Unit
                 </th>
-                <th style={{ backgroundColor: "#f472b6" }} className="p-3 border-r-2 border-slate-900">
+                <th style={{ backgroundColor: "#f472b6" }} className="p-3 border-r-2 border-slate-900 text-slate-950">
                   EnPI Value(s)
                 </th>
-                <th style={{ backgroundColor: "#facc15" }} className="p-3">
+                <th style={{ backgroundColor: "#facc15" }} className="p-3 text-slate-950">
                   % WRT to Total
                 </th>
               </tr>
@@ -550,7 +564,7 @@ export default function WiderPage() {
                     {/* Index */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.index }}
-                      className="p-2.5 border-r-2 border-slate-900 text-center font-black text-slate-900 truncate"
+                      className="p-2.5 border-r-2 border-slate-900 text-center font-black text-indigo-950 truncate"
                     >
                       {idx + 1}
                     </td>
@@ -566,7 +580,7 @@ export default function WiderPage() {
                     {/* Month Column (Expanded) */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.month }}
-                      className="p-2 border-r-2 border-slate-900 font-black text-slate-900 truncate"
+                      className="p-2 border-r-2 border-slate-900 font-black text-amber-950 truncate"
                     >
                       {selectedMonth}
                     </td>
@@ -581,7 +595,7 @@ export default function WiderPage() {
                         value={r.electricity}
                         onChange={(e) => handleCellChange(idx, 'electricity', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-white/90 border border-emerald-800/40 rounded-lg py-1 font-black text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-600"
+                        className="w-full text-center bg-white/95 border border-emerald-800/40 rounded-lg py-1 font-black text-emerald-950 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-600"
                       />
                     </td>
 
@@ -595,7 +609,7 @@ export default function WiderPage() {
                         value={r.lng}
                         onChange={(e) => handleCellChange(idx, 'lng', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-white/90 border border-orange-800/40 rounded-lg py-1 font-black text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-orange-600 text-xs px-0.5"
+                        className="w-full text-center bg-white/95 border border-orange-800/40 rounded-lg py-1 font-black text-orange-950 outline-none focus:bg-white focus:ring-2 focus:ring-orange-600 text-xs px-0.5"
                       />
                     </td>
 
@@ -609,14 +623,14 @@ export default function WiderPage() {
                         value={r.hsd}
                         onChange={(e) => handleCellChange(idx, 'hsd', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-white/90 border border-purple-800/40 rounded-lg py-1 font-black text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-purple-600"
+                        className="w-full text-center bg-white/95 border border-purple-800/40 rounded-lg py-1 font-black text-purple-950 outline-none focus:bg-white focus:ring-2 focus:ring-purple-600"
                       />
                     </td>
 
                     {/* Total Consumption Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.total }}
-                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950 text-xs truncate"
+                      className="p-2 border-r-2 border-slate-900 font-black text-emerald-950 text-xs truncate"
                     >
                       {r.totalConsumption !== '' && r.totalConsumption != null ? Number(r.totalConsumption).toLocaleString() : '—'}
                     </td>
@@ -631,14 +645,14 @@ export default function WiderPage() {
                         value={r.production}
                         onChange={(e) => handleCellChange(idx, 'production', e.target.value)}
                         placeholder="—"
-                        className="w-full text-center bg-white/90 border border-sky-800/40 rounded-lg py-1 font-black text-slate-950 outline-none focus:bg-white focus:ring-2 focus:ring-sky-600"
+                        className="w-full text-center bg-white/95 border border-sky-800/40 rounded-lg py-1 font-black text-sky-950 outline-none focus:bg-white focus:ring-2 focus:ring-sky-600"
                       />
                     </td>
 
                     {/* EnPI Unit Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.unit }}
-                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950 truncate"
+                      className="p-2 border-r-2 border-slate-900 font-black text-indigo-950 truncate"
                     >
                       {r.enpiUnit}
                     </td>
@@ -646,7 +660,7 @@ export default function WiderPage() {
                     {/* EnPI Value Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.enpiVal }}
-                      className="p-2 border-r-2 border-slate-900 font-black text-slate-950 text-xs truncate"
+                      className="p-2 border-r-2 border-slate-900 font-black text-pink-950 text-xs truncate"
                     >
                       {r.enpiValue !== '' && r.enpiValue != null ? r.enpiValue : '—'}
                     </td>
@@ -654,7 +668,7 @@ export default function WiderPage() {
                     {/* % WRT to Total KWH Column */}
                     <td 
                       style={{ backgroundColor: COL_COLORS.wrt }}
-                      className="p-2 font-black text-slate-950 text-xs truncate"
+                      className="p-2 font-black text-amber-950 text-xs truncate"
                     >
                       {r.wrtKwh !== '' && r.wrtKwh != null ? (typeof r.wrtKwh === 'number' ? r.wrtKwh.toFixed(4) : r.wrtKwh) : '—'}
                     </td>
@@ -664,43 +678,51 @@ export default function WiderPage() {
 
               {/* TOTAL FACILITY SUMMARY ROW */}
               <tr className="font-black text-xs border-t-4 border-slate-900 text-slate-950">
-                <td style={{ backgroundColor: COL_COLORS.index }} className="p-3 border-r-2 border-slate-900 text-center font-black">∑</td>
+                <td style={{ backgroundColor: COL_COLORS.index }} className="p-3 border-r-2 border-slate-900 text-center font-black text-blue-900">∑</td>
                 <td style={{ backgroundColor: '#0284c7' }} className="p-3 border-r-2 border-slate-900 text-left font-black tracking-wider uppercase text-white truncate">
                   Total Wider Facility
                 </td>
-                <td style={{ backgroundColor: COL_COLORS.month }} className="p-3 border-r-2 border-slate-900 font-black truncate">{selectedMonth}</td>
-                <td style={{ backgroundColor: COL_COLORS.electricity }} className="p-3 border-r-2 border-slate-900 truncate">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.lng }} className="p-3 border-r-2 border-slate-900 truncate">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.hsd }} className="p-3 border-r-2 border-slate-900 truncate">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.total }} className="p-3 border-r-2 border-slate-900 text-sm truncate">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.production }} className="p-3 border-r-2 border-slate-900 truncate">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.month }} className="p-3 border-r-2 border-slate-900 font-black text-amber-950 truncate">{selectedMonth}</td>
+                <td style={{ backgroundColor: COL_COLORS.electricity }} className="p-3 border-r-2 border-slate-900 font-black text-emerald-950 truncate">{totals.electricity > 0 ? totals.electricity.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.lng }} className="p-3 border-r-2 border-slate-900 font-black text-orange-950 truncate">{totals.lng > 0 ? totals.lng.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.hsd }} className="p-3 border-r-2 border-slate-900 font-black text-purple-950 truncate">{totals.hsd > 0 ? totals.hsd.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.total }} className="p-3 border-r-2 border-slate-900 text-sm font-black text-teal-950 truncate">{totals.totalConsumption > 0 ? totals.totalConsumption.toLocaleString() : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.production }} className="p-3 border-r-2 border-slate-900 font-black text-sky-950 truncate">{totals.production > 0 ? totals.production.toLocaleString() : '—'}</td>
                 <td style={{ backgroundColor: COL_COLORS.unit }} className="p-3 border-r-2 border-slate-900"></td>
-                <td style={{ backgroundColor: COL_COLORS.enpiVal }} className="p-3 border-r-2 border-slate-900 text-sm truncate">{totalEnpiVal || '—'}</td>
-                <td style={{ backgroundColor: COL_COLORS.wrt }} className="p-3 font-black truncate">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.enpiVal }} className="p-3 border-r-2 border-slate-900 text-sm font-black text-pink-950 truncate">{totalEnpiVal || '—'}</td>
+                <td style={{ backgroundColor: COL_COLORS.wrt }} className="p-3 font-black text-yellow-950 truncate">{totals.totalConsumption > 0 ? '100%' : '—'}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* CHARTS ANALYTICS GRID: BIG & EXTRA COLOURFUL */}
+      {/* CHARTS ANALYTICS GRID: BIG, VIBRANT & 100% COLORFUL TEXT */}
       <div>
-        <h2 className="text-lg font-black text-slate-100 mb-5 tracking-wide flex items-center gap-2.5">
-          <span className="text-purple-400 text-xl animate-pulse">▍</span> 
-          <span className="text-cyan-400">WIDER FACILITY</span> &amp; 
-          <span className="text-amber-400">CONSUMPTION</span> 
+        <h2 className="text-xl font-black mb-5 tracking-wide flex items-center gap-2.5">
+          <span className="text-fuchsia-400 text-2xl animate-pulse">▍</span> 
+          <span className="text-cyan-400">WIDER FACILITY</span>
+          <span className="text-amber-400">&amp;</span>
+          <span className="text-orange-400">CONSUMPTION</span>
           <span className="text-emerald-400">ANALYTICS</span>
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* 1. TOTAL CONSUMPTION BREAKDOWN (BIG & VIBRANT) */}
-          <div className="bg-gradient-to-b from-slate-800/90 to-slate-900/90 border-2 border-cyan-500/30 rounded-3xl p-5 shadow-2xl shadow-cyan-950/20 flex flex-col items-center backdrop-blur-md hover:border-cyan-400/50 transition-all">
-            <h3 className="text-sm font-black text-cyan-300 uppercase tracking-wide mb-2 flex items-center gap-2 self-start">
-              <span className="w-3 h-3 rounded-full bg-cyan-400 shadow-md shadow-cyan-400/60 animate-ping"></span>
-              Total Consumption Breakdown
-            </h3>
-            {/* Height badha kar 360px kiya gaya */}
+          {/* 1. TOTAL CONSUMPTION BREAKDOWN */}
+          <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-cyan-950/40 border-2 border-cyan-500/50 rounded-3xl p-5 shadow-2xl shadow-cyan-950/50 flex flex-col items-center backdrop-blur-md">
+            {/* COLORFUL TITLE */}
+            <div className="w-full flex items-center justify-between border-b border-cyan-500/30 pb-3 mb-2">
+              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2 text-cyan-300">
+                <span className="w-3 h-3 rounded-full bg-cyan-400 shadow-md shadow-cyan-400 animate-ping"></span>
+                Total Consumption Breakdown
+              </h3>
+              <span className="text-[11px] font-black text-cyan-400 bg-cyan-950/80 border border-cyan-500/40 px-2 py-0.5 rounded-full">
+                kWh
+              </span>
+            </div>
+
+            {/* BIG PIE CHART */}
             <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -713,47 +735,55 @@ export default function WiderPage() {
                     outerRadius={115}
                     innerRadius={60}
                     paddingAngle={4}
-                    labelLine={true}
+                    labelLine={{ stroke: '#38bdf8', strokeWidth: 1.5 }}
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {getCategorizedData('totalConsumption').map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`} 
                         fill={PIE_COLORS[index % PIE_COLORS.length]} 
-                        stroke="#0f172a" 
-                        strokeWidth={2}
+                        stroke="#090d16" 
+                        strokeWidth={2.5}
                       />
                     ))}
                   </Pie>
                   <Tooltip 
                     contentStyle={{ 
-                      backgroundColor: '#0f172a', 
+                      backgroundColor: '#021024', 
                       borderColor: '#38bdf8', 
                       borderRadius: '14px', 
-                      color: '#fff', 
+                      color: '#38bdf8', 
                       fontSize: '12px', 
-                      fontWeight: 'bold',
-                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                      fontWeight: '900',
+                      boxShadow: '0 10px 25px rgba(0, 200, 255, 0.2)'
                     }}
-                    formatter={(value) => [Number(value).toLocaleString() + ' kWh', 'Consumption']} 
+                    formatter={(value) => [`${Number(value).toLocaleString()} kWh`, 'Total Consumption']} 
                   />
                   <Legend 
                     verticalAlign="bottom" 
                     iconType="circle"
-                    wrapperStyle={{ fontSize: '12px', fontWeight: 'bold', paddingTop: '10px', color: '#e2e8f0' }} 
+                    formatter={(val) => <span style={{ color: '#67e8f9', fontWeight: 'bold', fontSize: '11px' }}>{val}</span>}
+                    wrapperStyle={{ paddingTop: '10px' }} 
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* 2. PRODUCTION BREAKDOWN (BIG & VIBRANT) */}
-          <div className="bg-gradient-to-b from-slate-800/90 to-slate-900/90 border-2 border-emerald-500/30 rounded-3xl p-5 shadow-2xl shadow-emerald-950/20 flex flex-col items-center backdrop-blur-md hover:border-emerald-400/50 transition-all">
-            <h3 className="text-sm font-black text-emerald-300 uppercase tracking-wide mb-2 flex items-center gap-2 self-start">
-              <span className="w-3 h-3 rounded-full bg-emerald-400 shadow-md shadow-emerald-400/60 animate-ping"></span>
-              Production Breakdown (MT)
-            </h3>
-            {/* Height badha kar 360px kiya gaya */}
+          {/* 2. PRODUCTION BREAKDOWN (MT) */}
+          <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-emerald-950/40 border-2 border-emerald-500/50 rounded-3xl p-5 shadow-2xl shadow-emerald-950/50 flex flex-col items-center backdrop-blur-md">
+            {/* COLORFUL TITLE */}
+            <div className="w-full flex items-center justify-between border-b border-emerald-500/30 pb-3 mb-2">
+              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2 text-emerald-300">
+                <span className="w-3 h-3 rounded-full bg-emerald-400 shadow-md shadow-emerald-400 animate-ping"></span>
+                Production Breakdown
+              </h3>
+              <span className="text-[11px] font-black text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-2 py-0.5 rounded-full">
+                MT
+              </span>
+            </div>
+
+            {/* BIG PIE CHART */}
             <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -766,47 +796,55 @@ export default function WiderPage() {
                     outerRadius={115}
                     innerRadius={60}
                     paddingAngle={4}
-                    labelLine={true}
+                    labelLine={{ stroke: '#34d399', strokeWidth: 1.5 }}
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {getCategorizedData('production').map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`} 
                         fill={PIE_COLORS[(index + 2) % PIE_COLORS.length]} 
-                        stroke="#0f172a" 
-                        strokeWidth={2}
+                        stroke="#090d16" 
+                        strokeWidth={2.5}
                       />
                     ))}
                   </Pie>
                   <Tooltip 
                     contentStyle={{ 
-                      backgroundColor: '#0f172a', 
+                      backgroundColor: '#032014', 
                       borderColor: '#10b981', 
                       borderRadius: '14px', 
-                      color: '#fff', 
+                      color: '#6ee7b7', 
                       fontSize: '12px', 
-                      fontWeight: 'bold',
-                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                      fontWeight: '900',
+                      boxShadow: '0 10px 25px rgba(16, 185, 129, 0.2)'
                     }}
-                    formatter={(value) => [Number(value).toLocaleString() + ' MT', 'Production']} 
+                    formatter={(value) => [`${Number(value).toLocaleString()} MT`, 'Production Output']} 
                   />
                   <Legend 
                     verticalAlign="bottom" 
                     iconType="circle"
-                    wrapperStyle={{ fontSize: '12px', fontWeight: 'bold', paddingTop: '10px', color: '#e2e8f0' }} 
+                    formatter={(val) => <span style={{ color: '#86efac', fontWeight: 'bold', fontSize: '11px' }}>{val}</span>}
+                    wrapperStyle={{ paddingTop: '10px' }} 
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* 3. ENPI VALUE BREAKDOWN (BIG & VIBRANT) */}
-          <div className="bg-gradient-to-b from-slate-800/90 to-slate-900/90 border-2 border-purple-500/30 rounded-3xl p-5 shadow-2xl shadow-purple-950/20 flex flex-col items-center backdrop-blur-md hover:border-purple-400/50 transition-all">
-            <h3 className="text-sm font-black text-purple-300 uppercase tracking-wide mb-2 flex items-center gap-2 self-start">
-              <span className="w-3 h-3 rounded-full bg-purple-400 shadow-md shadow-purple-400/60 animate-ping"></span>
-              EnPI Value Breakdown
-            </h3>
-            {/* Height badha kar 360px kiya gaya */}
+          {/* 3. ENPI VALUE BREAKDOWN */}
+          <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-purple-950/40 border-2 border-purple-500/50 rounded-3xl p-5 shadow-2xl shadow-purple-950/50 flex flex-col items-center backdrop-blur-md">
+            {/* COLORFUL TITLE */}
+            <div className="w-full flex items-center justify-between border-b border-purple-500/30 pb-3 mb-2">
+              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2 text-purple-300">
+                <span className="w-3 h-3 rounded-full bg-purple-400 shadow-md shadow-purple-400 animate-ping"></span>
+                EnPI Value Breakdown
+              </h3>
+              <span className="text-[11px] font-black text-pink-300 bg-purple-950/80 border border-purple-500/40 px-2 py-0.5 rounded-full">
+                Index
+              </span>
+            </div>
+
+            {/* BIG PIE CHART */}
             <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -819,34 +857,35 @@ export default function WiderPage() {
                     outerRadius={115}
                     innerRadius={60}
                     paddingAngle={4}
-                    labelLine={true}
+                    labelLine={{ stroke: '#c084fc', strokeWidth: 1.5 }}
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {getCategorizedData('enpiValue').map((entry, index) => (
                       <Cell 
                         key={`cell-${index}`} 
                         fill={PIE_COLORS[(index + 4) % PIE_COLORS.length]} 
-                        stroke="#0f172a" 
-                        strokeWidth={2}
+                        stroke="#090d16" 
+                        strokeWidth={2.5}
                       />
                     ))}
                   </Pie>
                   <Tooltip 
                     contentStyle={{ 
-                      backgroundColor: '#0f172a', 
-                      borderColor: '#a855f7', 
+                      backgroundColor: '#1b0629', 
+                      borderColor: '#c084fc', 
                       borderRadius: '14px', 
-                      color: '#fff', 
+                      color: '#f0abfc', 
                       fontSize: '12px', 
-                      fontWeight: 'bold',
-                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)'
+                      fontWeight: '900',
+                      boxShadow: '0 10px 25px rgba(192, 132, 252, 0.2)'
                     }}
-                    formatter={(value) => [Number(value).toLocaleString(), 'EnPI Value']} 
+                    formatter={(value) => [Number(value).toLocaleString(), 'EnPI Metric']} 
                   />
                   <Legend 
                     verticalAlign="bottom" 
                     iconType="circle"
-                    wrapperStyle={{ fontSize: '12px', fontWeight: 'bold', paddingTop: '10px', color: '#e2e8f0' }} 
+                    formatter={(val) => <span style={{ color: '#d8b4fe', fontWeight: 'bold', fontSize: '11px' }}>{val}</span>}
+                    wrapperStyle={{ paddingTop: '10px' }} 
                   />
                 </PieChart>
               </ResponsiveContainer>
