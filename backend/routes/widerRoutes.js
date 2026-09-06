@@ -1,3 +1,4 @@
+const { createFacilityYoYHandler } = require('../utils/facilityYoY');
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
@@ -57,60 +58,7 @@ router.post('/save', async (req, res) => {
   }
 });
 
-// GET Wider YoY Comparison Data (Apr to Mar for 4 Main Equipments)
-router.get('/yoy', async (req, res) => {
-  try {
-    const { year = '2025-26' } = req.query;
-    const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
-    const equipments = ['6HI', 'CGL', 'CCL', 'COMPRESSOR'];
-
-    const yoyResult = equipments.map(eq => {
-      const monthlyBreakdown = months.map(m => {
-        let baseElect = 300000;
-        let baseProd = 15000;
-
-        if (eq === '6HI') { baseElect = 1294234; baseProd = 17377; }
-        else if (eq === 'CGL') { baseElect = 1551650; baseProd = 17846; }
-        else if (eq === 'CCL') { baseElect = 203984; baseProd = 13247; }
-        else if (eq === 'COMPRESSOR') { baseElect = 361830; baseProd = 2098611; }
-
-        const randomPrevFact = 0.85 + Math.random() * 0.2;
-        const randomCurrFact = 0.90 + Math.random() * 0.2;
-
-        const prevElect = Math.round(baseElect * randomPrevFact);
-        const currElect = Math.round(baseElect * randomCurrFact);
-
-        const prevProd = Math.round(baseProd * randomPrevFact);
-        const currProd = Math.round(baseProd * randomCurrFact);
-
-        const prevEnpi = prevProd > 0 ? Number((prevElect / prevProd).toFixed(2)) : 0;
-        const currEnpi = currProd > 0 ? Number((currElect / currProd).toFixed(2)) : 0;
-
-        return {
-          month: m,
-          electricity: { prevYear: prevElect, currYear: currElect },
-          production: { prevYear: prevProd, currYear: currProd },
-          enpi: { prevYear: prevEnpi, currYear: currEnpi }
-        };
-      });
-
-      return {
-        equipment: eq,
-        monthlyData: monthlyBreakdown
-      };
-    });
-
-    const [startYear, endYear] = year.split('-').map(Number);
-    const prevFinancialYear = `${startYear - 1}-${(endYear - 1).toString().padStart(2, '0')}`;
-
-    res.json({
-      financialYear: year,
-      prevFinancialYear,
-      data: yoyResult
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// GET saved monthly YoY comparison (April to March)
+router.get('/yoy', createFacilityYoYHandler(WiderData, ['6HI', 'CGL', 'CCL', 'COMPRESSOR']));
 
 module.exports = router;

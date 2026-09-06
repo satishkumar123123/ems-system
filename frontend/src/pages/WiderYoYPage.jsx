@@ -7,10 +7,10 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cart
 
 export default function WiderYoYPage() {
   const navigate = useNavigate();
-  const [selectedYear, setSelectedYear] = useState('2025-26');
-  const [selectedMetric, setSelectedMetric] = useState('electricity'); // 'electricity' | 'production' | 'enpi'
+  const selectedYear = '2026-27';
+  const [selectedMetric, setSelectedMetric] = useState('electricity'); // 'electricity' | 'production' | 'totalConsumption'
   const [yoyData, setYoyData] = useState([]);
-  const [prevYearLabel, setPrevYearLabel] = useState('2024-25');
+  const prevYearLabel = '2025-26';
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [reloadAttempt, setReloadAttempt] = useState(0);
@@ -26,9 +26,9 @@ export default function WiderYoYPage() {
       .then(res => res.json())
       .then(data => {
         if (!active) return;
-        if (!data || !Array.isArray(data.data)) throw new Error('The comparison service returned invalid data. Please retry.');
+        if (!data || data.source !== 'monthly-records' || data.financialYear !== selectedYear || data.prevFinancialYear !== prevYearLabel || !Array.isArray(data.data)) throw new Error('Saved monthly comparison is not available yet. Please retry.');
         setYoyData(data.data);
-        setPrevYearLabel(data.prevFinancialYear);
+
       })
       .catch(error => {
         if (!active || error.name === 'AbortError') return;
@@ -48,9 +48,9 @@ export default function WiderYoYPage() {
       case 'electricity':
         return { label: 'Electricity Consumption (kWh)', colorPrev: '#94a3b8', colorCurr: '#4f46e5', unit: 'kWh' };
       case 'production':
-        return { label: 'Production (MT)', colorPrev: '#cbd5e1', colorCurr: '#10b981', unit: 'MT' };
-      case 'enpi':
-        return { label: 'EnPI Value (KwH/MT)', colorPrev: '#fcd34d', colorCurr: '#f59e0b', unit: 'KwH/MT' };
+        return { label: 'Production / Output', colorPrev: '#cbd5e1', colorCurr: '#10b981', unit: '' };
+      case 'totalConsumption':
+        return { label: 'Total Consumption (kWh)', colorPrev: '#fcd34d', colorCurr: '#f59e0b', unit: 'kWh' };
       default:
         return { label: 'Electricity Consumption (kWh)', colorPrev: '#94a3b8', colorCurr: '#4f46e5', unit: 'kWh' };
     }
@@ -71,7 +71,7 @@ export default function WiderYoYPage() {
           </button>
           <div>
             <h1 className="text-xl font-bold text-slate-800">Wider Facility - YoY Analytics</h1>
-            <p className="text-xs text-slate-500">April to March Financial Year Monthly Comparison</p>
+            <p className="text-xs text-slate-500">April to March · Saved monthly data · Missing data = 0</p>
           </div>
         </div>
 
@@ -79,14 +79,7 @@ export default function WiderYoYPage() {
         <div className="flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-xl border border-slate-200">
           <Calendar size={18} className="text-slate-500" />
           <span className="text-xs font-bold text-slate-600">Financial Year:</span>
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-            className="bg-white border border-slate-300 rounded-lg px-3 py-1 font-semibold text-xs outline-none cursor-pointer"
-          >
-            <option value="2025-26">FY 2025-26 vs FY 2024-25</option>
-            <option value="2024-25">FY 2024-25 vs FY 2023-24</option>
-          </select>
+          <span className="bg-white border border-slate-300 rounded-lg px-3 py-1 font-semibold text-xs">FY 2025-26 vs FY 2026-27</span>
         </div>
       </div>
 
@@ -113,18 +106,18 @@ export default function WiderYoYPage() {
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-300'
             }`}
           >
-            <Factory size={16} /> Production (MT)
+            <Factory size={16} /> Production / Output
           </button>
 
           <button
-            onClick={() => setSelectedMetric('enpi')}
+            onClick={() => setSelectedMetric('totalConsumption')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wide transition cursor-pointer ${
-              selectedMetric === 'enpi'
+              selectedMetric === 'totalConsumption'
                 ? 'bg-amber-600 text-white shadow-amber-200 shadow-md'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-300'
             }`}
           >
-            <BarChart3 size={16} /> EnPI Value
+            <BarChart3 size={16} /> Total Consumption (kWh)
           </button>
         </div>
       </div>
@@ -144,7 +137,7 @@ export default function WiderYoYPage() {
 
             return (
               <div
-                key={idx}
+                key={item.equipment}
                 className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition"
               >
                 <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
@@ -165,10 +158,10 @@ export default function WiderYoYPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} />
+                      <XAxis interval={0} dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} />
                       <YAxis tick={{ fontSize: 11, fill: '#64748b' }} />
                       <Tooltip
-                        formatter={(val) => [`${Number(val).toLocaleString()} ${metricConfig.unit}`, '']}
+                        formatter={(val, year) => [`${Number(val).toLocaleString()}${metricConfig.unit ? ` ${metricConfig.unit}` : ''}`, year]}
                         contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0' }}
                       />
                       <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />

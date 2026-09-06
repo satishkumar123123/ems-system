@@ -1,3 +1,4 @@
+const { createFacilityYoYHandler } = require('../utils/facilityYoY');
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
@@ -58,57 +59,7 @@ router.post('/save', async (req, res) => {
   }
 });
 
-// GET Utility YoY Comparison Data (Apr to Mar for 4 Main Equipments)
-router.get('/yoy', async (req, res) => {
-  try {
-    const { year = '2025-26' } = req.query;
-    const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
-    const equipments = ['ARP(LNG)', 'Boiler(LPG)', 'Pump house', 'MEE PLANT(LPG)'];
-
-    const yoyResult = equipments.map(eq => {
-      const monthlyBreakdown = months.map(m => {
-        let baseElect = 50000;
-        let baseProd = 1500;
-
-        if (eq === 'ARP(LNG)') { baseElect = 57640; baseProd = 1196; }
-        else if (eq === 'Boiler(LPG)') { baseElect = 11696; baseProd = 1808; }
-        else if (eq === 'Pump house') { baseElect = 260470; baseProd = 36379; }
-        else if (eq === 'MEE PLANT(LPG)') { baseElect = 46840; baseProd = 1678; }
-
-        const randomPrevFact = 0.85 + Math.random() * 0.2;
-        const randomCurrFact = 0.90 + Math.random() * 0.2;
-
-        const prevElect = Math.round(baseElect * randomPrevFact);
-        const currElect = Math.round(baseElect * randomCurrFact);
-
-        const prevProd = Math.round(baseProd * randomPrevFact);
-        const currProd = Math.round(baseProd * randomCurrFact);
-
-        const prevEnpi = prevProd > 0 ? Number((prevElect / prevProd).toFixed(2)) : 0;
-        const currEnpi = currProd > 0 ? Number((currElect / currProd).toFixed(2)) : 0;
-
-        return {
-          month: m,
-          electricity: { prevYear: prevElect, currYear: currElect },
-          production: { prevYear: prevProd, currYear: currProd },
-          enpi: { prevYear: prevEnpi, currYear: currEnpi }
-        };
-      });
-
-      return {
-        equipment: eq,
-        monthlyData: monthlyBreakdown
-      };
-    });
-
-    res.json({
-      financialYear: year,
-      prevFinancialYear: `${parseInt(year.split('-')[0]) - 1}-${parseInt(year.split('-')[1]) - 1}`,
-      data: yoyResult
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// GET saved monthly YoY comparison (April to March)
+router.get('/yoy', createFacilityYoYHandler(UtilityData, ['ARP(LNG)', 'Boiler(LPG)', 'Pump house', 'MEE PLANT(LPG)']));
 
 module.exports = router;
