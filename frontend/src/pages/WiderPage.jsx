@@ -1,3 +1,4 @@
+import ScheduleButton from '../components/ScheduleButton';
 import EquipmentBarCharts from '../components/EquipmentBarCharts';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
@@ -500,6 +501,7 @@ export default function WiderPage() {
           <TrendingUp size={16} strokeWidth={2.5} color="#ffffff" />
           <span>YoY Analytics</span>
         </button>
+        <ScheduleButton plant="wider" />
       </div>
 
       {/* PASSWORD CONFIRMATION MODAL */}

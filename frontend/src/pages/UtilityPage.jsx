@@ -1,3 +1,4 @@
+import ScheduleButton from '../components/ScheduleButton';
 import EquipmentBarCharts from '../components/EquipmentBarCharts';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
@@ -464,6 +465,7 @@ export default function UtilityPage() {
           <TrendingUp size={16} strokeWidth={2.5} color="#ffffff" />
           <span>YoY Analytics</span>
         </button>
+        <ScheduleButton plant="utility" />
       </div>
 
       {/* DYNAMIC UPLOAD MODAL */}

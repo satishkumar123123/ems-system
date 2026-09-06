@@ -1,3 +1,4 @@
+import SchedulePage from './pages/SchedulePage';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import WiderPage from './pages/WiderPage';
@@ -671,6 +672,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
+          <Route path="/:plant/schedule" element={<SchedulePage />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/wider" element={<WiderPage />} />
         <Route path="/wider/yoy" element={<WiderYoYPage />} />
