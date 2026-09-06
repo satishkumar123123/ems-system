@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -74,6 +75,9 @@ export default function WiderPage() {
   const [selectedMonth, setSelectedMonth] = useState('2026-04');
   const [rows, setRows] = useState(getInitialBlankRows());
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const [noMonthData, setNoMonthData] = useState(false);
+  const [reloadAttempt, setReloadAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
   const [showUploader, setShowUploader] = useState(false);
 
@@ -82,14 +86,22 @@ export default function WiderPage() {
   const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
-    fetchMonthData(selectedMonth);
-  }, [selectedMonth]);
-
-  const fetchMonthData = (month) => {
+    const controller = new AbortController();
+    let active = true;
     setLoading(true);
-    fetch(`http://localhost:5000/api/wider?month=${month}`)
-      .then(res => res.json())
+    setLoadError('');
+    setNoMonthData(false);
+    setRows(getInitialBlankRows());
+    fetch(`${API_BASE_URL}/api/wider?month=${selectedMonth}`, { signal: controller.signal })
+      .then(res => {
+        if (!res.ok) throw new Error(`Request failed (${res.status})`);
+        return res.json();
+      })
       .then(data => {
+        if (!active) return;
+        if (data !== null && (!data || !Array.isArray(data.rows))) {
+          throw new Error('Unexpected response from the server');
+        }
         if (data && data.rows && data.rows.length > 0) {
           const merged = PERMANENT_EQUIPMENTS.map(pe => {
             const found = data.rows.find(r => r.equipment?.trim().toUpperCase() === pe.equipment.trim().toUpperCase());
@@ -108,15 +120,23 @@ export default function WiderPage() {
           setRows(merged);
         } else {
           setRows(getInitialBlankRows());
+          setNoMonthData(true);
         }
-        setLoading(false);
       })
       .catch(err => {
+        if (!active || err.name === 'AbortError') return;
         console.error("Fetch error:", err);
-        setRows(getInitialBlankRows());
-        setLoading(false);
+        setLoadError(`Could not load Wider data for ${selectedMonth}. Please retry.`);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
-  };
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [selectedMonth, reloadAttempt]);
 
   const handleCellChange = (idx, field, value) => {
     setRows(prev => {
@@ -232,6 +252,7 @@ export default function WiderPage() {
           });
 
           setRows(mapped);
+          setNoMonthData(false);
           setShowUploader(false);
           alert('Excel Data Fetched Successfully! Click Save to store in Database.');
         } else {
@@ -268,9 +289,10 @@ export default function WiderPage() {
   };
 
   const executeSave = async () => {
+    if (loading || loadError) return;
     setSaving(true);
     try {
-      const res = await fetch('http://localhost:5000/api/wider/save', {
+      const res = await fetch(`${API_BASE_URL}/api/wider/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -284,6 +306,7 @@ export default function WiderPage() {
       });
       const resData = await res.json();
       if (resData.success) {
+        setNoMonthData(false);
         alert('Data successfully saved in MongoDB Database!');
       } else {
         alert('Save error: ' + (resData.error || 'Unknown error'));
@@ -443,7 +466,7 @@ export default function WiderPage() {
             setEnteredPassword("");
             setShowPasswordModal(true);
           }}
-          disabled={saving}
+          disabled={saving || loading || Boolean(loadError)}
           style={{ 
             display: 'flex', 
             flexShrink: 0, 
@@ -459,7 +482,7 @@ export default function WiderPage() {
             boxShadow: '0 4px 12px rgba(124,58,237,0.35)', 
             cursor: 'pointer', 
             whiteSpace: 'nowrap',
-            opacity: saving ? 0.5 : 1
+            opacity: saving || loading || loadError ? 0.5 : 1
           }}
         >
           <Save size={16} strokeWidth={2.5} color="#ffffff" />
@@ -583,6 +606,19 @@ export default function WiderPage() {
       )}
 
       {/* SOLID COLORFUL TABLE */}
+      {loadError && (
+        <div role="alert" style={{ padding: '14px', backgroundColor: '#450a0a', color: '#fecaca', border: '1px solid #ef4444', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+          <span>{loadError}</span>
+          <button type="button" onClick={() => setReloadAttempt(attempt => attempt + 1)} style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #fca5a5', backgroundColor: '#7f1d1d', color: '#ffffff', cursor: 'pointer' }}>
+            Retry
+          </button>
+        </div>
+      )}
+      {!loading && !loadError && noMonthData && (
+        <div role="status" style={{ padding: '14px', backgroundColor: '#172554', color: '#bfdbfe', border: '1px solid #3b82f6', borderRadius: '12px' }}>
+          No saved Wider data was found for {selectedMonth}.
+        </div>
+      )}
       <div style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
         {loading && (
           <div style={{ padding: '10px', backgroundColor: '#4f46e5', color: '#fef08a', textAlign: 'center', fontWeight: '900', fontSize: '12px' }}>

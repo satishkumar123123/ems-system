@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -38,7 +39,7 @@ export default function AbplPage() {
 
   const fetchAbplData = () => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/abpl?month=${selectedMonth}`)
+    fetch(`${API_BASE_URL}/api/abpl?month=${selectedMonth}`)
       .then((res) => res.json())
       .then((data) => {
         setAbplData(data);

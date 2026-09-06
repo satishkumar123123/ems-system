@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Factory, BatteryCharging, Sun } from 'lucide-react';
@@ -16,7 +17,7 @@ export default function SolarYoYPage() {
 
   const fetchYoYData = () => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/solar/yoy?year=${selectedYear}`)
+    fetch(`${API_BASE_URL}/api/solar/yoy?year=${selectedYear}`)
       .then(res => res.json())
       .then(resData => {
         if (resData && resData.monthlyData) {

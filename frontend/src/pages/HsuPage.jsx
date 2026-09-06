@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -95,7 +96,7 @@ export default function HsuPage() {
 
   const fetchMonthData = (month) => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/hsu?month=${month}`)
+    fetch(`${API_BASE_URL}/api/hsu?month=${month}`)
       .then(res => res.json())
       .then(data => {
         if (data && data.rows && data.rows.length > 0) {
@@ -285,7 +286,7 @@ export default function HsuPage() {
   const executeSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch('http://localhost:5000/api/hsu/save', {
+      const res = await fetch(`${API_BASE_URL}/api/hsu/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

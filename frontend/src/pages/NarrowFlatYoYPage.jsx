@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Zap, Factory, BarChart3, Calendar } from 'lucide-react';
@@ -17,7 +18,7 @@ export default function NarrowFlatYoYPage() {
 
   const fetchYoYData = () => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/narrow-flat/yoy?year=${selectedYear}`)
+    fetch(`${API_BASE_URL}/api/narrow-flat/yoy?year=${selectedYear}`)
       .then(res => res.json())
       .then(resData => {
         if (resData && resData.data) {

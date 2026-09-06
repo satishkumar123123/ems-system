@@ -1,5 +1,16 @@
 # React + Vite
 
+## EMS backend connection
+
+All frontend API requests use `src/config/api.js`. Production builds default to
+`https://ems-system-qpv1.onrender.com`; `npm run dev` defaults to
+`http://localhost:5000`.
+
+To override the backend, set `VITE_API_BASE_URL` to its origin (without `/api`).
+For local development, copy `.env.example` to `.env.local`. For Vercel, set the
+variable in the project's environment settings and redeploy, since Vite reads it
+at build time. This is a public API address, never a MongoDB connection string.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:

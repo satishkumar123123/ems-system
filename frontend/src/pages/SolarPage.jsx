@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, TrendingUp, Sun, BatteryCharging, Factory, Calendar } from 'lucide-react';
@@ -19,7 +20,7 @@ export default function SolarPage() {
 
   const fetchMonthData = (month) => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/solar?month=${month}`)
+    fetch(`${API_BASE_URL}/api/solar?month=${month}`)
       .then(res => res.json())
       .then(data => {
         if (data) {
@@ -41,7 +42,7 @@ export default function SolarPage() {
 
   const handleSave = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/solar/save', {
+      const res = await fetch(`${API_BASE_URL}/api/solar/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

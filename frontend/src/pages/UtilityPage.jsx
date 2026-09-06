@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -61,7 +62,7 @@ export default function UtilityPage() {
 
   const fetchMonthData = (month) => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/utility?month=${month}`)
+    fetch(`${API_BASE_URL}/api/utility?month=${month}`)
       .then(res => res.json())
       .then(data => {
         if (data && data.rows && data.rows.length > 0) {
@@ -254,7 +255,7 @@ export default function UtilityPage() {
   const handleSaveData = async () => {
     setSaving(true);
     try {
-      const res = await fetch('http://localhost:5000/api/utility/save', {
+      const res = await fetch(`${API_BASE_URL}/api/utility/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

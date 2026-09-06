@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -98,7 +99,7 @@ export default function NarrowFlatPage() {
 
   const fetchMonthData = (month) => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/narrow-flat?month=${month}`)
+    fetch(`${API_BASE_URL}/api/narrow-flat?month=${month}`)
       .then(res => res.json())
       .then(data => {
         if (data && data.rows && data.rows.length > 0) {
@@ -282,7 +283,7 @@ export default function NarrowFlatPage() {
   const executeSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch('http://localhost:5000/api/narrow-flat/save', {
+      const res = await fetch(`${API_BASE_URL}/api/narrow-flat/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
