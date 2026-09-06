@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  BarChart, Bar, Cell, CartesianGrid, LabelList,
+  BarChart, Bar, Cell, CartesianGrid,
   Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
 
@@ -22,31 +22,8 @@ const METRICS = [
 const formatValue = value => Number(value).toLocaleString('en-IN', { maximumFractionDigits: 3 });
 const formatAxis = value => Number(value).toLocaleString('en', { notation: 'compact', maximumFractionDigits: 1 });
 
-function EquipmentTick({ x, y, payload }) {
-  const name = String(payload.value);
-  const words = name.split(/\s+/);
-  const lines = [];
-  let line = '';
-  words.forEach(word => {
-    if (line && `${line} ${word}`.length > 23) {
-      lines.push(line);
-      line = word;
-    } else {
-      line = line ? `${line} ${word}` : word;
-    }
-  });
-  if (line) lines.push(line);
-  return (
-    <text x={x - 4} y={y} textAnchor="end" fill="#e2e8f0" fontSize={11} fontWeight={700}>
-      <title>{name}</title>
-      {lines.map((text, index) => (
-        <tspan key={index} x={x - 4} dy={index === 0 ? 4 - (lines.length - 1) * 7 : 14}>{text}</tspan>
-      ))}
-    </text>
-  );
-}
-
 export default function EquipmentBarCharts({ rows, selectedMonth, loading, error }) {
+  const [tooltipTrigger, setTooltipTrigger] = useState('hover');
   const charts = useMemo(() => {
     // Colour assignment happens before ranking so equipment keep their colour
     // across all three charts, even when their rankings differ.
@@ -69,7 +46,16 @@ export default function EquipmentBarCharts({ rows, selectedMonth, loading, error
   }, [rows]);
 
   return (
-    <div aria-label="Equipment bar charts" style={{ display: 'grid', gap: '24px', marginTop: '24px', minWidth: 0 }}>
+    <div
+      aria-label="Equipment bar charts"
+      onPointerDown={event => {
+        if (event.pointerType === 'touch' || event.pointerType === 'pen') setTooltipTrigger('click');
+      }}
+      onPointerMove={event => {
+        if (event.pointerType === 'mouse') setTooltipTrigger('hover');
+      }}
+      style={{ display: 'grid', gap: '24px', marginTop: '24px', minWidth: 0 }}
+    >
       {charts.map(metric => (
         <section
           key={metric.key}
@@ -85,7 +71,7 @@ export default function EquipmentBarCharts({ rows, selectedMonth, loading, error
             </span>
           </div>
           <p style={{ margin: '8px 0 16px', color: '#cbd5e1', fontSize: '12px' }}>
-            Highest to lowest for the selected month.
+            Highest to lowest for the selected month. Touch or hover over a bar to see its equipment and value.
             {metric.key === 'production' && ' Production values use each equipment’s recorded unit.'}
           </p>
           {loading || error || metric.data.length === 0 ? (
@@ -93,27 +79,25 @@ export default function EquipmentBarCharts({ rows, selectedMonth, loading, error
               {loading ? `Loading ${selectedMonth} data…` : error ? 'Chart unavailable. Retry loading the month above.' : `No ${metric.title.toLowerCase()} data for ${selectedMonth}.`}
             </p>
           ) : (
-            <div style={{ overflowX: 'auto' }}>
-              <div style={{ minWidth: '640px', width: '100%', height: Math.max(260, metric.data.length * 56 + 50) }}>
+            <div style={{ width: '100%', height: 360 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart key={`${metric.key}-${selectedMonth}`} data={metric.data} layout="vertical" margin={{ top: 8, right: 110, left: 8, bottom: 8 }} accessibilityLayer>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#334155" />
-                    <XAxis type="number" domain={[0, 'auto']} tickFormatter={formatAxis} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                    <YAxis type="category" dataKey="name" width={190} interval={0} tick={<EquipmentTick />} axisLine={false} tickLine={false} />
+                  <BarChart key={`${metric.key}-${selectedMonth}`} data={metric.data} layout="horizontal" margin={{ top: 12, right: 12, left: 0, bottom: 8 }} accessibilityLayer>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#334155" />
+                    <XAxis type="category" dataKey="name" hide />
+                    <YAxis type="number" domain={[0, 'auto']} tickFormatter={formatAxis} tick={{ fontSize: 11, fill: '#94a3b8' }} width={60} axisLine={false} tickLine={false} />
                     <Tooltip
+                      shared={false}
+                      trigger={tooltipTrigger}
                       cursor={{ fill: 'rgba(148,163,184,0.12)' }}
                       contentStyle={{ backgroundColor: '#030712', borderColor: metric.border, borderRadius: '14px', color: '#f8fafc', fontSize: '12px', fontWeight: '900' }}
                       itemStyle={{ color: metric.accent }}
-                      formatter={value => [`${formatValue(value)}${metric.unit ? ` ${metric.unit}` : ''}`, metric.title]}
+                      formatter={(value, _name, item) => [`${formatValue(value)}${metric.unit ? ` ${metric.unit}` : ''}`, item.payload.name]}
                     />
-                    {/* An explicit shape keeps recorded zero values in the label list. */}
-                    <Bar dataKey="value" name={metric.title} maxBarSize={28} radius={[0, 6, 6, 0]} shape={<Rectangle />} isAnimationActive={false}>
+                    <Bar dataKey="value" name={metric.title} maxBarSize={56} radius={[6, 6, 0, 0]} shape={<Rectangle />} isAnimationActive={false}>
                       {metric.data.map(item => <Cell key={item.name} fill={item.color} />)}
-                      <LabelList dataKey="value" position="right" formatter={formatValue} fill="#f8fafc" fontSize={11} fontWeight={700} />
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
-              </div>
             </div>
           )}
         </section>
