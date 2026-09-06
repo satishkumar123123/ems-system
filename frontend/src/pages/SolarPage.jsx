@@ -1,4 +1,5 @@
-import { API_BASE_URL } from '../config/api';
+import DataLoadNotice from '../components/DataLoadNotice';
+import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, TrendingUp, Sun, BatteryCharging, Factory, Calendar } from 'lucide-react';
@@ -13,36 +14,48 @@ export default function SolarPage() {
   const [evStationElectricity, setEvStationElectricity] = useState('');
   const [solarElectricity, setSolarElectricity] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const [reloadAttempt, setReloadAttempt] = useState(0);
+  const [noMonthData, setNoMonthData] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetchMonthData(selectedMonth);
-  }, [selectedMonth]);
-
-  const fetchMonthData = (month) => {
+    const controller = new AbortController();
+    let active = true;
     setLoading(true);
-    fetch(`${API_BASE_URL}/api/solar?month=${month}`)
+    setLoadError('');
+    setNoMonthData(false);
+    setCtlProduction('');
+    setEvStationElectricity('');
+    setSolarElectricity('');
+    apiFetch(`${API_BASE_URL}/api/solar?month=${selectedMonth}`, { signal: controller.signal })
       .then(res => res.json())
       .then(data => {
-        if (data) {
-          setCtlProduction(data.ctlProduction ?? '');
-          setEvStationElectricity(data.evStationElectricity ?? '');
-          setSolarElectricity(data.solarElectricity ?? '');
-        } else {
-          setCtlProduction('');
-          setEvStationElectricity('');
-          setSolarElectricity('');
-        }
-        setLoading(false);
+        if (!active) return;
+        if (data !== null && (!data || typeof data !== 'object' || Array.isArray(data))) throw new Error('The data service returned an invalid record. Please retry.');
+        setCtlProduction(data?.ctlProduction ?? '');
+        setEvStationElectricity(data?.evStationElectricity ?? '');
+        setSolarElectricity(data?.solarElectricity ?? '');
+        setNoMonthData(data === null);
       })
-      .catch(err => {
-        console.error("Solar fetch error:", err);
-        setLoading(false);
+      .catch(error => {
+        if (!active || error.name === 'AbortError') return;
+        setLoadError(error.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
-  };
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [selectedMonth, reloadAttempt]);
 
   const handleSave = async () => {
+    if (loading || loadError || saving) return;
+    setSaving(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/solar/save`, {
+      const res = await apiFetch(`${API_BASE_URL}/api/solar/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -54,12 +67,15 @@ export default function SolarPage() {
       });
       const data = await res.json();
       if (data.success) {
+        setNoMonthData(false);
         alert(`Solar data successfully saved in Atlas database for ${selectedMonth}!`);
       } else {
         alert('Save failed: ' + data.error);
       }
     } catch (err) {
       alert('Error saving solar data: ' + err.message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -113,6 +129,7 @@ export default function SolarPage() {
         <div className="flex items-center gap-4">
           <button
             onClick={handleSave}
+            disabled={saving || loading || Boolean(loadError)}
             className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-md shadow-indigo-200 transition cursor-pointer"
           >
             <Save size={18} /> Save Data
@@ -127,6 +144,7 @@ export default function SolarPage() {
         </div>
       </div>
 
+      <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* Row 3: 3 COLORFUL INPUT BLOCKS */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Block 1: CTL */}

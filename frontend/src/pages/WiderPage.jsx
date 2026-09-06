@@ -1,4 +1,5 @@
-import { API_BASE_URL } from '../config/api';
+import DataLoadNotice from '../components/DataLoadNotice';
+import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -92,46 +93,32 @@ export default function WiderPage() {
     setLoadError('');
     setNoMonthData(false);
     setRows(getInitialBlankRows());
-    fetch(`${API_BASE_URL}/api/wider?month=${selectedMonth}`, { signal: controller.signal })
-      .then(res => {
-        if (!res.ok) throw new Error(`Request failed (${res.status})`);
-        return res.json();
-      })
+    apiFetch(`${API_BASE_URL}/api/wider?month=${selectedMonth}`, { signal: controller.signal })
+      .then(res => res.json())
       .then(data => {
         if (!active) return;
         if (data !== null && (!data || !Array.isArray(data.rows))) {
-          throw new Error('Unexpected response from the server');
+          throw new Error('The data service returned an invalid record. Please retry.');
         }
-        if (data && data.rows && data.rows.length > 0) {
-          const merged = PERMANENT_EQUIPMENTS.map(pe => {
-            const found = data.rows.find(r => r.equipment?.trim().toUpperCase() === pe.equipment.trim().toUpperCase());
-            return found || {
-              equipment: pe.equipment,
-              electricity: '',
-              lng: '',
-              hsd: '',
-              totalConsumption: '',
-              production: '',
-              enpiUnit: pe.enpiUnit,
-              enpiValue: '',
-              wrtKwh: ''
-            };
+        if (data?.rows?.length) {
+          const blanks = getInitialBlankRows();
+          // Saved equipment names are authoritative; do not discard legacy/new rows.
+          const merged = data.rows.map(row => {
+            const blank = blanks.find(item => item.equipment.trim().toUpperCase() === String(row.equipment || '').trim().toUpperCase()) || { ...blanks[0], equipment: row.equipment, enpiUnit: row.enpiUnit || '' };
+            return { ...blank, ...row, lng: row.lng ?? row.lng ?? row.lpg ?? row.lngLpg ?? blank.lng };
           });
           setRows(merged);
         } else {
-          setRows(getInitialBlankRows());
           setNoMonthData(true);
         }
       })
-      .catch(err => {
-        if (!active || err.name === 'AbortError') return;
-        console.error("Fetch error:", err);
-        setLoadError(`Could not load Wider data for ${selectedMonth}. Please retry.`);
+      .catch(error => {
+        if (!active || error.name === 'AbortError') return;
+        setLoadError(error.message);
       })
       .finally(() => {
         if (active) setLoading(false);
       });
-
     return () => {
       active = false;
       controller.abort();
@@ -219,7 +206,7 @@ export default function WiderPage() {
         const parsedData = XLSX.utils.sheet_to_json(ws);
 
         if (parsedData.length > 0) {
-          const mapped = PERMANENT_EQUIPMENTS.map(pe => {
+          const mapped = rows.map(pe => {
             const found = parsedData.find(item =>
               (item["Process/Equipments"] || item["Equipment"] || item.equipment || "").trim().toUpperCase() === pe.equipment.trim().toUpperCase()
             );
@@ -266,7 +253,7 @@ export default function WiderPage() {
   };
 
   const handleDownloadSample = () => {
-    const exportData = PERMANENT_EQUIPMENTS.map(pe => {
+    const exportData = rows.map(pe => {
       const existing = rows.find(r => r.equipment === pe.equipment);
       return {
         "Process/Equipments": pe.equipment,
@@ -292,7 +279,7 @@ export default function WiderPage() {
     if (loading || loadError) return;
     setSaving(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/wider/save`, {
+      const res = await apiFetch(`${API_BASE_URL}/api/wider/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -605,26 +592,9 @@ export default function WiderPage() {
         </div>
       )}
 
+      <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* SOLID COLORFUL TABLE */}
-      {loadError && (
-        <div role="alert" style={{ padding: '14px', backgroundColor: '#450a0a', color: '#fecaca', border: '1px solid #ef4444', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-          <span>{loadError}</span>
-          <button type="button" onClick={() => setReloadAttempt(attempt => attempt + 1)} style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #fca5a5', backgroundColor: '#7f1d1d', color: '#ffffff', cursor: 'pointer' }}>
-            Retry
-          </button>
-        </div>
-      )}
-      {!loading && !loadError && noMonthData && (
-        <div role="status" style={{ padding: '14px', backgroundColor: '#172554', color: '#bfdbfe', border: '1px solid #3b82f6', borderRadius: '12px' }}>
-          No saved Wider data was found for {selectedMonth}.
-        </div>
-      )}
       <div style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
-        {loading && (
-          <div style={{ padding: '10px', backgroundColor: '#4f46e5', color: '#fef08a', textAlign: 'center', fontWeight: '900', fontSize: '12px' }}>
-            Loading data for {selectedMonth}…
-          </div>
-        )}
 
         <div style={{ overflowX: 'auto', width: '100%' }}>
           <table style={{ width: '100%', minWidth: '1300px', fontSize: '12px', textAlign: 'center', borderCollapse: 'collapse', tableLayout: 'fixed' }}>

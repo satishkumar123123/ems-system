@@ -1,4 +1,5 @@
-import { API_BASE_URL } from '../config/api';
+import DataLoadNotice from '../components/DataLoadNotice';
+import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
@@ -83,6 +84,9 @@ export default function HsuPage() {
   const [selectedMonth, setSelectedMonth] = useState('2026-04');
   const [rows, setRows] = useState(getInitialBlankRows());
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const [noMonthData, setNoMonthData] = useState(false);
+  const [reloadAttempt, setReloadAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
   const [showUploader, setShowUploader] = useState(false);
 
@@ -91,41 +95,43 @@ export default function HsuPage() {
   const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
-    fetchMonthData(selectedMonth);
-  }, [selectedMonth]);
-
-  const fetchMonthData = (month) => {
+    const controller = new AbortController();
+    let active = true;
     setLoading(true);
-    fetch(`${API_BASE_URL}/api/hsu?month=${month}`)
+    setLoadError('');
+    setNoMonthData(false);
+    setRows(getInitialBlankRows());
+    apiFetch(`${API_BASE_URL}/api/hsu?month=${selectedMonth}`, { signal: controller.signal })
       .then(res => res.json())
       .then(data => {
-        if (data && data.rows && data.rows.length > 0) {
-          const merged = PERMANENT_EQUIPMENTS.map(pe => {
-            const found = data.rows.find(r => r.equipment?.trim().toUpperCase() === pe.equipment.trim().toUpperCase());
-            return found || {
-              equipment: pe.equipment,
-              electricity: '',
-              lpg: '',
-              hsd: '',
-              totalConsumption: '',
-              production: '',
-              enpiUnit: pe.enpiUnit,
-              enpiValue: '---',
-              wrtKwh: ''
-            };
+        if (!active) return;
+        if (data !== null && (!data || !Array.isArray(data.rows))) {
+          throw new Error('The data service returned an invalid record. Please retry.');
+        }
+        if (data?.rows?.length) {
+          const blanks = getInitialBlankRows();
+          // Saved equipment names are authoritative; do not discard legacy/new rows.
+          const merged = data.rows.map(row => {
+            const blank = blanks.find(item => item.equipment.trim().toUpperCase() === String(row.equipment || '').trim().toUpperCase()) || { ...blanks[0], equipment: row.equipment, enpiUnit: row.enpiUnit || '' };
+            return { ...blank, ...row, lpg: row.lpg ?? row.lng ?? row.lpg ?? row.lngLpg ?? blank.lpg };
           });
           setRows(merged);
         } else {
-          setRows(getInitialBlankRows());
+          setNoMonthData(true);
         }
-        setLoading(false);
       })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        setRows(getInitialBlankRows());
-        setLoading(false);
+      .catch(error => {
+        if (!active || error.name === 'AbortError') return;
+        setLoadError(error.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
-  };
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [selectedMonth, reloadAttempt]);
 
   const handleCellChange = (idx, field, value) => {
     setRows(prev => {
@@ -215,7 +221,7 @@ export default function HsuPage() {
         const parsedData = XLSX.utils.sheet_to_json(ws);
 
         if (parsedData.length > 0) {
-          const mapped = PERMANENT_EQUIPMENTS.map(pe => {
+          const mapped = rows.map(pe => {
             const found = parsedData.find(item => 
               (item["Process/Equipments"] || item["Equipment"] || item.equipment || "").trim().toUpperCase() === pe.equipment.trim().toUpperCase()
             );
@@ -248,6 +254,7 @@ export default function HsuPage() {
           });
 
           setRows(mapped);
+          setNoMonthData(false);
           setShowUploader(false);
           alert('HSU Excel Data Uploaded Successfully! Click Save to store.');
         } else {
@@ -261,7 +268,7 @@ export default function HsuPage() {
   };
 
   const handleDownloadSample = () => {
-    const exportData = PERMANENT_EQUIPMENTS.map(pe => {
+    const exportData = rows.map(pe => {
       const existing = rows.find(r => r.equipment === pe.equipment);
       return {
         "Process/Equipments": pe.equipment,
@@ -284,22 +291,25 @@ export default function HsuPage() {
   };
 
   const executeSave = async () => {
+    if (loading || loadError) return;
     setSaving(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/hsu/save`, {
+      const res = await apiFetch(`${API_BASE_URL}/api/hsu/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           monthYear: selectedMonth,
-          rows,
+          rows: rows.map(row => ({ ...row, lng: row.lpg })),
           totals: {
             ...totals,
+            lng: totals.lpg,
             enpiValue: Number(totalEnpiVal) || 0
           }
         })
       });
       const resData = await res.json();
       if (resData.success) {
+        setNoMonthData(false);
         alert('HSU Data successfully saved in MongoDB Database!');
       } else {
         alert('Save error: ' + (resData.error || 'Unknown error'));
@@ -459,7 +469,7 @@ export default function HsuPage() {
             setEnteredPassword("");
             setShowPasswordModal(true);
           }}
-          disabled={saving}
+          disabled={saving || loading || Boolean(loadError)}
           style={{ 
             display: 'flex', 
             flexShrink: 0, 
@@ -475,7 +485,7 @@ export default function HsuPage() {
             boxShadow: '0 4px 12px rgba(124,58,237,0.35)', 
             cursor: 'pointer', 
             whiteSpace: 'nowrap',
-            opacity: saving ? 0.5 : 1
+            opacity: saving || loading || loadError ? 0.5 : 1
           }}
         >
           <Save size={16} strokeWidth={2.5} color="#ffffff" />
@@ -598,13 +608,9 @@ export default function HsuPage() {
         </div>
       )}
 
+      <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* SOLID COLORFUL TABLE */}
       <div style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
-        {loading && (
-          <div style={{ padding: '10px', backgroundColor: '#4f46e5', color: '#fef08a', textAlign: 'center', fontWeight: '900', fontSize: '12px' }}>
-            Loading data for {selectedMonth}…
-          </div>
-        )}
 
         <div style={{ overflowX: 'auto', width: '100%' }}>
           <table style={{ width: '100%', minWidth: '1300px', fontSize: '12px', textAlign: 'center', borderCollapse: 'collapse', tableLayout: 'fixed' }}>

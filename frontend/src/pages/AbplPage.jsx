@@ -1,4 +1,5 @@
-import { API_BASE_URL } from '../config/api';
+import DataLoadNotice from '../components/DataLoadNotice';
+import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -32,24 +33,35 @@ export default function AbplPage() {
   const [selectedMetric, setSelectedMetric] = useState('electricity');
   const [abplData, setAbplData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [reloadAttempt, setReloadAttempt] = useState(0);
+
 
   useEffect(() => {
-    fetchAbplData();
-  }, [selectedMonth]);
-
-  const fetchAbplData = () => {
+    const controller = new AbortController();
+    let active = true;
     setLoading(true);
-    fetch(`${API_BASE_URL}/api/abpl?month=${selectedMonth}`)
-      .then((res) => res.json())
-      .then((data) => {
+    setLoadError('');
+    setAbplData(null);
+    apiFetch(`${API_BASE_URL}/api/abpl?month=${selectedMonth}`, { signal: controller.signal })
+      .then(res => res.json())
+      .then(data => {
+        if (!active) return;
+        if (!data || !Array.isArray(data.plants) || !data.totals) throw new Error('The consolidated service returned invalid data. Please retry.');
         setAbplData(data);
-        setLoading(false);
       })
-      .catch((err) => {
-        console.error('ABPL Fetch Error:', err);
-        setLoading(false);
+      .catch(error => {
+        if (!active || error.name === 'AbortError') return;
+        setLoadError(error.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
-  };
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [selectedMonth, reloadAttempt]);
 
   // 5 Distinct Colorful Theme Configurations with Vibrant Gradients
   const metricConfigs = {
@@ -317,10 +329,9 @@ export default function AbplPage() {
         })}
       </div>
 
-      {loading ? (
-        <div style={{ padding: '60px', textAlign: 'center', color: '#00e5ff', fontWeight: 900, fontSize: '14px', letterSpacing: '1px' }}>
-          Aggregating telemetry from all plant databases...
-        </div>
+      <DataLoadNotice loading={loading} error={loadError} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
+      {loading || loadError ? (
+        null
       ) : (
         <>
           {/* Active Metric Title Banner */}

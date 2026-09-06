@@ -16,11 +16,11 @@ router.get('/', async (req, res) => {
 
     // Parallel DB fetch for the selected month
     const [wider, utility, hsu, narrowFlat, narrowTube] = await Promise.all([
-      WiderData.findOne({ monthYear: month }),
-      UtilityData.findOne({ monthYear: month }),
-      HsuData.findOne({ monthYear: month }),
-      NarrowFlatData.findOne({ monthYear: month }),
-      NarrowTubeData.findOne({ monthYear: month }),
+      WiderData.findOne({ monthYear: month }).lean(),
+      UtilityData.findOne({ monthYear: month }).lean(),
+      HsuData.findOne({ monthYear: month }).lean(),
+      NarrowFlatData.findOne({ monthYear: month }).lean(),
+      NarrowTubeData.findOne({ monthYear: month }).lean(),
     ]);
 
     const plantsList = [
@@ -39,7 +39,7 @@ router.get('/', async (req, res) => {
         name: 'Utility Facility',
         color: '#06b6d4',
         electricity: utility?.totals?.electricity || 0,
-        lpg: utility?.totals?.lngLpg || 0,
+        lpg: utility?.totals?.lngLpg ?? utility?.totals?.lng ?? utility?.totals?.lpg ?? 0,
         hsd: utility?.totals?.hsd || 0,
         totalConsumption: utility?.totals?.totalConsumption || 0,
         production: utility?.totals?.production || 0,
@@ -49,7 +49,7 @@ router.get('/', async (req, res) => {
         name: 'HSU Facility',
         color: '#10b981',
         electricity: hsu?.totals?.electricity || 0,
-        lpg: hsu?.totals?.lpg || 0,
+        lpg: hsu?.totals?.lpg ?? hsu?.totals?.lng ?? hsu?.totals?.lngLpg ?? 0,
         hsd: hsu?.totals?.hsd || 0,
         totalConsumption: hsu?.totals?.totalConsumption || 0,
         production: hsu?.totals?.production || 0,
@@ -59,7 +59,7 @@ router.get('/', async (req, res) => {
         name: 'Narrow Flat',
         color: '#f59e0b',
         electricity: narrowFlat?.totals?.electricity || 0,
-        lpg: narrowFlat?.totals?.lpg || 0,
+        lpg: narrowFlat?.totals?.lpg ?? narrowFlat?.totals?.lng ?? narrowFlat?.totals?.lngLpg ?? 0,
         hsd: narrowFlat?.totals?.hsd || 0,
         totalConsumption: narrowFlat?.totals?.totalConsumption || 0,
         production: narrowFlat?.totals?.production || 0,
@@ -69,7 +69,7 @@ router.get('/', async (req, res) => {
         name: 'Narrow Tube',
         color: '#ec4899',
         electricity: narrowTube?.totals?.electricity || 0,
-        lpg: narrowTube?.totals?.lpg || 0,
+        lpg: narrowTube?.totals?.lpg ?? narrowTube?.totals?.lng ?? narrowTube?.totals?.lngLpg ?? 0,
         hsd: narrowTube?.totals?.hsd || 0,
         totalConsumption: narrowTube?.totals?.totalConsumption || 0,
         production: narrowTube?.totals?.production || 0,

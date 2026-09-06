@@ -1,4 +1,5 @@
-import { API_BASE_URL } from '../config/api';
+import DataLoadNotice from '../components/DataLoadNotice';
+import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Factory, BatteryCharging, Sun } from 'lucide-react';
@@ -10,27 +11,36 @@ export default function SolarYoYPage() {
   const [yoyMonthlyData, setYoyMonthlyData] = useState([]);
   const [prevYearLabel, setPrevYearLabel] = useState('2024-25');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [reloadAttempt, setReloadAttempt] = useState(0);
+
 
   useEffect(() => {
-    fetchYoYData();
-  }, [selectedYear]);
-
-  const fetchYoYData = () => {
+    const controller = new AbortController();
+    let active = true;
     setLoading(true);
-    fetch(`${API_BASE_URL}/api/solar/yoy?year=${selectedYear}`)
+    setLoadError('');
+    setYoyMonthlyData([]);
+    apiFetch(`${API_BASE_URL}/api/solar/yoy?year=${selectedYear}`, { signal: controller.signal })
       .then(res => res.json())
-      .then(resData => {
-        if (resData && resData.monthlyData) {
-          setYoyMonthlyData(resData.monthlyData);
-          setPrevYearLabel(resData.prevFinancialYear);
-        }
-        setLoading(false);
+      .then(data => {
+        if (!active) return;
+        if (!data || !Array.isArray(data.monthlyData)) throw new Error('The comparison service returned invalid data. Please retry.');
+        setYoyMonthlyData(data.monthlyData);
+        setPrevYearLabel(data.prevFinancialYear);
       })
-      .catch(err => {
-        console.error("Solar YoY Fetch Error:", err);
-        setLoading(false);
+      .catch(error => {
+        if (!active || error.name === 'AbortError') return;
+        setLoadError(error.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
-  };
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [selectedYear, reloadAttempt]);
 
   const sections = [
     {
@@ -95,10 +105,9 @@ export default function SolarYoYPage() {
       </div>
 
       {/* 3 YoY BAR CHARTS */}
-      {loading ? (
-        <div className="p-16 text-center text-amber-600 font-bold animate-pulse">
-          Loading Solar YoY Comparative Analytics...
-        </div>
+      <DataLoadNotice loading={loading} error={loadError} period={selectedYear} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
+      {loading || loadError ? (
+        null
       ) : (
         <div className="mt-6 flex flex-col gap-6">
           {sections.map((sec, idx) => {

@@ -1,4 +1,5 @@
-import { API_BASE_URL } from '../config/api';
+import DataLoadNotice from '../components/DataLoadNotice';
+import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Zap, Factory, BarChart3, Calendar } from 'lucide-react';
@@ -11,27 +12,36 @@ export default function NarrowTubeYoYPage() {
   const [yoyData, setYoyData] = useState([]);
   const [prevYearLabel, setPrevYearLabel] = useState('2024-25');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [reloadAttempt, setReloadAttempt] = useState(0);
+
 
   useEffect(() => {
-    fetchYoYData();
-  }, [selectedYear]);
-
-  const fetchYoYData = () => {
+    const controller = new AbortController();
+    let active = true;
     setLoading(true);
-    fetch(`${API_BASE_URL}/api/narrow-tube/yoy?year=${selectedYear}`)
+    setLoadError('');
+    setYoyData([]);
+    apiFetch(`${API_BASE_URL}/api/narrow-tube/yoy?year=${selectedYear}`, { signal: controller.signal })
       .then(res => res.json())
-      .then(resData => {
-        if (resData && resData.data) {
-          setYoyData(resData.data);
-          setPrevYearLabel(resData.prevFinancialYear);
-        }
-        setLoading(false);
+      .then(data => {
+        if (!active) return;
+        if (!data || !Array.isArray(data.data)) throw new Error('The comparison service returned invalid data. Please retry.');
+        setYoyData(data.data);
+        setPrevYearLabel(data.prevFinancialYear);
       })
-      .catch(err => {
-        console.error("Narrow Tube YoY Fetch Error:", err);
-        setLoading(false);
+      .catch(error => {
+        if (!active || error.name === 'AbortError') return;
+        setLoadError(error.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
-  };
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [selectedYear, reloadAttempt]);
 
   const getMetricConfig = () => {
     switch (selectedMetric) {
@@ -119,10 +129,9 @@ export default function NarrowTubeYoYPage() {
       </div>
 
       {/* 4 Fixed Equipment Rows (COMPRESSOR, GMT-1, GMT-2, PUMP HOUSE) */}
-      {loading ? (
-        <div className="p-16 text-center text-blue-600 font-bold animate-pulse">
-          Loading Narrow Tube YoY Data for {selectedMetric.toUpperCase()}...
-        </div>
+      <DataLoadNotice loading={loading} error={loadError} period={selectedYear} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
+      {loading || loadError ? (
+        null
       ) : (
         <div className="mt-6 flex flex-col gap-6">
           {yoyData.map((item, idx) => {

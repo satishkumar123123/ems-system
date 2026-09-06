@@ -2,14 +2,22 @@
 
 ## EMS backend connection
 
-All frontend API requests use `src/config/api.js`. Production builds default to
-`https://ems-system-qpv1.onrender.com`; `npm run dev` defaults to
-`http://localhost:5000`.
+All frontend API requests use `src/config/api.js`. Production requests go to
+`/api` on the same website. `vercel.json` forwards them to the Render backend at
+`https://ems-system-qpv1.onrender.com/api`, before applying the SPA fallback.
+Keep `frontend` as the Vercel project's Root Directory. Production deliberately
+does not use `VITE_API_BASE_URL`, so an old environment value cannot redirect data
+requests to localhost, the frontend itself, or a duplicate `/api` path.
 
-To override the backend, set `VITE_API_BASE_URL` to its origin (without `/api`).
-For local development, copy `.env.example` to `.env.local`. For Vercel, set the
-variable in the project's environment settings and redeploy, since Vite reads it
-at build time. This is a public API address, never a MongoDB connection string.
+`npm run dev` defaults to `http://localhost:5000`. For local development against
+Render, copy `.env.example` to `.env.local`. To move the production backend, change
+the external rewrite destination in `vercel.json` and redeploy. See
+[Vercel's external rewrite documentation](https://vercel.com/docs/routing/rewrites).
+
+Data requests have a 65-second timeout to allow a sleeping backend to start.
+Each page distinguishes connection errors from missing records, offers Retry,
+and ignores responses from a previously selected month/year. Save requests are
+not retried automatically.
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
