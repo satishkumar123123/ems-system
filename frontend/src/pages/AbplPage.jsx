@@ -1,3 +1,5 @@
+import AbplScheduleOverview from '../components/AbplScheduleOverview';
+import AbplSec from '../components/AbplSec';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useRef } from 'react';
@@ -519,6 +521,8 @@ export default function AbplPage() {
         </>
       )}
 
+      <AbplSec selectedMonth={selectedMonth} />
+      <AbplScheduleOverview />
     </div>
   );
 }

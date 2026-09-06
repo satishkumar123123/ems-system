@@ -1,3 +1,4 @@
+import SecPanel from './SecPanel';
 import { useMemo } from 'react';
 import {
   BarChart, Bar, Cell, CartesianGrid, LabelList,
@@ -118,6 +119,7 @@ export default function EquipmentBarCharts({ rows, selectedMonth, loading, error
           )}
         </section>
       ))}
+      <SecPanel rows={rows} selectedMonth={selectedMonth} loading={loading} error={error} />
     </div>
   );
 }

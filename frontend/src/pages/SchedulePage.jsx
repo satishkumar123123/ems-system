@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
 import '../styles/schedule.css';
 
@@ -20,8 +20,10 @@ export default function SchedulePage() {
   return plants[plant] ? <PlantSchedule key={plant} plant={plant} /> : <div className="schedule"><Link to="/">Unknown plant — return to dashboard</Link></div>;
 }
 function PlantSchedule({ plant }) {
+  const [reportBusy, setReportBusy] = useState(false), [reportError, setReportError] = useState('');
+  const [searchParams] = useSearchParams();
   const [items, setItems] = useState([]), [tab, setTab] = useState('objective'), [loading, setLoading] = useState(true), [error, setError] = useState(''), [refresh, setRefresh] = useState(0);
-  const [draft, setDraft] = useState(null), [selected, setSelected] = useState(''), [saving, setSaving] = useState(false), [formError, setFormError] = useState(''), [notice, setNotice] = useState('');
+  const [draft, setDraft] = useState(null), [selected, setSelected] = useState(searchParams.get('record') || ''), [saving, setSaving] = useState(false), [formError, setFormError] = useState(''), [notice, setNotice] = useState('');
   useEffect(() => {
     let active = true;
     const controller = new AbortController();
@@ -56,6 +58,18 @@ function PlantSchedule({ plant }) {
       setDraft(d => ({ ...d, attachments: [...d.attachments, ...additions] })); setFormError('');
     } catch (e) { setFormError(e.message); } finally { setSaving(false); }
   };
+  const report = async () => {
+    setReportBusy(true); setReportError('');
+    try {
+      const fresh = await request(plant);
+      const meeting = fresh.items.find(i => i._id === selected);
+      if (!meeting) throw new Error('Meeting no longer exists. Refresh the schedule.');
+      const { downloadMeetingReport } = await import('../utils/meetingReport');
+      downloadMeetingReport(meeting, fresh.items, plant, plants[plant]);
+      setItems(fresh.items);
+    } catch (error) { setReportError(error.message); }
+    finally { setReportBusy(false); }
+  };
   const detail = items.find(i => i._id === selected);
   const pending = items.filter(i => i.kind === 'action' && i.status !== 'Verified');
   const upcoming = items.flatMap(i => ['audit', 'meeting'].includes(i.kind) ? [...(open(i) && i.date >= today() ? [{ ...i, displayDate: i.date }] : []), ...(i.kind === 'meeting' && i.nextDate >= today() ? [{ ...i, displayDate: i.nextDate, title: `Follow-up: ${i.title}` }] : [])] : []).sort((a, b) => a.displayDate.localeCompare(b.displayDate));
@@ -72,7 +86,8 @@ function PlantSchedule({ plant }) {
     {detail && !draft && <div className="sch-overlay"><section className="sch-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title"><div className="sch-section-title"><h2 id="detail-title">{detail.title}</h2><button onClick={() => setSelected('')} aria-label="Close details">✕</button></div><p><span className="sch-badge">{detail.status}</span> · {detail.owner} · {detail.date}</p>
       <dl className="sch-details">{[['equipment','Equipment / department'],['description','Details'],['baseline','Baseline'],['target','Target'],['actual','Current value'],['unit','Unit'],['findings','Audit findings'],['attendees','Attendees'],['decisions','Decisions'],['nextDate','Next meeting'],['correctiveAction','Corrective action']].filter(([key]) => detail[key] !== '' && detail[key] != null).map(([key,label]) => <div key={key}><dt>{label}</dt><dd>{detail[key]}</dd></div>)}</dl>
       {detail.sourceId && <p>Linked to: {items.find(i => i._id === detail.sourceId)?.title || 'Previous record'}</p>}
-      <div className="sch-actions"><button onClick={() => edit(detail.kind, detail)}>Edit / update</button>{detail.kind !== 'action' && <button onClick={() => edit('action', null, { sourceId: detail._id, equipment: detail.equipment })}>＋ Improvement action</button>}{detail.kind === 'meeting' && detail.nextDate && <button onClick={() => edit('meeting', null, { date: detail.nextDate, title: `Follow-up: ${detail.title}`.slice(0,180), attendees: detail.attendees, owner: detail.owner })}>Schedule next meeting</button>}</div>
+      {reportError && <p role="alert" className="sch-error">{reportError}</p>}
+      <div className="sch-actions">{detail.kind === 'meeting' && <button disabled={reportBusy} onClick={report}>{reportBusy ? 'Preparing PDF…' : 'Download meeting PDF'}</button>}<button onClick={() => edit(detail.kind, detail)}>Edit / update</button>{detail.kind !== 'action' && <button onClick={() => edit('action', null, { sourceId: detail._id, equipment: detail.equipment })}>＋ Improvement action</button>}{detail.kind === 'meeting' && detail.nextDate && <button onClick={() => edit('meeting', null, { date: detail.nextDate, title: `Follow-up: ${detail.title}`.slice(0,180), attendees: detail.attendees, owner: detail.owner })}>Schedule next meeting</button>}</div>
       {!!detail.attachments?.length && <section><h3>Evidence</h3>{detail.attachments.map(f => <a className="sch-file" key={f.id} href={`${API_BASE_URL}/api/schedule/${plant}/items/${detail._id}/files/${f.id}`} download>{f.name} ↓</a>)}</section>}
       {detail.kind === 'meeting' && <section><h3>Open actions to review ({pending.length})</h3>{pending.map(action => <div className="sch-review" key={action._id}><div><strong>{action.title}</strong><p>{action.owner} · Due {action.date} · {action.status}</p></div><button onClick={() => edit('action', action, { reviewMeetingId: detail._id })}>Review action</button></div>)}{!pending.length && <p>No outstanding actions.</p>}<h3>Reviews recorded in this meeting</h3>{items.filter(i => i.kind === 'action').flatMap(i => (i.history || []).filter(h => h.meetingId === detail._id).map((h,index) => <div className="sch-history" key={`${i._id}-${index}`}><strong>{i.title} · {h.status}</strong><p>{h.note}</p><small>{h.by} · {new Date(h.at).toLocaleString()}</small></div>))}</section>}
       <h3>Update history</h3>{[...(detail.history || [])].reverse().map((h,index) => <div className="sch-history" key={index}><strong>{h.status} · {h.by}</strong><p>{h.note || 'Record saved.'}</p>{h.actual !== '' && h.actual != null && <p>Current value: {h.actual} {detail.unit}</p>}{h.meetingId && <p>Review meeting: {items.find(i => i._id === h.meetingId)?.title}</p>}<small>{new Date(h.at).toLocaleString()}</small></div>)}

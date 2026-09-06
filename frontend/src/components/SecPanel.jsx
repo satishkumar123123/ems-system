@@ -1,0 +1,9 @@
+import { summarizeSec } from '../utils/sec';
+import '../styles/insights.css';
+export const formatSec = value => value == null ? 'N/A' : value.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+export default function SecPanel({ rows = [], selectedMonth, loading, error }) {
+  const result = summarizeSec(rows);
+  return <section className="ems-insight" aria-label="Specific Energy Consumption"><div className="insight-heading"><div><p>ENERGY EFFICIENCY · {selectedMonth}</p><h2>Specific Energy Consumption</h2></div><span className="insight-chip">kWh / ton</span></div>
+    {loading || error ? <p>{loading ? 'Loading SEC…' : 'SEC unavailable. Retry loading the month above.'}</p> : <><div className="insight-metrics"><div><span>Plant electricity SEC</span><strong>{formatSec(result.electricSec)}</strong><small>kWh / ton of recorded throughput</small></div><div><span>Plant total energy SEC</span><strong>{formatSec(result.totalSec)}</strong><small>kWh / ton of recorded throughput</small></div></div><p className="insight-note">Energy ÷ production. Plant figures use only equipment recorded in kWh/MT ({result.included} included, {result.excluded} excluded). This is combined process throughput, not finished-product tonnage. Missing data or zero total production shows N/A.</p><div className="insight-scroll"><table><thead><tr><th>Equipment</th><th>Production (ton)</th><th>Electricity SEC</th><th>Total energy SEC</th><th>Note</th></tr></thead><tbody>{result.data.map((r,i) => <tr key={`${r.name}-${i}`}><th>{r.name}</th><td>{r.tonnes ? formatSec(r.production) : 'N/A'}</td><td>{formatSec(r.electricSec)}</td><td>{formatSec(r.totalSec)}</td><td>{r.reason || (r.electricity == null || r.energy == null ? 'Energy data incomplete' : 'kWh / ton')}</td></tr>)}</tbody></table></div></>}
+  </section>;
+}
