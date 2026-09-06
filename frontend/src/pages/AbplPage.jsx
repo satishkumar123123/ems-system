@@ -117,16 +117,9 @@ export default function AbplPage() {
     },
   };
 
-  const activeConf = metricConfigs[selectedMetric];
-
-  // Prepare chart data
-  const chartData = (abplData?.plants || []).map((p) => ({
-    name: p.name,
-    value: p[selectedMetric] || 0,
-    color: p.color,
-  }));
-
-  const pieData = chartData.filter((item) => item.value > 0);
+  // Keep the three main comparisons visible in a fixed order.
+  const chartMetrics = ['electricity', 'totalConsumption', 'production'];
+  if (selectedMetric === 'lpg' || selectedMetric === 'hsd') chartMetrics.push(selectedMetric);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
@@ -240,7 +233,10 @@ export default function AbplPage() {
           return (
             <div
               key={key}
-              onClick={() => setSelectedMetric(key)}
+              onClick={() => {
+                setSelectedMetric(key);
+                requestAnimationFrame(() => document.getElementById(`abpl-chart-${key}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+              }}
               style={{
                 flex: '1 1 0px',
                 minWidth: '190px',
@@ -334,7 +330,17 @@ export default function AbplPage() {
         null
       ) : (
         <>
-          {/* Active Metric Title Banner */}
+          {chartMetrics.map(metric => {
+            const activeConf = metricConfigs[metric];
+            const chartData = (abplData?.plants || []).map(plant => ({
+              name: plant.name,
+              value: Number(plant[metric]) || 0,
+              color: plant.color,
+            }));
+            const pieData = chartData.filter(item => item.value > 0);
+            return (
+              <section key={metric} id={`abpl-chart-${metric}`} aria-label={`${activeConf.title} plant-wise charts`} style={{ display: 'flex', flexDirection: 'column', gap: '24px', scrollMarginTop: '24px' }}>
+          {/* Metric title and matching plant-wise charts */}
           <div style={{ background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)', padding: '16px 20px', borderRadius: '16px', border: '1px solid #334155', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 10px 25px rgba(0,0,0,0.4)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: activeConf.barColor, display: 'inline-block', boxShadow: `0 0 10px ${activeConf.barColor}` }}></span>
@@ -365,7 +371,7 @@ export default function AbplPage() {
 
               <div style={{ width: '100%', height: 360 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} margin={{ top: 20, right: 20, left: 10, bottom: 25 }}>
+                  <BarChart key={`${metric}-${selectedMonth}`} data={chartData} margin={{ top: 20, right: 20, left: 10, bottom: 25 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
                     <XAxis
                       dataKey="name"
@@ -408,7 +414,7 @@ export default function AbplPage() {
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                    <PieChart key={`${metric}-${selectedMonth}`}>
                       <Pie
                         data={pieData}
                         dataKey="value"
@@ -442,6 +448,10 @@ export default function AbplPage() {
             </div>
 
           </div>
+
+              </section>
+            );
+          })}
 
           {/* 5. DETAILED DATA TABLE */}
           <div style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
