@@ -1,3 +1,4 @@
+import EquipmentBarCharts from '../components/EquipmentBarCharts';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -910,6 +911,8 @@ export default function NarrowTubePage() {
           </div>
 
         </div>
+
+        <EquipmentBarCharts rows={rows} selectedMonth={selectedMonth} loading={loading} error={loadError} />
       </div>
 
     </div>

@@ -1,3 +1,4 @@
+import EquipmentBarCharts from '../components/EquipmentBarCharts';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useRef } from 'react';
@@ -799,6 +800,8 @@ export default function UtilityPage() {
           </div>
 
         </div>
+
+        <EquipmentBarCharts rows={rows} selectedMonth={selectedMonth} loading={loading} error={loadError} />
       </div>
 
     </div>
