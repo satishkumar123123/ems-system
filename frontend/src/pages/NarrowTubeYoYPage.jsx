@@ -1,3 +1,4 @@
+import '../styles/yoy.css';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect } from 'react';
@@ -46,11 +47,11 @@ export default function NarrowTubeYoYPage() {
   const getMetricConfig = () => {
     switch (selectedMetric) {
       case 'electricity':
-        return { label: 'Electricity Consumption (kWh)', colorPrev: '#94a3b8', colorCurr: '#2563eb', unit: 'kWh' };
+        return { label: 'Electricity Consumption (kWh)', colorPrev: '#a78bfa', colorCurr: '#22d3ee', unit: 'kWh' };
       case 'production':
-        return { label: 'Production / Output', colorPrev: '#cbd5e1', colorCurr: '#10b981', unit: '' };
+        return { label: 'Production / Output', colorPrev: '#60a5fa', colorCurr: '#34d399', unit: '' };
       case 'totalConsumption':
-        return { label: 'Total Consumption (kWh)', colorPrev: '#fcd34d', colorCurr: '#f59e0b', unit: 'kWh' };
+        return { label: 'Total Consumption (kWh)', colorPrev: '#f472b6', colorCurr: '#fbbf24', unit: 'kWh' };
       default:
         return { label: 'Electricity Consumption (kWh)', colorPrev: '#94a3b8', colorCurr: '#2563eb', unit: 'kWh' };
     }
@@ -59,62 +60,50 @@ export default function NarrowTubeYoYPage() {
   const metricConfig = getMetricConfig();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 p-6 md:p-8">
+    <div className="yoy-page">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-200 bg-white p-4 rounded-2xl shadow-sm">
-        <div className="flex items-center gap-4">
+      <div className="yoy-header">
+        <div className="yoy-heading-group">
           <button
             onClick={() => navigate('/narrow-tube')}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold border border-slate-300 transition shadow-sm cursor-pointer"
+            className="yoy-back"
           >
             <ArrowLeft size={18} /> Back to Narrow Tube
           </button>
           <div>
-            <h1 className="text-xl font-bold text-slate-800">Narrow Tube (NTD) Facility - YoY Analytics</h1>
-            <p className="text-xs text-slate-500">April to March · Saved monthly data · Missing data = 0</p>
+            <h1 className="yoy-title">Narrow Tube (NTD) Facility - YoY Analytics</h1>
+            <p className="yoy-subtitle">April to March · Saved monthly data · Missing data = 0</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-xl border border-slate-200">
-          <Calendar size={18} className="text-slate-500" />
-          <span className="text-xs font-bold text-slate-600">Financial Year:</span>
-          <span className="bg-white border border-slate-300 rounded-lg px-3 py-1 font-semibold text-xs">FY 2025-26 vs FY 2026-27</span>
+        <div className="yoy-years">
+          <Calendar size={18} className="yoy-calendar" />
+          <span className="yoy-years-label">Financial Year:</span>
+          <span className="yoy-years-value">FY 2025-26 vs FY 2026-27</span>
         </div>
       </div>
 
       {/* 3 Parameter Selection Bar */}
-      <div className="mt-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
-        <span className="text-sm font-bold text-slate-700">Select Parameter to Compare:</span>
-        <div className="flex flex-wrap gap-3">
+      <div className="yoy-toolbar">
+        <span className="yoy-toolbar-label">Select Parameter to Compare:</span>
+        <div className="yoy-metrics">
           <button
             onClick={() => setSelectedMetric('electricity')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wide transition cursor-pointer ${
-              selectedMetric === 'electricity'
-                ? 'bg-blue-600 text-white shadow-blue-200 shadow-md'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-300'
-            }`}
+            className={`yoy-metric yoy-metric--electricity ${selectedMetric === 'electricity' ? 'is-active' : ''}`} aria-pressed={selectedMetric === 'electricity'}
           >
             <Zap size={16} /> Electricity (kWh)
           </button>
 
           <button
             onClick={() => setSelectedMetric('production')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wide transition cursor-pointer ${
-              selectedMetric === 'production'
-                ? 'bg-emerald-600 text-white shadow-emerald-200 shadow-md'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-300'
-            }`}
+            className={`yoy-metric yoy-metric--production ${selectedMetric === 'production' ? 'is-active' : ''}`} aria-pressed={selectedMetric === 'production'}
           >
             <Factory size={16} /> Production / Output
           </button>
 
           <button
             onClick={() => setSelectedMetric('totalConsumption')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wide transition cursor-pointer ${
-              selectedMetric === 'totalConsumption'
-                ? 'bg-amber-600 text-white shadow-amber-200 shadow-md'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-300'
-            }`}
+            className={`yoy-metric yoy-metric--totalConsumption ${selectedMetric === 'totalConsumption' ? 'is-active' : ''}`} aria-pressed={selectedMetric === 'totalConsumption'}
           >
             <BarChart3 size={16} /> Total Consumption (kWh)
           </button>
@@ -126,7 +115,7 @@ export default function NarrowTubeYoYPage() {
       {loading || loadError ? (
         null
       ) : (
-        <div className="mt-6 flex flex-col gap-6">
+        <div className="yoy-cards">
           {yoyData.map((item, idx) => {
             const chartData = item.monthlyData.map(m => ({
               month: m.month,
@@ -137,33 +126,34 @@ export default function NarrowTubeYoYPage() {
             return (
               <div
                 key={item.equipment}
-                className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition"
+                className="yoy-card"
               >
-                <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 font-extrabold flex items-center justify-center text-sm">
+                <div className="yoy-card-header">
+                  <div className="yoy-equipment">
+                    <span className="yoy-equipment-number">
                       0{idx + 1}
                     </span>
-                    <h2 className="text-lg font-extrabold text-slate-800 tracking-wide">
+                    <h2 className="yoy-equipment-name">
                       {item.equipment}
                     </h2>
                   </div>
-                  <span className="text-xs font-semibold px-3 py-1 bg-slate-100 text-slate-600 rounded-lg">
+                  <span className="yoy-metric-badge">
                     Showing: {metricConfig.label}
                   </span>
                 </div>
 
-                <div style={{ width: '100%', height: 260 }}>
+                <div className="yoy-chart-scroll">
+                <div className="yoy-chart-canvas">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis interval={0} dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} />
-                      <YAxis tick={{ fontSize: 11, fill: '#64748b' }} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#25354d" />
+                      <XAxis interval={0} dataKey="month" tick={{ fontSize: 11, fill: '#cbd5e1' }} />
+                      <YAxis tick={{ fontSize: 11, fill: '#cbd5e1' }} />
                       <Tooltip
                         formatter={(val, year) => [`${Number(val).toLocaleString()}${metricConfig.unit ? ` ${metricConfig.unit}` : ''}`, year]}
-                        contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0' }}
+                        contentStyle={{ background: '#020617', borderRadius: '12px', border: '1px solid #475569', color: '#f8fafc', boxShadow: '0 12px 28px rgba(0,0,0,0.45)' }} labelStyle={{ color: '#f8fafc', fontWeight: 800 }}
                       />
-                      <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
+                      <Legend iconType="circle" wrapperStyle={{ fontSize: '12px', paddingTop: '8px', fontWeight: 700 }} />
                       <Bar
                         dataKey={`FY ${prevYearLabel}`}
                         fill={metricConfig.colorPrev}
@@ -176,6 +166,7 @@ export default function NarrowTubeYoYPage() {
                       />
                     </BarChart>
                   </ResponsiveContainer>
+                </div>
                 </div>
               </div>
             );

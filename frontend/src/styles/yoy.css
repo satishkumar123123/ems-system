@@ -1,0 +1,85 @@
+.yoy-page {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  padding: 24px;
+  color: #f8fafc;
+  background: radial-gradient(circle at 12% 0%, #172554 0%, #020617 42%, #0f172a 100%);
+}
+.yoy-page *, .yoy-page *::before, .yoy-page *::after { box-sizing: border-box; }
+.yoy-header, .yoy-toolbar, .yoy-card-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.yoy-heading-group, .yoy-years, .yoy-metrics, .yoy-equipment { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.yoy-back, .yoy-metric { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; border: 1px solid; border-radius: 12px; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; transition: background .2s, transform .2s, box-shadow .2s; }
+.yoy-back:focus-visible, .yoy-metric:focus-visible { outline: 3px solid #f8fafc; outline-offset: 3px; }
+.yoy-title { margin: 0; font-size: clamp(20px, 3vw, 28px); font-weight: 900; }
+.yoy-subtitle { margin: 8px 0 0; font-size: 12px; line-height: 1.6; }
+.yoy-years { padding: 12px; border: 1px solid; border-radius: 12px; font-size: 12px; }
+.yoy-years-value { padding: 6px 10px; border: 1px solid; border-radius: 8px; font-weight: 800; }
+.yoy-toolbar { margin: 24px 0; }
+.yoy-toolbar-label { font-size: 13px; font-weight: 800; }
+.yoy-metric.is-active { color: #fff; outline: 2px solid #fff; outline-offset: 2px; }
+.yoy-cards { display: flex; flex-direction: column; margin-top: 24px; }
+.yoy-card { padding: 20px; min-width: 0; }
+.yoy-card-header { padding-bottom: 16px; margin-bottom: 18px; border-bottom: 1px solid; }
+.yoy-equipment { min-width: 0; }
+.yoy-equipment-number { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; font-size: 13px; font-weight: 900; flex-shrink: 0; }
+.yoy-equipment-name { margin: 0; font-size: 18px; font-weight: 900; overflow-wrap: anywhere; }
+.yoy-metric-badge { padding: 7px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+.yoy-header, .yoy-toolbar {
+  border: 1px solid #334155;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(15,23,42,.98), rgba(30,41,59,.96));
+  box-shadow: 0 16px 34px rgba(0,0,0,.32);
+}
+.yoy-header { padding: 16px; border-bottom: 2px solid #38bdf8; }
+.yoy-heading-group { gap: 14px; }
+.yoy-back { color: #bae6fd; background: #0c4a6e; border-color: #38bdf8; }
+.yoy-back:hover { background: #075985; }
+.yoy-title { color: #f8fafc; text-shadow: 0 0 16px rgba(56,189,248,.35); }
+.yoy-subtitle { color: #94a3b8; }
+.yoy-years { color: #cbd5e1; background: #111827; border-color: #475569; }
+.yoy-calendar { color: #38bdf8; }
+.yoy-years-label, .yoy-toolbar-label { color: #cbd5e1; }
+.yoy-years-value { color: #f8fafc; background: #1e293b; border-color: #64748b; }
+.yoy-toolbar { padding: 16px; }
+.yoy-metrics { gap: 12px; }
+.yoy-metric {
+  border: 1px solid #475569;
+  color: #cbd5e1;
+  background: #1e293b;
+  box-shadow: 0 6px 16px rgba(0,0,0,.24);
+}
+.yoy-metric:hover { transform: translateY(-2px); color: #fff; border-color: #7dd3fc; }
+.yoy-metric--electricity.is-active { background: linear-gradient(135deg,#4338ca,#0891b2); border-color:#67e8f9; box-shadow:0 8px 22px rgba(34,211,238,.3); }
+.yoy-metric--production.is-active { background: linear-gradient(135deg,#047857,#14b8a6); border-color:#6ee7b7; box-shadow:0 8px 22px rgba(52,211,153,.3); }
+.yoy-metric--totalConsumption.is-active { background: linear-gradient(135deg,#be185d,#d97706); border-color:#fbbf24; box-shadow:0 8px 22px rgba(251,191,36,.3); }
+.yoy-cards { gap: 22px; }
+.yoy-card {
+  border: 1px solid #334155;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(15,23,42,.98), rgba(30,41,59,.92));
+  box-shadow: 0 16px 30px rgba(0,0,0,.3);
+}
+.yoy-card:nth-child(3n+1) { border-top: 3px solid #22d3ee; }
+.yoy-card:nth-child(3n+2) { border-top: 3px solid #34d399; }
+.yoy-card:nth-child(3n) { border-top: 3px solid #fbbf24; }
+.yoy-card-header { border-color: #334155; }
+.yoy-equipment-number { background: linear-gradient(135deg,#312e81,#0891b2); border: 1px solid #67e8f9; color: #ecfeff; }
+.yoy-equipment-name { color: #f8fafc; }
+.yoy-metric-badge { color: #bae6fd; background: #172554; border: 1px solid #2563eb; }
+.yoy-chart-scroll { width: 100%; overflow-x: auto; }
+.yoy-chart-canvas { width: 100%; min-width: 680px; height: 260px; }
+.yoy-card .recharts-cartesian-axis-tick-value { fill: #cbd5e1; }
+.yoy-card .recharts-legend-item-text { color: #e2e8f0 !important; }
+@media (max-width: 640px) {
+  .yoy-page { padding: 12px; }
+  .yoy-header, .yoy-toolbar { padding: 12px; }
+  .yoy-chart-canvas { min-width: 620px; }
+  .yoy-metrics { width: 100%; }
+  .yoy-metric { flex: 1 1 160px; }
+  .yoy-card { padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yoy-back, .yoy-metric { transition: none; }
+  .yoy-metric:hover { transform: none; }
+}
