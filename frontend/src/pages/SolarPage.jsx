@@ -1,3 +1,4 @@
+import '../styles/solar.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
@@ -92,9 +93,9 @@ export default function SolarPage() {
   ].filter(d => d.value > 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 p-6 md:p-8">
+    <div className="solar-page">
       {/* Top Header */}
-      <div className="flex items-center gap-4 pb-6 border-b border-slate-200">
+      <div className="solar-header">
         <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 rounded-xl font-semibold border border-slate-300 transition shadow-sm cursor-pointer"
@@ -113,9 +114,9 @@ export default function SolarPage() {
       </div>
 
       {/* Row 2: Date Selector + 2 Colorful Rectangular Buttons (Save & YoY) */}
-      <div className="mt-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+      <div className="solar-toolbar">
         {/* Date Selector */}
-        <div className="flex items-center gap-3 bg-slate-50 border border-slate-300 px-4 py-2 rounded-xl">
+        <div className="solar-month">
           <Calendar size={18} className="text-slate-500" />
           <span className="text-xs font-bold text-slate-700">Select Month:</span>
           <input
@@ -127,7 +128,7 @@ export default function SolarPage() {
         </div>
 
         {/* 2 Buttons */}
-        <div className="flex items-center gap-4">
+        <div className="solar-buttons">
           <button
             onClick={handleSave}
             disabled={saving || loading || Boolean(loadError)}
@@ -147,20 +148,21 @@ export default function SolarPage() {
 
       <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* Row 3: 3 COLORFUL INPUT BLOCKS */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="solar-input-row">
         {/* Block 1: CTL */}
-        <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl p-6 text-white shadow-lg shadow-amber-100 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
+        <div className="solar-input-card solar-ctl">
+          <div className="solar-card-top">
             <span className="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">Unit: MT</span>
             <Factory size={26} className="text-white/80" />
           </div>
-          <div className="my-4">
+          <div className="solar-card-title">
             <h3 className="text-sm font-bold text-white/90 uppercase tracking-wide">1. CTL Production</h3>
             <p className="text-[11px] text-white/70">Production Output</p>
           </div>
           <div>
-            <label className="text-xs font-semibold text-white/80 block mb-1">Enter Production (MT):</label>
+            <label htmlFor="solar-ctl" className="text-xs font-semibold text-white/80 block mb-1">Enter Production (MT):</label>
             <input
+              id="solar-ctl"
               type="number"
               value={ctlProduction}
               onChange={(e) => setCtlProduction(e.target.value)}
@@ -171,18 +173,19 @@ export default function SolarPage() {
         </div>
 
         {/* Block 2: EV Station */}
-        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg shadow-emerald-100 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
+        <div className="solar-input-card solar-ev">
+          <div className="solar-card-top">
             <span className="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">Unit: kWh</span>
             <BatteryCharging size={26} className="text-white/80" />
           </div>
-          <div className="my-4">
+          <div className="solar-card-title">
             <h3 className="text-sm font-bold text-white/90 uppercase tracking-wide">2. EV Station</h3>
             <p className="text-[11px] text-white/70">Electricity Consumption</p>
           </div>
           <div>
-            <label className="text-xs font-semibold text-white/80 block mb-1">Enter Electricity (kWh):</label>
+            <label htmlFor="solar-ev" className="text-xs font-semibold text-white/80 block mb-1">Enter Electricity (kWh):</label>
             <input
+              id="solar-ev"
               type="number"
               value={evStationElectricity}
               onChange={(e) => setEvStationElectricity(e.target.value)}
@@ -193,18 +196,19 @@ export default function SolarPage() {
         </div>
 
         {/* Block 3: Solar Generation */}
-        <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-6 text-white shadow-lg shadow-indigo-100 flex flex-col justify-between">
-          <div className="flex items-center justify-between">
+        <div className="solar-input-card solar-generation">
+          <div className="solar-card-top">
             <span className="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">Unit: kWh</span>
             <Sun size={26} className="text-white/80" />
           </div>
-          <div className="my-4">
+          <div className="solar-card-title">
             <h3 className="text-sm font-bold text-white/90 uppercase tracking-wide">3. Solar Generation</h3>
             <p className="text-[11px] text-white/70">Electricity Generation</p>
           </div>
           <div>
-            <label className="text-xs font-semibold text-white/80 block mb-1">Enter Electricity (kWh):</label>
+            <label htmlFor="solar-generation" className="text-xs font-semibold text-white/80 block mb-1">Enter Electricity (kWh):</label>
             <input
+              id="solar-generation"
               type="number"
               value={solarElectricity}
               onChange={(e) => setSolarElectricity(e.target.value)}
@@ -216,10 +220,10 @@ export default function SolarPage() {
       </div>
 
       {/* Row 4: GRAPHICAL VISUALIZATIONS (BAR CHART + PIE CHART) */}
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="solar-chart-row">
         {/* Bar Chart (7 Cols) */}
-        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+        <div className="solar-chart-card">
+          <div className="solar-chart-heading">
             <h3 className="font-extrabold text-sm text-slate-800">
               Live Monthly Parameter Comparison ({selectedMonth})
             </h3>
@@ -248,8 +252,8 @@ export default function SolarPage() {
         </div>
 
         {/* Pie Chart (5 Cols) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col items-center justify-between">
-          <div className="w-full flex items-center justify-between mb-2 border-b border-slate-100 pb-3">
+        <div className="solar-chart-card">
+          <div className="solar-chart-heading">
             <h3 className="font-extrabold text-sm text-slate-800">
               Electricity Energy Split (kWh)
             </h3>
