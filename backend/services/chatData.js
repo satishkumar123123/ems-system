@@ -33,7 +33,7 @@ function planQuestion(body) {
    if(found.length){const values=found.map(m=>`${m[2] || years.at(-1) || String(from).slice(0,4)}-${String(monthNames[m[1].slice(0,3).toLowerCase()]).padStart(2,'0')}`).sort();from=values[0];to=values.at(-1);}
  }
  const months=monthsBetween(from,to);
- const schedule=/\b(schedule|meeting|audit|action|pending|overdue|objective|target|review|decision|improvement|verified|findings)\b|बैठक|ऑडिट|सुधार/.test(q);
+ const schedule=/\b(schedule|meetings?|audits?|actions?|pending|overdue|objectives?|targets?|reviews?|decisions?|improvement|verified|findings)\b|बैठक|ऑडिट|सुधार/.test(q);
  const metric=/\b(sec|specific|efficiency|enpi)\b/.test(q)?'sec':/\b(production|output|utpadan)\b|उत्पादन/.test(q)?'production':/\b(total|energy|consumption)\b/.test(q)&&!/\b(electricity|electric|bijli)\b/.test(q)?'totalConsumption':'electricity';
  return { question,plants,from,to,months,schedule,metric,rank:/\b(top|highest|maximum|max|sabse|jyada|ranking)\b/.test(q),equipment:typeof body.equipment==='string'?body.equipment.trim().slice(0,180):'',q };
 }
@@ -51,7 +51,7 @@ async function loadData(plan,models) {
  const source=[];const missing=[];const monthly=[];const equipment=[];const fullRows=[];
  const datasets=await Promise.all(plan.plants.map(async plant=>({plant,docs:await models[PLANTS[plant]].find({monthYear:{$in:plan.months}}).select('-__v').lean()})));
  let filter=normalizeText(plan.equipment);
- if(!filter){const names=[...new Set(datasets.flatMap(d=>d.docs.flatMap(doc=>(doc.rows||[]).map(r=>r.equipment))).filter(Boolean))].sort((a,b)=>b.length-a.length);const name=names.find(name=>` ${plan.q} `.includes(` ${normalizeText(name)} `));if(name)filter=normalizeText(name);}
+ {const names=[...new Set(datasets.flatMap(d=>d.docs.flatMap(doc=>(doc.rows||[]).map(r=>r.equipment))).filter(Boolean))].sort((a,b)=>b.length-a.length);const name=names.find(name=>` ${plan.q} `.includes(` ${normalizeText(name)} `));if(name)filter=normalizeText(name);}
  for(const {plant,docs} of datasets)for(const month of plan.months){
   const doc=docs.find(d=>d.monthYear===month);
   if(!doc){missing.push(`${NAMES[plant]} ${month}`);monthly.push({plant:NAMES[plant],month,available:false,electricity:null,totalConsumption:null,production:null,electricSec:null,totalSec:null});continue;}
@@ -75,7 +75,14 @@ async function loadData(plan,models) {
 }
 async function loadSchedules(plan,models) {
  const selected=plan.plants.filter(p=>p!=='solar');
- const records=await models.ScheduleItem.find({plant:{$in:selected}}).select('-attachments -__v').sort({date:-1,createdAt:-1}).limit(201).lean();
+ const query={plant:{$in:selected}};
+ const currentView=/\b(pending|overdue|upcoming|next|last|latest)\b/.test(plan.q);
+ if(!currentView)query.date={$gte:`${plan.from}-01`,$lte:`${plan.to}-31`};
+ if(/\bactions?\b|\bpending\b/.test(plan.q))query.kind='action';
+ else if(/\bmeetings?|decisions?\b/.test(plan.q))query.kind='meeting';
+ else if(/\baudits?|findings?\b/.test(plan.q))query.kind='audit';
+ else if(/\bobjectives?|targets?\b/.test(plan.q))query.kind='objective';
+ const records=await models.ScheduleItem.find(query).select('-attachments -__v').sort({date:-1,createdAt:-1}).limit(201).lean();
  const truncated=records.length>200;let items=records.slice(0,200);
  if(/\bactions?\b/.test(plan.q))items=items.filter(i=>i.kind==='action');
  if(/\boverdue\b/.test(plan.q))items=items.filter(i=>!['Completed','Verified'].includes(i.status)&&i.date<new Date().toISOString().slice(0,10));
@@ -95,7 +102,7 @@ function answerFromData(plan,data,schedules) {
  const reasons=[];
  if(schedules){
   const rows=schedules.items.map(i=>[NAMES[i.plant],i.title,i.kind,i.owner,i.date,i.status,i.decisions||i.findings||i.correctiveAction||i.description||'—']);
-  return {answer:`${rows.length} matching schedule record${rows.length===1?'':'s'} ${schedules.current?'current work view mein':`${plan.from} se ${plan.to} tak`} mile.${schedules.truncated?' Latest 200 records ke andar search hua; older records is answer mein included nahi hain.':''}\nRecord link se complete details aur history khol sakte hain.`,tables:[{title:'Schedule records',columns:['Plant','Title','Type','Owner','Date','Status','Notes'],rows}],sources:schedules.source.slice(0,40)};
+  return {answer:`${rows.length} matching schedule record${rows.length===1?'':'s'} ${schedules.current?'current work view mein':`${plan.from} se ${plan.to} tak`} mile.${schedules.truncated?' Latest 200 records ke andar search hua; older records is answer mein included nahi hain.':''}\nRecord link se complete details aur history khol sakte hain.`,tables:[{title:'Schedule records',columns:['Plant','Title','Type','Owner','Date','Status','Notes'],rows}],sources:schedules.source};
  }
  const key=plan.metric==='sec'?'totalSec':plan.metric;
  const sorted=[...data.summary].sort((a,b)=>(b[key]??-1)-(a[key]??-1));
@@ -106,12 +113,12 @@ function answerFromData(plan,data,schedules) {
  if(!plan.rank && data.summary.length===1 && data.summary[0][key]!=null)answer+=`\n${data.summary[0].plant}: ${key} = ${format(data.summary[0][key])}${key==='totalSec'?' kWh/ton':key==='production'?' (recorded output units)':' kWh'}.`;
  if(plan.rank && plan.metric!=='production' && sorted[0]?.[key]!=null)answer+=`\nAvailable complete plant totals mein ${sorted[0].plant} ka ${key} highest hai: ${format(sorted[0][key])}.`;
  if(/\b(why|kyu|kyun|reason|cause)\b/.test(plan.q))answer+='\nConsumption badhne ka confirmed reason monthly numbers se nahi pata chalta. Audit findings / meeting notes ka question poochhein; main reason guess nahi karunga.';
- if(!/\b(electricity|electric|bijli|energy|consumption|production|output|sec|enpi|summary|compare|comparison|yoy|highest|top|solar|kitna|kitni|data)\b|बिजली|उत्पादन/.test(plan.q))answer='Data mode is question ko fully interpret nahi kar saka. Neeche selected scope ka data hai. Electricity, production, SEC, comparison ya schedule ke baare mein poochhein. Full conversational AI abhi connected nahi hai.';
+ if(!plan.reason && !plan.comparison && !/\b(electricity|electric|bijli|energy|consumption|production|output|sec|enpi|summary|compare|comparison|yoy|highest|top|solar|kitna|kitni|data)\b|बिजली|उत्पादन/.test(plan.q))answer='Data mode is question ko fully interpret nahi kar saka. Neeche selected scope ka data hai. Electricity, production, SEC, comparison ya schedule ke baare mein poochhein. Full conversational AI abhi connected nahi hai.';
  const table=rows=>rows.map(r=>[r.plant,r.electricity,r.totalConsumption,r.production,r.electricSec,r.totalSec].map(v=>typeof v==='string'?v:format(v)));
  const tables=[{title:'Plant totals for requested period',columns:['Plant','Electricity (kWh)','Total energy (kWh)','Recorded production*','Electricity SEC','Total energy SEC'],rows:table(plan.rank && plan.metric!=='production'?sorted:data.summary)}];
  if(plan.months.length>1)tables.push({title:'Monthly breakdown',columns:['Plant','Month','Electricity (kWh)','Total energy (kWh)','Recorded production*','Record'],rows:data.monthly.map(r=>[r.plant,r.month,format(r.electricity),format(r.totalConsumption),format(r.production),r.available?'Saved':'Missing'])});
  let equipment=data.equipment;if(plan.rank && plan.metric!=='production')equipment=[...equipment].sort((a,b)=>(b[key]??-1)-(a[key]??-1)).slice(0,10);
  if(equipment.length)tables.push({title:plan.rank && plan.metric!=='production'?'Top 10 equipment-month values':'Equipment details (up to 100 records)',columns:['Plant','Month','Equipment','Electricity (kWh)','Total energy (kWh)','Production','Output basis','Electricity SEC','Total SEC'],rows:equipment.slice(0,100).map(r=>[r.plant,r.month,r.equipment,format(r.electricity),format(r.totalConsumption),format(r.production),r.outputBasis,format(r.electricSec),format(r.totalSec)])});
- return {answer:`${answer}\n\n${reasons.join('\n')}`,tables,sources:data.source.slice(0,40)};
+ return {answer:`${answer}\n\n${reasons.join('\n')}`,tables,sources:data.source};
 }
 module.exports={PLANTS,NAMES,planQuestion,monthsBetween,summarize,sec,loadData,loadSchedules,answerFromData};
