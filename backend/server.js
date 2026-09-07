@@ -12,6 +12,7 @@ const narrowTubeRoutes = require('./routes/narrowTubeRoutes');
 const abplRoutes = require('./routes/abplRoutes');
 const solarRoutes = require('./routes/solarRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 app.use(cors());
@@ -43,6 +44,7 @@ app.use('/api/narrow-flat', narrowFlatRoutes);
 app.use('/api/narrow-tube', narrowTubeRoutes);
 app.use('/api/solar', solarRoutes);
 app.use('/api/schedule', scheduleRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Health Check Route
 app.get('/', (req, res) => {

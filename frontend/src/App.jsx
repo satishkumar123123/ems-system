@@ -1,3 +1,4 @@
+import ChatPage from './pages/ChatPage';
 import SchedulePage from './pages/SchedulePage';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
@@ -685,6 +686,7 @@ export default function App() {
         <Route path="/narrow-tube" element={<NarrowTubePage />} />
         <Route path="/narrow-tube/yoy" element={<NarrowTubeYoYPage />} />
         <Route path="/abpl" element={<AbplPage />} />
+        <Route path="/abpl/chat" element={<ChatPage />} />
         <Route path="/solar" element={<SolarPage />} />
         <Route path="/solar/yoy" element={<SolarYoYPage />} />
         <Route path="/details/:id" element={<GenericDetails />} />

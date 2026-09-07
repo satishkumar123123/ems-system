@@ -1,3 +1,4 @@
+import { monthFromUrl } from '../utils/monthFromUrl';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect } from 'react';
@@ -9,7 +10,7 @@ const COLORS = ['#f59e0b', '#10b981', '#6366f1'];
 
 export default function SolarPage() {
   const navigate = useNavigate();
-  const [selectedMonth, setSelectedMonth] = useState('2026-04');
+  const [selectedMonth, setSelectedMonth] = useState(() => monthFromUrl());
   const [ctlProduction, setCtlProduction] = useState('');
   const [evStationElectricity, setEvStationElectricity] = useState('');
   const [solarElectricity, setSolarElectricity] = useState('');

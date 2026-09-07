@@ -1,0 +1,44 @@
+import { useEffect, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Bot, Send, Sparkles, ArrowLeft, Plus, Database, MessageSquare } from 'lucide-react';
+import { API_BASE_URL } from '../config/api';
+import '../styles/chat.css';
+const plants={all:'All five plants',wider:'Wider',utility:'Utility',hsu:'HSU','narrow-flat':'Narrow Flat','narrow-tube':'Narrow Tube',solar:'Solar'};
+const examples=[['⚡ Electricity','Compare electricity consumption of all plants'],['📊 Equipment','Top 10 equipment electricity consumption'],['🌿 Efficiency','Show SEC for the selected plant'],['📅 Follow-up','Which improvement actions are overdue?'],['📝 Meetings','Show meeting decisions'],['🏭 Production','Show production for all plants']];
+const validMonth=value=>/^20\d{2}-(0[1-9]|1[0-2])$/.test(value||'');
+async function chatRequest(path,options={}) {
+ const response=await fetch(`${API_BASE_URL}/api/chat${path}`,{...options,cache:'no-store',headers:{Accept:'application/json','Content-Type':'application/json'},signal:options.signal||AbortSignal.timeout(65000)});
+ const data=await response.json().catch(()=>({error:'The chat service did not return data. Please retry.'}));
+ if(!response.ok || data.error)throw new Error(data.error||`Chat service returned ${response.status}.`);
+ return data;
+}
+export default function ChatPage(){
+ const [params]=useSearchParams();const initial=validMonth(params.get('month'))?params.get('month'):new Date().toISOString().slice(0,7);
+ const [plant,setPlant]=useState('all'),[from,setFrom]=useState(initial),[to,setTo]=useState(initial),[equipment,setEquipment]=useState('');
+ const [messages,setMessages]=useState([]),[question,setQuestion]=useState(''),[pending,setPending]=useState(''),[error,setError]=useState(''),[status,setStatus]=useState(null),[copied,setCopied]=useState('');
+ const controller=useRef(null),end=useRef(null),input=useRef(null);
+ useEffect(()=>{let active=true;const abort=new AbortController();chatRequest('/status',{signal:abort.signal}).then(data=>{if(active)setStatus(data);}).catch(()=>{if(active)setStatus({message:'Connection will be checked when you send a question.',mode:'unknown'});});return()=>{active=false;abort.abort();controller.current?.abort();};},[]);
+ useEffect(()=>{end.current?.scrollIntoView?.({behavior:'smooth',block:'end'});},[messages,pending]);
+ async function send(text=question){
+  if(controller.current || !text.trim())return;
+  if(!validMonth(from)||!validMonth(to)||from>to){setError('Choose a valid month range.');return;}
+  setError('');setPending(text.trim());const abort=new AbortController();controller.current=abort;const timer=setTimeout(()=>abort.abort(),65000);
+  const history=messages.flatMap(m=>[{role:'user',content:m.question},{role:'assistant',content:m.answer}]).slice(-6);
+  try{
+   const data=await chatRequest('',{method:'POST',signal:abort.signal,body:JSON.stringify({message:text.trim(),plant,from,to,equipment,history})});
+   if(typeof data.answer!=='string'||!data.scope)throw new Error('The service returned an invalid answer. Please retry.');
+   setMessages(old=>[...old,{...data,question:text.trim(),id:crypto.randomUUID()}]);setQuestion('');
+   setFrom(data.scope.from);setTo(data.scope.to);if(data.scope.plants.length===1)setPlant(data.scope.plants[0]);else setPlant('all');
+   setEquipment(data.scope.equipment||'');setStatus({mode:data.mode,message:data.notice});
+  }catch(e){if(!abort.signal.aborted)setError(e.message);else setError('The request timed out or was stopped. You can retry.');setQuestion(text);}
+  finally{clearTimeout(timer);controller.current=null;setPending('');}
+ }
+ const clear=()=>{setMessages([]);setQuestion('');setError('');setCopied('');input.current?.focus();};
+ const copy=async(message)=>{try{await navigator.clipboard.writeText(message.answer);setCopied(message.id);}catch{setError('Copy is unavailable. Select the answer text to copy it.');}};
+ return <main className="ems-chat"><header className="chat-header"><div><Link className="chat-back" to={`/abpl?month=${from}`}><ArrowLeft size={16}/> Back to ABPL</Link><div className="chat-brand"><span className="chat-avatar"><Bot size={27}/></span><div><p>ABPL · PLANT INTELLIGENCE</p><h1>EMS AI Assistant</h1></div></div></div><button className="chat-new" onClick={clear} disabled={!!pending}><Plus size={17}/> New chat</button></header>
+ <div className="chat-layout"><aside className="chat-sidebar"><h2><Database size={18}/> Your question scope</h2><p>Choose a plant and period. A plant or date written in your question takes priority.</p><fieldset disabled={!!pending}><label>Plant<select value={plant} onChange={e=>{setPlant(e.target.value);setEquipment('');}}>{Object.entries(plants).map(([id,name])=><option key={id} value={id}>{name}</option>)}</select></label><div className="chat-period"><label>From<input aria-label="From month" type="month" value={from} onChange={e=>setFrom(e.target.value)}/></label><label>To<input aria-label="To month" type="month" value={to} onChange={e=>setTo(e.target.value)}/></label></div><label>Equipment (optional)<input value={equipment} maxLength={180} onChange={e=>setEquipment(e.target.value)} placeholder="CGL, CRM, compressor…"/></label></fieldset><p className="chat-hint">Up to 24 months. Pending and overdue questions use the current Schedule view.</p><div className={`chat-mode ${status?.mode==='ai'?'ai':''}`}><Sparkles size={17}/><div><strong>{!status?'Connecting…':status.mode==='ai'?'AI + saved records':status.mode==='data'?'Saved-data mode':'Connection pending'}</strong><p>{status?.mode==='data'?'Monthly data, comparisons and Schedule search are available. Full conversational AI is not connected yet.':status?.mode==='ai'?'Answers use the selected records. Check the source links for details.':status?.message||'Checking the data service.'}</p></div></div><div className="chat-topics"><h3>Ask about</h3><span>Electricity</span><span>Total energy</span><span>Production</span><span>SEC</span><span>Audits</span><span>Meetings</span></div></aside>
+ <section className="chat-main" aria-label="Plant conversation"><div className="chat-conversation"><div className="chat-welcome"><span className="chat-welcome-icon"><MessageSquare size={29}/></span><h2>What would you like to know?</h2><p>Plant data, equipment performance or meeting follow-ups—ask in English, Hindi or Hinglish.</p><div className="chat-examples">{examples.map(([label,text])=><button key={label} disabled={!!pending} onClick={()=>send(text)}><strong>{label}</strong><span>{text}</span></button>)}</div></div>
+ {messages.map(message=><div className="chat-turn" key={message.id}><div className="chat-question"><span>You</span><p>{message.question}</p></div><article className="chat-answer"><div className="chat-answer-heading"><strong><Bot size={18}/> {message.mode==='ai'?'EMS AI':'EMS Data Assistant'}</strong><button onClick={()=>copy(message)}>{copied===message.id?'Copied':'Copy answer'}</button></div><small>{message.scope.plants.map(p=>plants[p]||p).join(', ')} · {message.scope.from}{message.scope.to!==message.scope.from?` → ${message.scope.to}`:''}</small><p className="chat-answer-text">{message.answer}</p>{message.notice&&<p className="chat-answer-note">{message.notice}</p>}{(message.tables||[]).map((table,index)=><details className="chat-table" key={index} open={index===0}><summary>{table.title} <span>{table.rows.length} rows</span></summary><div className="chat-table-scroll"><table><thead><tr>{table.columns.map((col,i)=><th key={i}>{col}</th>)}</tr></thead><tbody>{table.rows.map((row,i)=><tr key={i}>{row.map((value,j)=><td key={j}>{value==null?'N/A':String(value)}</td>)}</tr>)}</tbody></table>{!table.rows.length&&<p>No matching saved records.</p>}</div></details>)}{!!message.sources?.length&&<details className="chat-sources"><summary>Source records ({message.sources.length})</summary><div>{message.sources.map((source,i)=><Link key={i} to={source.url}>{source.label} ↗</Link>)}</div></details>}</article></div>)}
+ {pending&&<div className="chat-pending" role="status"><p>{pending}</p><span className="chat-dot"/> Reading saved plant records…</div>}<div ref={end}/></div>
+ <form className="chat-composer" onSubmit={e=>{e.preventDefault();send();}}>{error&&<p role="alert" className="chat-error">{error}</p>}<label htmlFor="chat-question">Ask your plant question</label><div><textarea id="chat-question" ref={input} value={question} disabled={!!pending} onChange={e=>setQuestion(e.target.value)} maxLength={1500} rows={2} placeholder="June 2026 mein Wider ka electricity consumption kitna tha?" onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing){e.preventDefault();send();}}}/><button type="submit" disabled={!!pending||!question.trim()}><Send size={19}/><span>{pending?'Checking…':'Send'}</span></button></div><p>Enter to send · Shift + Enter for a new line · Answers do not change your records.</p></form></section></div></main>;
+}

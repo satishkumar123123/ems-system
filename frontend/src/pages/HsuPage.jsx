@@ -1,3 +1,4 @@
+import { monthFromUrl } from '../utils/monthFromUrl';
 import ScheduleButton from '../components/ScheduleButton';
 import EquipmentBarCharts from '../components/EquipmentBarCharts';
 import DataLoadNotice from '../components/DataLoadNotice';
@@ -83,7 +84,7 @@ export default function HsuPage() {
   const navigate = useNavigate();
   const dateInputRef = useRef(null);
 
-  const [selectedMonth, setSelectedMonth] = useState('2026-04');
+  const [selectedMonth, setSelectedMonth] = useState(() => monthFromUrl());
   const [rows, setRows] = useState(getInitialBlankRows());
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState('');

@@ -1,3 +1,4 @@
+import { monthFromUrl } from '../utils/monthFromUrl';
 import AbplScheduleOverview from '../components/AbplScheduleOverview';
 import AbplSec from '../components/AbplSec';
 import DataLoadNotice from '../components/DataLoadNotice';
@@ -31,7 +32,7 @@ import {
 export default function AbplPage() {
   const navigate = useNavigate();
   const dateInputRef = useRef(null);
-  const [selectedMonth, setSelectedMonth] = useState('2026-04');
+  const [selectedMonth, setSelectedMonth] = useState(() => monthFromUrl());
   const [selectedMetric, setSelectedMetric] = useState('electricity');
   const [abplData, setAbplData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -207,7 +208,8 @@ export default function AbplPage() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <button onClick={() => navigate(`/abpl/chat?month=${selectedMonth}`)} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 20px', borderRadius: '12px', border: '1px solid #a6b1ff', background: 'linear-gradient(120deg, #087f91, #7652bd)', color: '#ffffff', fontWeight: '900', fontSize: '13px', cursor: 'pointer', boxShadow: '0 4px 18px #7661c744' }}><span aria-hidden="true">✦</span> AI Chatbot</button>
           <span style={{ fontSize: '12px', fontWeight: '800', color: '#94a3b8' }}>Consolidated Plant View:</span>
           <span style={{ fontSize: '12px', fontWeight: '900', color: '#00e5ff', padding: '4px 10px', backgroundColor: 'rgba(0,229,255,0.1)', borderRadius: '8px', border: '1px solid rgba(0,229,255,0.3)' }}>
             {selectedMonth}
