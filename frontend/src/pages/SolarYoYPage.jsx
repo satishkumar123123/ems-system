@@ -73,7 +73,7 @@ export default function SolarYoYPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 p-6 md:p-8">
+    <div className="min-h-screen bg-slate-50 text-slate-800 p-6 md:p-8" style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #e0f2fe 0%, #ede9fe 55%, #fce7f3 100%)' }}>
       {/* Top Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-200 bg-white p-4 rounded-2xl shadow-sm">
         <div className="flex items-center gap-4">
