@@ -448,6 +448,31 @@ function Dashboard() {
           line-height: 1.15;
         }
 
+        /* Coordinated jewel palette for all seven home destinations. */
+        .portal-wrapper .gem-abpl { --tile-start: #635bdf; --tile-end: #312477; --tile-shadow: #4338ca55; --tile-ink: #ffffff; }
+        .portal-wrapper .block-ntd { --tile-start: #a5f3fc; --tile-end: #22b8cf; --tile-shadow: #0891b244; --tile-ink: #083344; }
+        .portal-wrapper .block-wider { --tile-start: #ffe7a0; --tile-end: #f5b73b; --tile-shadow: #d9770644; --tile-ink: #542b09; }
+        .portal-wrapper .block-solar { --tile-start: #ef795f; --tile-end: #bf3c51; --tile-shadow: #be405044; --tile-ink: #ffffff; }
+        .portal-wrapper .block-substation { --tile-start: #397cda; --tile-end: #204392; --tile-shadow: #1d4ed844; --tile-ink: #ffffff; }
+        .portal-wrapper .block-hsg { --tile-start: #16886c; --tile-end: #075943; --tile-shadow: #04785744; --tile-ink: #ffffff; }
+        .portal-wrapper .block-nf { --tile-start: #a34a9e; --tile-end: #672b7b; --tile-shadow: #86198f44; --tile-ink: #ffffff; }
+        .portal-wrapper .iso-3d-block {
+          background: linear-gradient(145deg, var(--tile-start), var(--tile-end));
+          border: 2px solid #ffffff99;
+          box-shadow: 0 14px 28px var(--tile-shadow), inset 2px 2px 5px #ffffff55, inset -2px -3px 6px #00000018;
+        }
+        .portal-wrapper .iso-3d-block:hover {
+          box-shadow: 0 20px 35px var(--tile-shadow), inset 2px 2px 6px #ffffff77;
+        }
+        .portal-wrapper .iso-3d-block .plant-title-text,
+        .portal-wrapper .iso-3d-block i { color: var(--tile-ink) !important; }
+        .portal-wrapper .gem-abpl-text {
+          background: none;
+          color: #fff5cf;
+          -webkit-text-fill-color: #fff5cf;
+          filter: drop-shadow(0 2px 2px #23165744);
+        }
+
         /* Home-only atmosphere: decorative layers never intercept plant clicks. */
         .portal-wrapper .blueprint-stage {
           isolation: isolate;
