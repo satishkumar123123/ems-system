@@ -45,3 +45,12 @@
 .plant-theme-solar .solar-chart-card { background:linear-gradient(145deg,#ffffff,#fff6f2 55%,#f6efff);border-color:#e7cfda; }
 .plant-theme-solar .solar-chart-heading h3 { color:#8a3457; }
 .plant-theme-solar .solar-chart-card:nth-child(2) .solar-chart-heading h3 { color:#65449a; }
+
+/* Inset outline preserves every equipment/metric cell colour. */
+.plant-theme tbody tr:hover > td, .plant-theme tbody tr:focus-within > td {
+  background-image: linear-gradient(#ffffff20,#ffffff20);
+  box-shadow: inset 0 2px 0 #818cf8, inset 0 -2px 0 #818cf8;
+}
+.plant-theme tbody tr:hover > td:first-child, .plant-theme tbody tr:focus-within > td:first-child {
+  box-shadow: inset 3px 0 0 #818cf8,inset 0 2px 0 #818cf8,inset 0 -2px 0 #818cf8;
+}

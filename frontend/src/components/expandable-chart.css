@@ -1,0 +1,14 @@
+.expandable-chart{position:relative;min-width:0}
+.expandable-chart .chart-expand-button{position:absolute;right:0;top:0;z-index:3;border:1px solid #94a3b8;border-radius:8px;background:#172554;color:#fff;padding:5px 9px;font:600 11px system-ui;cursor:pointer;opacity:.9}
+.expandable-chart .chart-expand-button:hover{opacity:1;background:#25428a}
+.chart-dialog{position:fixed;inset:0;margin:auto;width:96vw;max-width:none;height:94vh;max-height:96vh;padding:18px;border:1px solid #64748b;border-radius:18px;background:#0f172a;color:#f1f5f9;box-sizing:border-box;box-shadow:0 25px 100px #0008}
+.chart-dialog::backdrop{background:#020617c9;backdrop-filter:blur(4px)}
+.chart-dialog[open]{display:flex;flex-direction:column;gap:16px}
+.chart-dialog-header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-shrink:0}
+.chart-dialog-header h2{margin:0;font:700 16px/1.4 system-ui}
+.chart-dialog-header button{border:1px solid #94a3b8;background:#273754;color:#fff;padding:10px 15px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.chart-dialog-scroll{overflow:auto;flex:1;min-height:0}
+.chart-dialog-canvas{height:100%;min-height:380px;min-width:640px}
+.chart-dialog-light{background:#fff8f4;color:#51384a}
+.chart-dialog button:focus-visible,.chart-expand-button:focus-visible{outline:3px solid #a78bfa;outline-offset:3px}
+@media print{.chart-expand-button{display:none}}

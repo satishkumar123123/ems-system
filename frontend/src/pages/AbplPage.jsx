@@ -1,3 +1,4 @@
+import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import AbplScheduleOverview from '../components/AbplScheduleOverview';
@@ -22,7 +23,6 @@ import {
   XAxis, 
   YAxis, 
   Tooltip, 
-  ResponsiveContainer, 
   CartesianGrid, 
   PieChart, 
   Pie, 

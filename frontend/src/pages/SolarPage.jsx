@@ -1,3 +1,4 @@
+import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
 import '../styles/solar.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
@@ -6,7 +7,7 @@ import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, TrendingUp, Sun, BatteryCharging, Factory, Calendar } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, Legend } from 'recharts';
 
 const COLORS = ['#f59e0b', '#10b981', '#6366f1'];
 

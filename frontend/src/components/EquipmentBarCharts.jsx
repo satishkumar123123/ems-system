@@ -1,8 +1,9 @@
+import ResponsiveContainer from './ExpandableChart';
 import SecPanel from './SecPanel';
 import { useMemo } from 'react';
 import {
   BarChart, Bar, Cell, CartesianGrid, LabelList,
-  Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Rectangle, Tooltip, XAxis, YAxis,
 } from 'recharts';
 
 // Reuse the facility charts' bright palette, with distinct colours for larger lists.

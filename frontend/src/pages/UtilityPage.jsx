@@ -1,3 +1,4 @@
+import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import ScheduleButton from '../components/ScheduleButton';
@@ -7,7 +8,7 @@ import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import {
   ArrowLeft, UploadCloud, Download, Save, TrendingUp,
   FileSpreadsheet, X, Calendar, Activity
