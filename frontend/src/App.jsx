@@ -572,6 +572,57 @@ function Dashboard() {
           0%, 65% { transform: translateX(-75%); }
           90%, 100% { transform: translateX(75%); }
         }
+        /* Plant energy connections: dots, pulses, sparks and hover emphasis. */
+        .portal-wrapper .flower-tail { overflow: visible; opacity: .55; transition: opacity .25s, filter .25s; }
+        .portal-wrapper .flower-tail::before {
+          content: ''; position: absolute; inset: -2px 0;
+          background: radial-gradient(circle, #ffffff 1.5px, transparent 2px) 0 50% / 14px 10px repeat-x;
+          animation: portalEnergyDots 2s linear infinite;
+          pointer-events: none;
+        }
+        .portal-wrapper .tail-wider::before,
+        .portal-wrapper .tail-substation::before,
+        .portal-wrapper .tail-hsg::before { animation-direction: reverse; }
+        .portal-wrapper .traveling-flower {
+          width: 12px; height: 12px; border: 1px solid #ffffff;
+          box-shadow: 0 0 9px currentColor; color: #ffffff;
+        }
+        .portal-wrapper .energy-core { width: 4px; height: 4px; border-radius: 50%; background: white; }
+        .portal-wrapper .energy-junction {
+          display: block; width: 10px; height: 10px; border-radius: 50%;
+          background: #ffffff; border: 2px solid #a5b4fc;
+          box-shadow: 0 0 10px #818cf880;
+        }
+        .portal-wrapper .flower-tail::after {
+          content: ''; position: absolute; left: 47%; top: -7px;
+          width: 16px; height: 20px; background: #ffffff;
+          clip-path: polygon(55% 0, 15% 57%, 47% 57%, 33% 100%, 88% 38%, 57% 38%);
+          opacity: 0; pointer-events: none;
+          animation: portalEnergySpark 8s ease-in-out infinite;
+        }
+        .portal-wrapper .tail-wider::after { animation-delay: 1.2s; }
+        .portal-wrapper .tail-solar::after { animation-delay: 2.4s; }
+        .portal-wrapper .tail-substation::after { animation-delay: 3.6s; }
+        .portal-wrapper .tail-nf::after { animation-delay: 4.8s; }
+        .portal-wrapper .tail-hsg::after { animation-delay: 6s; }
+        .portal-wrapper .schematic-grid:has(.block-ntd:is(:hover, :focus-visible)) .tail-ntd { opacity: 1; filter: drop-shadow(0 0 5px #ffffff); }
+        .portal-wrapper .schematic-grid:has(.block-ntd:is(:hover, :focus-visible)) .tail-ntd .traveling-flower { animation-duration: 1.2s; }
+        .portal-wrapper .schematic-grid:has(.block-wider:is(:hover, :focus-visible)) .tail-wider { opacity: 1; filter: drop-shadow(0 0 5px #ffffff); }
+        .portal-wrapper .schematic-grid:has(.block-wider:is(:hover, :focus-visible)) .tail-wider .traveling-flower { animation-duration: 1.2s; }
+        .portal-wrapper .schematic-grid:has(.block-solar:is(:hover, :focus-visible)) .tail-solar { opacity: 1; filter: drop-shadow(0 0 5px #ffffff); }
+        .portal-wrapper .schematic-grid:has(.block-solar:is(:hover, :focus-visible)) .tail-solar .traveling-flower { animation-duration: 1.2s; }
+        .portal-wrapper .schematic-grid:has(.block-substation:is(:hover, :focus-visible)) .tail-substation { opacity: 1; filter: drop-shadow(0 0 5px #ffffff); }
+        .portal-wrapper .schematic-grid:has(.block-substation:is(:hover, :focus-visible)) .tail-substation .traveling-flower { animation-duration: 1.2s; }
+        .portal-wrapper .schematic-grid:has(.block-nf:is(:hover, :focus-visible)) .tail-nf { opacity: 1; filter: drop-shadow(0 0 5px #ffffff); }
+        .portal-wrapper .schematic-grid:has(.block-nf:is(:hover, :focus-visible)) .tail-nf .traveling-flower { animation-duration: 1.2s; }
+        .portal-wrapper .schematic-grid:has(.block-hsg:is(:hover, :focus-visible)) .tail-hsg { opacity: 1; filter: drop-shadow(0 0 5px #ffffff); }
+        .portal-wrapper .schematic-grid:has(.block-hsg:is(:hover, :focus-visible)) .tail-hsg .traveling-flower { animation-duration: 1.2s; }
+        .portal-wrapper .schematic-grid:has(.gem-abpl:is(:hover, :focus-visible)) .flower-tail { opacity: 1; }
+        @keyframes portalEnergyDots { to { background-position: 28px 50%; } }
+        @keyframes portalEnergySpark {
+          0%, 75%, 100% { opacity: 0; transform: scale(.65); }
+          83%, 90% { opacity: .9; transform: scale(1); }
+        }
         @media (prefers-reduced-motion: reduce) {
           .portal-wrapper *, .portal-wrapper *::before, .portal-wrapper *::after {
             animation: none !important;
@@ -618,75 +669,63 @@ function Dashboard() {
           <div className="schematic-grid">
             {/* Glowing Connection Tails with Flowing Theme Flowers towards ABPL */}
             <div className="flower-tail tail-ntd">
-              <div className="traveling-flower fl-ntd flow-fwd" style={{ animationDelay: '0s' }}>
-                🪷
-              </div>
+              <div className="traveling-flower fl-ntd flow-fwd" style={{ animationDelay: '0s' }}><span className="energy-core" /></div>
             </div>
             
             <div className="flower-tail tail-wider">
-              <div className="traveling-flower fl-wider flow-rev" style={{ animationDelay: '0.4s' }}>
-                🌻
-              </div>
+              <div className="traveling-flower fl-wider flow-rev" style={{ animationDelay: '0.4s' }}><span className="energy-core" /></div>
             </div>
             
             <div className="flower-tail tail-solar">
-              <div className="traveling-flower fl-solar flow-fwd" style={{ animationDelay: '0.8s' }}>
-                🌺
-              </div>
+              <div className="traveling-flower fl-solar flow-fwd" style={{ animationDelay: '0.8s' }}><span className="energy-core" /></div>
             </div>
             
             <div className="flower-tail tail-substation">
-              <div className="traveling-flower fl-utility flow-rev" style={{ animationDelay: '1.2s' }}>
-                🪻
-              </div>
+              <div className="traveling-flower fl-utility flow-rev" style={{ animationDelay: '1.2s' }}><span className="energy-core" /></div>
             </div>
             
             <div className="flower-tail tail-nf">
-              <div className="traveling-flower fl-nf flow-fwd" style={{ animationDelay: '0.6s' }}>
-                🌹
-              </div>
+              <div className="traveling-flower fl-nf flow-fwd" style={{ animationDelay: '0.6s' }}><span className="energy-core" /></div>
             </div>
             
             <div className="flower-tail tail-hsg">
-              <div className="traveling-flower fl-hsu flow-rev" style={{ animationDelay: '1.0s' }}>
-                🌼
-              </div>
+              <div className="traveling-flower fl-hsu flow-rev" style={{ animationDelay: '1.0s' }}><span className="energy-core" /></div>
             </div>
 
             {/* 6 Stationary Blooming Flowers */}
             <div className="schematic-flower flower-pos-ntd">
               <div className="relative group p-1.5 rounded-full bg-gradient-to-br from-cyan-400 via-sky-200 to-white shadow-lg shadow-cyan-400/50 border-2 border-cyan-100 flex items-center justify-center">
-                <span style={{ fontSize: '24px' }}>🪷</span>
+                <span className="energy-junction" />
               </div>
             </div>
 
             <div className="schematic-flower flower-pos-wider">
               <div className="relative group p-1.5 rounded-full bg-gradient-to-br from-amber-400 via-yellow-200 to-white shadow-lg shadow-amber-400/50 border-2 border-amber-100 flex items-center justify-center">
-                <span style={{ fontSize: '24px' }}>🌻</span>
+                <span className="energy-junction" />
               </div>
             </div>
 
             <div className="schematic-flower flower-pos-solar">
               <div className="relative group p-1.5 rounded-full bg-gradient-to-br from-pink-500 via-rose-300 to-white shadow-lg shadow-pink-500/50 border-2 border-pink-100 flex items-center justify-center">
-                <span style={{ fontSize: '24px' }}>🌺</span>
+                <span className="energy-junction" />
               </div>
             </div>
 
             <div className="schematic-flower flower-pos-substation">
               <div className="relative group p-1.5 rounded-full bg-gradient-to-br from-indigo-500 via-sky-300 to-white shadow-lg shadow-sky-400/50 border-2 border-sky-100 flex items-center justify-center">
-                <span style={{ fontSize: '24px' }}>🪻</span>
+                <span className="energy-junction" />
               </div>
             </div>
 
             <div className="schematic-flower flower-pos-nf">
               <div className="relative group p-1.5 rounded-full bg-gradient-to-br from-rose-600 via-pink-300 to-white shadow-lg shadow-rose-600/50 border-2 border-rose-100 flex items-center justify-center">
-                <span style={{ fontSize: '24px' }}>🌹</span>
+                <span className="energy-junction" />
               </div>
             </div>
 
             <div className="schematic-flower flower-pos-hsg">
               <div className="relative group p-1.5 rounded-full bg-gradient-to-br from-emerald-500 via-teal-200 to-white shadow-lg shadow-emerald-500/50 border-2 border-emerald-100 flex items-center justify-center">
-                <span style={{ fontSize: '24px' }}>🌼</span>
+                <span className="energy-junction" />
               </div>
             </div>
 
