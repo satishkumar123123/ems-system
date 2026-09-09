@@ -5,6 +5,20 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Factory, BatteryCharging, Sun } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid } from 'recharts';
 
+// Dark accents stay readable on the pastel page and white chart surfaces.
+const textColors = ['#1d4ed8', '#7e22ce', '#be185d', '#047857', '#b45309', '#0e7490'];
+
+function ColorWords({ children, offset = 0 }) {
+  return <span>{String(children).split(/(\s+)/).map((word, index) => (
+    /\s+/.test(word) ? word : <span key={index} style={{ color: textColors[(Math.floor(index / 2) + offset) % textColors.length] }}>{word}</span>
+  ))}</span>;
+}
+
+function ColorTick({ x, y, payload, index = 0, vertical = false }) {
+  return <text x={x} y={y} dy={vertical ? 4 : 16} textAnchor={vertical ? 'end' : 'middle'}
+    fill={textColors[index % textColors.length]} fontSize={11} fontWeight={600}>{payload.value}</text>;
+}
+
 export default function SolarYoYPage() {
   const navigate = useNavigate();
   const [selectedYear, setSelectedYear] = useState('2025-26');
@@ -81,25 +95,27 @@ export default function SolarYoYPage() {
             onClick={() => navigate('/solar')}
             className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold border border-slate-300 transition shadow-sm cursor-pointer"
           >
-            <ArrowLeft size={18} /> Back to Solar
+            <ArrowLeft size={18} color="#1d4ed8" /> <ColorWords>Back to Solar</ColorWords>
           </button>
           <div>
-            <h1 className="text-xl font-bold text-slate-800">Solar Facility - YoY Analytics</h1>
-            <p className="text-xs text-slate-500">April to March Financial Year Comparison for CTL, EV Station & Solar</p>
+            <h1 className="text-xl font-bold text-slate-800"><ColorWords>Solar Facility - YoY Analytics</ColorWords></h1>
+            <p className="text-xs text-slate-500"><ColorWords offset={2}>April to March Financial Year Comparison for CTL, EV Station & Solar</ColorWords></p>
           </div>
         </div>
 
         {/* Financial Year Selector */}
         <div className="flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-xl border border-slate-200">
-          <Calendar size={18} className="text-slate-500" />
-          <span className="text-xs font-bold text-slate-600">Financial Year:</span>
+          <Calendar size={18} color="#7e22ce" />
+          <span className="text-xs font-bold text-slate-600"><ColorWords offset={3}>Financial Year:</ColorWords></span>
           <select
             value={selectedYear}
+            aria-label="Financial year comparison"
+            style={{ color: selectedYear === '2025-26' ? '#7e22ce' : '#047857', backgroundColor: '#fff' }}
             onChange={(e) => setSelectedYear(e.target.value)}
             className="bg-white border border-slate-300 rounded-lg px-3 py-1 font-semibold text-xs outline-none cursor-pointer"
           >
-            <option value="2025-26">FY 2025-26 vs FY 2024-25</option>
-            <option value="2024-25">FY 2024-25 vs FY 2023-24</option>
+            <option value="2025-26" style={{ color: '#7e22ce' }}>FY 2025-26 vs FY 2024-25</option>
+            <option value="2024-25" style={{ color: '#047857' }}>FY 2024-25 vs FY 2023-24</option>
           </select>
         </div>
       </div>
@@ -127,14 +143,14 @@ export default function SolarYoYPage() {
                 <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
                   <div className="flex items-center gap-3">
                     <span className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-extrabold flex items-center justify-center text-sm">
-                      <Icon size={18} />
+                      <Icon size={18} color={textColors[idx]} />
                     </span>
                     <h2 className="text-lg font-extrabold text-slate-800 tracking-wide">
-                      {sec.title}
+                      <ColorWords offset={idx}>{sec.title}</ColorWords>
                     </h2>
                   </div>
                   <span className="text-xs font-semibold px-3 py-1 bg-slate-100 text-slate-600 rounded-lg">
-                    {sec.badge}
+                    <ColorWords offset={idx + 3}>{sec.badge}</ColorWords>
                   </span>
                 </div>
 
@@ -142,13 +158,14 @@ export default function SolarYoYPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} />
-                      <YAxis tick={{ fontSize: 11, fill: '#64748b' }} />
+                      <XAxis dataKey="month" tick={<ColorTick />} />
+                      <YAxis tick={<ColorTick vertical />} />
                       <Tooltip
-                        formatter={(val) => [`${Number(val).toLocaleString()} ${sec.unit}`, '']}
+                        formatter={(val, name) => [<ColorWords offset={3}>{`${Number(val).toLocaleString()} ${sec.unit}`}</ColorWords>, <ColorWords>{name}</ColorWords>]}
+                        labelFormatter={(label) => <ColorWords offset={2}>{label}</ColorWords>}
                         contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0' }}
                       />
-                      <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
+                      <Legend formatter={(value, entry, index) => <ColorWords offset={index * 3}>{value}</ColorWords>} wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
                       <Bar
                         dataKey={`FY ${prevYearLabel}`}
                         fill={sec.colorPrev}
