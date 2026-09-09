@@ -1,6 +1,6 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { Children, cloneElement, isValidElement, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ResponsiveContainer } from 'recharts';
+import { Pie, PieChart, ResponsiveContainer } from 'recharts';
 import './expandable-chart.css';
 
 export default function ExpandableChart({ children, width = '100%', height = '100%', ...props }) {
@@ -10,6 +10,15 @@ export default function ExpandableChart({ children, width = '100%', height = '10
   const dialog = useRef(null);
   const trigger = useRef(null);
   const titleId = useId();
+  const isPie = isValidElement(children) && children.type === PieChart;
+  const chart = isPie ? cloneElement(children, {}, Children.map(children.props.children, child => {
+    if (!isValidElement(child) || child.type !== Pie) return child;
+    return cloneElement(child, {
+      innerRadius: 0,
+      isAnimationActive: false,
+      ...(expanded ? { outerRadius: '75%', cx: '50%', cy: '48%' } : {}),
+    });
+  })) : children;
   useEffect(() => {
     if (!expanded) return;
     const element = dialog.current;
@@ -33,17 +42,17 @@ export default function ExpandableChart({ children, width = '100%', height = '10
     setContext({ title, light: Boolean(host.current.closest('.solar-page')) });
     setExpanded(true);
   };
-  return <div ref={host} className="expandable-chart" style={{ width, height }}>
+  return <div ref={host} className={`expandable-chart${isPie ? ' chart-pie-grow' : ''}`} style={{ width, height }}>
     <button ref={trigger} type="button" className="chart-expand-button" onClick={open} aria-label="Expand chart">⛶ Expand</button>
-    {!expanded && <ResponsiveContainer {...props} width="100%" height="100%">{children}</ResponsiveContainer>}
+    {!expanded && <ResponsiveContainer {...props} width="100%" height="100%">{chart}</ResponsiveContainer>}
     {expanded && createPortal(
       <dialog ref={dialog} className={`chart-dialog${context.light ? ' chart-dialog-light' : ''}`} aria-labelledby={titleId}
         onCancel={event => { event.preventDefault(); setExpanded(false); }} onClose={() => setExpanded(false)}>
         <header className="chart-dialog-header"><h2 id={titleId}>{context.title}</h2>
           <button type="button" autoFocus onClick={() => setExpanded(false)}>Close ✕</button>
         </header>
-        <div className="chart-dialog-scroll"><div className="chart-dialog-canvas">
-          <ResponsiveContainer {...props} width="100%" height="100%">{children}</ResponsiveContainer>
+        <div className="chart-dialog-scroll"><div className={`chart-dialog-canvas${isPie ? ' chart-pie-grow chart-dialog-pie' : ''}`}>
+          <ResponsiveContainer {...props} width="100%" height="100%">{chart}</ResponsiveContainer>
         </div></div>
       </dialog>, document.body)}
   </div>;
