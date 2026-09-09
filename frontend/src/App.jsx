@@ -451,32 +451,59 @@ function Dashboard() {
         /* Home-only atmosphere: decorative layers never intercept plant clicks. */
         .portal-wrapper .blueprint-stage {
           isolation: isolate;
-          background: radial-gradient(ellipse at 50% 45%, #ffffff 0%, #f4f5ff 38%, transparent 72%),
-            linear-gradient(125deg, #cceeff 0%, #e3dcff 48%, #ffe0ed 100%);
+          background: radial-gradient(circle at 76% 12%, #fff8da 0%, #fff8da00 27%),
+            radial-gradient(ellipse at 48% 48%, #ffffff 0%, #ffffffa8 30%, transparent 65%),
+            linear-gradient(155deg, #bcecff 0%, #e0ecff 35%, #f5e4ff 66%, #ffded7 100%);
         }
-        .portal-wrapper .blueprint-stage::before,
-        .portal-wrapper .blueprint-stage::after {
+        .portal-wrapper .blueprint-stage::before {
           content: '';
           position: absolute;
-          inset: -12%;
+          top: -110px;
+          right: -65px;
+          width: 370px;
+          height: 370px;
+          border-radius: 50%;
+          background: radial-gradient(circle at 40% 40%, #fffef4, #ffe9a5 60%, #ffcfa0);
+          box-shadow: 0 0 0 24px #fff7cf38, 0 0 0 55px #fff7cf20, 0 0 100px #fff5cc;
           pointer-events: none;
           z-index: -1;
         }
-        .portal-wrapper .blueprint-stage::before {
-          background: radial-gradient(ellipse at 12% 22%, #38bdf84d, transparent 34%),
-            radial-gradient(ellipse at 85% 30%, #a78bfa55, transparent 32%),
-            radial-gradient(ellipse at 72% 90%, #f9a8d455, transparent 35%),
-            radial-gradient(ellipse at 20% 85%, #5eead433, transparent 30%);
-          animation: portalAurora 18s ease-in-out infinite alternate;
-        }
         .portal-wrapper .blueprint-stage::after {
+          content: '';
+          position: absolute;
           inset: 0;
-          background-image: linear-gradient(#6366f10a 1px, transparent 1px),
-            linear-gradient(90deg, #6366f10a 1px, transparent 1px);
-          background-size: 48px 48px;
-          mask-image: radial-gradient(ellipse, transparent 15%, black 100%);
+          pointer-events: none;
+          background-image: radial-gradient(circle at 12% 20%, #fff 0 2px, transparent 3px),
+            radial-gradient(circle at 32% 12%, #fff 0 3px, transparent 4px),
+            radial-gradient(circle at 66% 18%, #fff 0 2px, transparent 3px),
+            radial-gradient(circle at 88% 62%, #fff 0 3px, transparent 4px),
+            radial-gradient(circle at 15% 74%, #fff 0 2px, transparent 3px),
+            radial-gradient(circle at 72% 84%, #fff 0 2px, transparent 3px);
+          animation: portalSparkles 6s ease-in-out infinite alternate;
+          z-index: -1;
         }
-        .portal-wrapper .blueprint-doodles { color: #59649d; opacity: .25; }
+        .portal-wrapper .portal-landscape {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: -1;
+        }
+        .portal-wrapper .portal-ribbon {
+          transform-origin: center bottom;
+          animation: portalRibbon 14s ease-in-out infinite alternate;
+        }
+        .portal-wrapper .portal-ribbon-back { animation-delay: -7s; }
+        .portal-wrapper .blueprint-doodles { color: #647ca5; opacity: .14; }
+        @keyframes portalRibbon {
+          from { transform: translateY(0) scaleX(1); }
+          to { transform: translateY(15px) scaleX(1.035); }
+        }
+        @keyframes portalSparkles {
+          from { opacity: .35; transform: translateY(0); }
+          to { opacity: .95; transform: translateY(-9px); }
+        }
         .portal-wrapper .schematic-grid::before {
           content: '';
           position: absolute;
@@ -512,10 +539,6 @@ function Dashboard() {
           outline-offset: 5px;
           filter: brightness(1.12);
         }
-        @keyframes portalAurora {
-          from { transform: translate(-2%, -1%) scale(1); }
-          to { transform: translate(3%, 2%) scale(1.08); }
-        }
         @keyframes portalHalo {
           from { opacity: .45; scale: .96; }
           to { opacity: .9; scale: 1.04; }
@@ -534,6 +557,26 @@ function Dashboard() {
       `}</style>
 
       <div className="blueprint-stage">
+        <svg className="portal-landscape" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="portalRibbonMint" x1="0" y1="0" x2="1" y2="1">
+              <stop stopColor="#55d7d0" /><stop offset="1" stopColor="#b9edff" />
+            </linearGradient>
+            <linearGradient id="portalRibbonRose" x1="0" y1="0" x2="1" y2="0">
+              <stop stopColor="#b7a1f6" /><stop offset=".55" stopColor="#f4b1db" /><stop offset="1" stopColor="#ffd0a9" />
+            </linearGradient>
+          </defs>
+          <g className="portal-ribbon portal-ribbon-back">
+            <path d="M-80 490 C180 540 160 800 460 780 S1040 590 1520 770 L1520 960 L-80 960Z" fill="url(#portalRibbonMint)" opacity=".48" />
+            <path d="M-80 490 C180 540 160 800 460 780 S1040 590 1520 770" fill="none" stroke="white" strokeWidth="2" opacity=".7" />
+          </g>
+          <g className="portal-ribbon">
+            <path d="M-80 810 C260 620 370 910 740 795 S1180 540 1520 640 L1520 960 L-80 960Z" fill="url(#portalRibbonRose)" opacity=".65" />
+            <path d="M-80 810 C260 620 370 910 740 795 S1180 540 1520 640" fill="none" stroke="white" strokeWidth="3" opacity=".7" />
+          </g>
+          <path d="M-60 130 C190 -10 300 240 570 85 S1010 -50 1170 30" fill="none" stroke="white" strokeWidth="2" opacity=".6" />
+          <path d="M-60 146 C190 6 300 256 570 101 S1010 -34 1170 46" fill="none" stroke="white" opacity=".35" />
+        </svg>
         {/* Background Formula Markings */}
         <div className="blueprint-doodles">
           <span style={{ position: 'absolute', top: '32px', left: '64px', fontSize: '24px', fontWeight: 'bold' }}>50 / 21</span>
