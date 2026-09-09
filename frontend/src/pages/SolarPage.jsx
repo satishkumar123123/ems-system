@@ -1,3 +1,4 @@
+import '../styles/plant-themes.css';
 import '../styles/solar.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import DataLoadNotice from '../components/DataLoadNotice';
@@ -93,7 +94,7 @@ export default function SolarPage() {
   ].filter(d => d.value > 0);
 
   return (
-    <div className="solar-page">
+    <div className="solar-page plant-theme plant-theme-solar">
       {/* Top Header */}
       <div className="solar-header">
         <button

@@ -1,3 +1,4 @@
+import '../styles/plant-themes.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import ScheduleButton from '../components/ScheduleButton';
 import EquipmentBarCharts from '../components/EquipmentBarCharts';
@@ -332,7 +333,7 @@ export default function NarrowFlatPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div className="plant-theme plant-theme-narrow-flat" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
       {/* 1. TOP BRAND HEADING: BACK BUTTON + "N A R R O W   F L A T" */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>

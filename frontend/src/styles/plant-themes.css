@@ -1,0 +1,47 @@
+/* Monthly destinations only: presentation without changing page geometry. */
+.plant-theme-wider { --plant-glow:#9d366e44; --plant-secondary:#43387830; --plant-accent:#f9a8d4; --plant-edge:#a8578059; }
+.plant-theme-utility { --plant-glow:#a9653044; --plant-secondary:#7c483030; --plant-accent:#fdba74; --plant-edge:#b77a4959; }
+.plant-theme-hsu { --plant-glow:#16846a44; --plant-secondary:#226e7730; --plant-accent:#6ee7b7; --plant-edge:#37967f59; }
+.plant-theme-narrow-flat { --plant-glow:#8b429c44; --plant-secondary:#4c387e30; --plant-accent:#e9b6fa; --plant-edge:#9662b659; }
+.plant-theme-narrow-tube { --plant-glow:#168ba044; --plant-secondary:#285c9130; --plant-accent:#67e8f9; --plant-edge:#429caf59; }
+.plant-theme-abpl { --plant-glow:#6253b844; --plant-secondary:#425f9c30; --plant-accent:#c4b5fd; --plant-edge:#8178bc59; }
+.plant-theme:not(.plant-theme-solar) {
+  background-image: radial-gradient(ellipse 950px 650px at 0 0,var(--plant-glow),transparent 75%),
+    radial-gradient(ellipse 800px 650px at 100% 35%,var(--plant-secondary),transparent 75%),
+    linear-gradient(155deg,#101a30,#0c1325 55%,#141b30);
+  background-repeat: no-repeat;
+}
+.plant-theme:not(.plant-theme-solar) > div:first-child {
+  background: linear-gradient(115deg,var(--plant-glow),#16223880);
+  border-color: var(--plant-edge) !important;
+  box-shadow: 0 10px 30px #00000012;
+}
+.plant-theme:not(.plant-theme-solar) > .no-print {
+  background-image: linear-gradient(115deg,var(--plant-secondary),#14203580);
+  border-color: var(--plant-edge) !important;
+  box-shadow: 0 8px 24px #00000016;
+}
+.plant-theme:not(.plant-theme-solar) h2 { color: var(--plant-accent) !important; }
+.plant-theme:not(.plant-theme-solar) h2 span,
+.plant-theme:not(.plant-theme-solar) h3 span { text-shadow: none !important; }
+.plant-theme:not(.plant-theme-solar) h2 span:nth-child(3n+1),
+.plant-theme:not(.plant-theme-solar) h3 span:nth-child(3n+1) { color: var(--plant-accent) !important; }
+.plant-theme:not(.plant-theme-solar) h2 span:nth-child(3n+2),
+.plant-theme:not(.plant-theme-solar) h3 span:nth-child(3n+2) { color: #a5d8ff !important; }
+.plant-theme:not(.plant-theme-solar) h2 span:nth-child(3n),
+.plant-theme:not(.plant-theme-solar) h3 span:nth-child(3n) { color: #fde68a !important; }
+.plant-theme button:focus-visible, .plant-theme input:focus-visible, .plant-theme select:focus-visible {
+  outline: 2px solid var(--plant-accent,#9a3412) !important; outline-offset: 3px;
+}
+.plant-theme-solar.solar-page {
+  background: radial-gradient(ellipse at 0 0,#ffddd2,transparent 55%),
+    radial-gradient(ellipse at 100% 35%,#f4e2ff,transparent 65%),linear-gradient(145deg,#fffaf4,#fff1ed 60%,#f5f0ff);
+  color:#51384a;
+}
+.plant-theme-solar .solar-header { background:linear-gradient(115deg,#fffaf7,#fff0ee,#f4ebff);border-color:#e7c4ca;box-shadow:0 10px 28px #9d466615; }
+.plant-theme-solar .solar-header h1 { color:#9f3658; }
+.plant-theme-solar .solar-header p { color:#775269; }
+.plant-theme-solar .solar-toolbar { background:linear-gradient(110deg,#fffaf7,#fff4fb);border-color:#ebced9; }
+.plant-theme-solar .solar-chart-card { background:linear-gradient(145deg,#ffffff,#fff6f2 55%,#f6efff);border-color:#e7cfda; }
+.plant-theme-solar .solar-chart-heading h3 { color:#8a3457; }
+.plant-theme-solar .solar-chart-card:nth-child(2) .solar-chart-heading h3 { color:#65449a; }

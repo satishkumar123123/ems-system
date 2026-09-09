@@ -1,3 +1,4 @@
+import '../styles/plant-themes.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import AbplScheduleOverview from '../components/AbplScheduleOverview';
 import AbplSec from '../components/AbplSec';
@@ -125,7 +126,7 @@ export default function AbplPage() {
   if (selectedMetric === 'lpg' || selectedMetric === 'hsd') chartMetrics.push(selectedMetric);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div className="plant-theme plant-theme-abpl" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
       {/* 1. TOP BRAND HEADING: BACK BUTTON + "A B P L" (PURE INLINE STYLES WITH RADIANT GLOW) */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>
