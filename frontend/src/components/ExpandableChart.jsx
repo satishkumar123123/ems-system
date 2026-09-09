@@ -51,8 +51,8 @@ export default function ExpandableChart({ children, width = '100%', height = '10
         <header className="chart-dialog-header"><h2 id={titleId}>{context.title}</h2>
           <button type="button" autoFocus onClick={() => setExpanded(false)}>Close ✕</button>
         </header>
-        <div className="chart-dialog-scroll"><div className={`chart-dialog-canvas${isPie ? ' chart-pie-grow chart-dialog-pie' : ''}`}>
-          <ResponsiveContainer {...props} width="100%" height="100%">{chart}</ResponsiveContainer>
+        <div className="chart-dialog-scroll"><div className={`chart-dialog-canvas${isPie ? ' chart-dialog-pie' : ''}`}>
+          <ResponsiveContainer {...props} debounce={100} width="100%" height="100%">{chart}</ResponsiveContainer>
         </div></div>
       </dialog>, document.body)}
   </div>;
