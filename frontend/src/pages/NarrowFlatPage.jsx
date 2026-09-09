@@ -621,10 +621,10 @@ export default function NarrowFlatPage() {
 
       <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* SOLID COLORFUL TABLE */}
-      <div style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
+      <div className="equipment-grid-shell" style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
 
         <div style={{ overflowX: 'auto', width: '100%' }}>
-          <table style={{ width: '100%', minWidth: '1300px', fontSize: '12px', textAlign: 'center', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+          <table className="equipment-grid" style={{ width: '100%', minWidth: '1300px', fontSize: '12px', textAlign: 'center', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
             
             {/* STRICT COLUMN SIZING */}
             <colgroup>
