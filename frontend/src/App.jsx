@@ -447,6 +447,90 @@ function Dashboard() {
           text-align: center;
           line-height: 1.15;
         }
+
+        /* Home-only atmosphere: decorative layers never intercept plant clicks. */
+        .portal-wrapper .blueprint-stage {
+          isolation: isolate;
+          background: radial-gradient(ellipse at 50% 45%, #ffffff 0%, #f4f5ff 38%, transparent 72%),
+            linear-gradient(125deg, #cceeff 0%, #e3dcff 48%, #ffe0ed 100%);
+        }
+        .portal-wrapper .blueprint-stage::before,
+        .portal-wrapper .blueprint-stage::after {
+          content: '';
+          position: absolute;
+          inset: -12%;
+          pointer-events: none;
+          z-index: -1;
+        }
+        .portal-wrapper .blueprint-stage::before {
+          background: radial-gradient(ellipse at 12% 22%, #38bdf84d, transparent 34%),
+            radial-gradient(ellipse at 85% 30%, #a78bfa55, transparent 32%),
+            radial-gradient(ellipse at 72% 90%, #f9a8d455, transparent 35%),
+            radial-gradient(ellipse at 20% 85%, #5eead433, transparent 30%);
+          animation: portalAurora 18s ease-in-out infinite alternate;
+        }
+        .portal-wrapper .blueprint-stage::after {
+          inset: 0;
+          background-image: linear-gradient(#6366f10a 1px, transparent 1px),
+            linear-gradient(90deg, #6366f10a 1px, transparent 1px);
+          background-size: 48px 48px;
+          mask-image: radial-gradient(ellipse, transparent 15%, black 100%);
+        }
+        .portal-wrapper .blueprint-doodles { color: #59649d; opacity: .25; }
+        .portal-wrapper .schematic-grid::before {
+          content: '';
+          position: absolute;
+          width: 420px;
+          height: 420px;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+          border: 1px solid #818cf833;
+          box-shadow: 0 0 0 32px #818cf807, 0 0 0 65px #818cf806;
+          background: radial-gradient(circle, #c7d2fe33, transparent 68%);
+          pointer-events: none;
+          animation: portalHalo 7s ease-in-out infinite alternate;
+        }
+        .portal-wrapper .iso-3d-block { overflow: hidden; }
+        .portal-wrapper .iso-3d-block::after {
+          content: '';
+          position: absolute;
+          inset: -70%;
+          background: linear-gradient(110deg, transparent 42%, #ffffff30 49%, transparent 56%);
+          transform: translateX(-75%);
+          pointer-events: none;
+          animation: portalShine 9s ease-in-out infinite;
+        }
+        .portal-wrapper .block-wider::after { animation-delay: 1s; }
+        .portal-wrapper .block-solar::after { animation-delay: 2s; }
+        .portal-wrapper .block-substation::after { animation-delay: 3s; }
+        .portal-wrapper .block-nf::after { animation-delay: 4s; }
+        .portal-wrapper .block-hsg::after { animation-delay: 5s; }
+        .portal-wrapper .iso-3d-block:focus-visible {
+          outline: 3px solid #312e81;
+          outline-offset: 5px;
+          filter: brightness(1.12);
+        }
+        @keyframes portalAurora {
+          from { transform: translate(-2%, -1%) scale(1); }
+          to { transform: translate(3%, 2%) scale(1.08); }
+        }
+        @keyframes portalHalo {
+          from { opacity: .45; scale: .96; }
+          to { opacity: .9; scale: 1.04; }
+        }
+        @keyframes portalShine {
+          0%, 65% { transform: translateX(-75%); }
+          90%, 100% { transform: translateX(75%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .portal-wrapper *, .portal-wrapper *::before, .portal-wrapper *::after {
+            animation: none !important;
+            transition: none !important;
+          }
+          .portal-wrapper .iso-3d-block::after { display: none; }
+        }
       `}</style>
 
       <div className="blueprint-stage">
