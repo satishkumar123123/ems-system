@@ -1,6 +1,6 @@
 import ChatPage from './pages/ChatPage';
 import SchedulePage from './pages/SchedulePage';
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import WiderPage from './pages/WiderPage';
 import UtilityPage from './pages/UtilityPage';
@@ -17,6 +17,24 @@ import SolarPage from './pages/SolarPage';
 import SolarYoYPage from './pages/SolarYoYPage';
 
 function Dashboard() {
+  const [night, setNight] = useState(() => {
+    try { return localStorage.getItem('ems-home-theme') === 'night'; } catch { return false; }
+  });
+  const toggleTheme = () => setNight(previous => {
+    const next = !previous;
+    try { localStorage.setItem('ems-home-theme', next ? 'night' : 'day'); } catch { /* Theme works without storage. */ }
+    return next;
+  });
+  const moveAtmosphere = event => {
+    if (event.pointerType === 'touch' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const box = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - box.left) / box.width;
+    const y = (event.clientY - box.top) / box.height;
+    event.currentTarget.style.setProperty('--glow-x', `${x * 100}%`);
+    event.currentTarget.style.setProperty('--glow-y', `${y * 100}%`);
+    event.currentTarget.style.setProperty('--depth-x', `${(x - .5) * -14}px`);
+    event.currentTarget.style.setProperty('--depth-y', `${(y - .5) * -10}px`);
+  };
   const navigate = useNavigate();
 
   const handleNavigate = (id) => {
@@ -31,7 +49,10 @@ function Dashboard() {
   };
 
   return (
-    <div className="portal-wrapper">
+    <div className={`portal-wrapper${night ? ' portal-night' : ''}`} onPointerMove={moveAtmosphere}
+      onPointerLeave={event => {
+        for (const property of ['--glow-x', '--glow-y', '--depth-x', '--depth-y']) event.currentTarget.style.removeProperty(property);
+      }}>
       <style>{`
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@700;900&display=swap');
@@ -623,6 +644,50 @@ function Dashboard() {
           0%, 75%, 100% { opacity: 0; transform: scale(.65); }
           83%, 90% { opacity: .9; transform: scale(1); }
         }
+        .portal-wrapper .portal-glow {
+          position: absolute; inset: 0; pointer-events: none; z-index: 0;
+          background: radial-gradient(330px circle at var(--glow-x, 50%) var(--glow-y, 45%), #ffffff80, transparent 75%);
+        }
+        .portal-wrapper .portal-landscape { translate: var(--depth-x, 0px) var(--depth-y, 0px); scale: 1.03; transition: translate .35s ease-out; }
+        .portal-wrapper .diagram-scaler { position: relative; z-index: 1; }
+        .portal-wrapper .portal-glass {
+          position: absolute; width: min(94vw, 1240px); height: min(84vh, 690px);
+          border-radius: 48px; border: 1px solid #ffffffb3;
+          background: linear-gradient(140deg, #ffffff40, #ffffff12);
+          box-shadow: 0 24px 70px #64748b12, inset 0 1px 0 #ffffff99;
+          backdrop-filter: blur(5px); pointer-events: none; z-index: 0;
+        }
+        .portal-wrapper .portal-leaves {
+          position: absolute; width: clamp(100px, 17vw, 245px); height: auto;
+          pointer-events: none; z-index: 0; opacity: .5;
+          translate: var(--depth-x, 0px) var(--depth-y, 0px); transition: translate .5s ease-out;
+        }
+        .portal-wrapper .portal-leaves-left { left: -20px; bottom: -15px; color: #48b9a0; }
+        .portal-wrapper .portal-leaves-right { right: -25px; top: -25px; rotate: 180deg; color: #a78bda; }
+        .portal-wrapper .portal-theme-toggle {
+          position: absolute; top: 20px; right: 24px; z-index: 50;
+          display: flex; gap: 9px; align-items: center; padding: 11px 17px;
+          border: 1px solid #ffffff; border-radius: 999px; background: #fffffff0;
+          color: #43386b; box-shadow: 0 5px 20px #43386b18;
+          cursor: pointer; font: 600 14px system-ui;
+        }
+        .portal-wrapper .portal-theme-toggle:focus-visible { outline: 3px solid #8b5cf6; outline-offset: 3px; }
+        .portal-wrapper.portal-night .blueprint-stage {
+          background: radial-gradient(ellipse at 50% 45%, #303563, transparent 65%), linear-gradient(145deg, #10182e, #201932 75%, #33213d);
+        }
+        .portal-wrapper.portal-night .blueprint-stage::before {
+          background: radial-gradient(circle at 35% 30%, #ffffff, #cdd8ff 70%, #91a5db);
+          box-shadow: 0 0 0 24px #dbeafe09, 0 0 0 55px #dbeafe06, 0 0 100px #93c5fd22;
+        }
+        .portal-wrapper.portal-night .portal-landscape { opacity: .35; }
+        .portal-wrapper.portal-night .portal-glass { background: linear-gradient(140deg, #ffffff09, #ffffff03); border-color: #c7d2fe20; box-shadow: 0 24px 70px #00000020; }
+        .portal-wrapper.portal-night .portal-glow { background: radial-gradient(330px circle at var(--glow-x, 50%) var(--glow-y, 45%), #a78bfa18, transparent 75%); }
+        .portal-wrapper.portal-night .blueprint-doodles { color: #c7d2fe; }
+        .portal-wrapper.portal-night .portal-theme-toggle { background: #252c48; color: #e0e7ff; border-color: #64748b; }
+        @media (hover: none), (prefers-reduced-motion: reduce) {
+          .portal-wrapper .portal-landscape, .portal-wrapper .portal-leaves { translate: none; }
+          .portal-wrapper .portal-glow { display: none; }
+        }
         @media (prefers-reduced-motion: reduce) {
           .portal-wrapper *, .portal-wrapper *::before, .portal-wrapper *::after {
             animation: none !important;
@@ -633,6 +698,17 @@ function Dashboard() {
       `}</style>
 
       <div className="blueprint-stage">
+        <button type="button" className="portal-theme-toggle" onClick={toggleTheme} aria-pressed={night} aria-label="Night theme">
+          <span aria-hidden="true">{night ? '☾' : '☀'}</span>{night ? 'Night' : 'Day'}
+        </button>
+        <div className="portal-glow" aria-hidden="true" />
+        <div className="portal-glass" aria-hidden="true" />
+        {['left', 'right'].map(side => (
+          <svg key={side} className={`portal-leaves portal-leaves-${side}`} viewBox="0 0 200 280" aria-hidden="true" focusable="false">
+            <path d="M25 280 Q65 180 160 25" fill="none" stroke="currentColor" strokeWidth="3" />
+            <path d="M45 230 Q-15 155 30 140 Q80 157 45 230 M68 190 Q145 193 143 145 Q102 126 68 190 M89 150 Q28 92 63 68 Q110 88 89 150 M114 109 Q188 115 183 62 Q143 52 114 109 M143 58 Q101 14 132 0 Q172 8 143 58" fill="currentColor" />
+          </svg>
+        ))}
         <svg className="portal-landscape" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient id="portalRibbonMint" x1="0" y1="0" x2="1" y2="1">
