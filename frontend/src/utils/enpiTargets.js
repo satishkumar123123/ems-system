@@ -8,3 +8,6 @@ export function averageEnpi(rows,unit) {
  const values=group.map(r=>r.enpiValue).filter(v=>v!=null&&String(v).trim()!=='').map(v=>Number(String(v).replaceAll(',',''))).filter(Number.isFinite);
  return {value:values.length?values.reduce((a,b)=>a+b,0)/values.length:null,count:values.length,total:group.length};
 }
+
+export function applicableTarget(records,month){return records.filter(r=>r.kind==='target'&&r.month<=month).sort((a,b)=>b.month.localeCompare(a.month))[0]||null;}
+export function targetGap(actual,target){return actual==null||target==null||target===0?null:(actual-target)/target*100;}

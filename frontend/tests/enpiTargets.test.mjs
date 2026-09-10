@@ -15,3 +15,9 @@ test('plant mean excludes missing and incompatible units, preserves zero',()=>{
  assert.equal(averageEnpi(rows,'').value,null);
  assert.equal(canonicalEnpiUnit(' kWh / Tonne '),'kwh/mt');
 });
+import {applicableTarget,targetGap} from '../src/utils/enpiTargets.js';
+test('target effective dates preserve historical comparison and ignore remarks',()=>{
+ const records=[{kind:'target',month:'2026-04',target:90},{kind:'target',month:'2026-07',target:80},{kind:'remark',month:'2026-08',remark:'Shutdown'}];
+ assert.equal(applicableTarget(records,'2026-03'),null);assert.equal(applicableTarget(records,'2026-06').target,90);assert.equal(applicableTarget(records,'2026-09').target,80);
+ assert.equal(targetGap(99,90),10);assert.equal(targetGap(81,90),-10);assert.equal(targetGap(0,0),null);assert.equal(targetGap(null,90),null);
+});

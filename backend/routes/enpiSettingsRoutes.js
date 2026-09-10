@@ -1,0 +1,12 @@
+const express=require('express');const mongoose=require('mongoose');const router=express.Router();
+const plants=['wider','utility','hsu','narrow-flat','narrow-tube'];
+const month=v=>typeof v==='string'&&/^20\d{2}-(0[1-9]|1[0-2])$/.test(v);
+const schema=new mongoose.Schema({plant:String,equipment:String,unit:String,kind:String,month:String,baseline:Number,target:Number,remark:String},{timestamps:true});
+schema.index({plant:1,equipment:1,unit:1,kind:1,month:1},{unique:true});
+const Record=mongoose.models.EnpiSetting||mongoose.model('EnpiSetting',schema);
+router.param('plant',(req,res,next,p)=>plants.includes(p)?next():res.status(404).json({error:'Unknown plant'}));
+const identity=req=>{const source=req.method==='GET'?req.query:req.body;const equipment=source?.equipment,unit=source?.unit;if(typeof equipment!=='string'||!equipment.trim()||equipment.length>150||typeof unit!=='string'||!unit.trim()||unit.length>60)throw Error('Invalid equipment or unit');return {plant:req.params.plant,equipment:equipment.trim(),unit:unit.trim().toLowerCase()};};
+router.get('/:plant',async(req,res)=>{try{const records=await Record.find(identity(req)).sort({month:1}).lean();res.json({records});}catch(e){res.status(400).json({error:'Unable to load EnPI settings.'});}});
+router.post('/:plant/targets',async(req,res)=>{try{const key=identity(req);const {month:effective,baseline,target}=req.body;if(!month(effective)||typeof baseline!=='number'||!Number.isFinite(baseline)||baseline<0||typeof target!=='number'||!Number.isFinite(target)||target<0)return res.status(400).json({error:'Enter valid month and nonnegative baseline/target.'});const record=await Record.create({...key,kind:'target',month:effective,baseline,target});res.status(201).json({record});}catch(e){res.status(e.code===11000?409:400).json({error:e.code===11000?'A target already exists for this effective month. Choose a new effective month.':'Could not save target.'});}});
+router.put('/:plant/remarks',async(req,res)=>{try{const key=identity(req);const {month:period,remark}=req.body;if(!month(period)||typeof remark!=='string'||remark.length>3000)return res.status(400).json({error:'Invalid month or remark.'});const record=await Record.findOneAndUpdate({...key,kind:'remark',month:period},{$set:{remark:remark.trim()}},{upsert:true,new:true,runValidators:true});res.json({record});}catch(e){res.status(400).json({error:'Could not save remark.'});}});
+module.exports=router;

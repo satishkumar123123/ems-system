@@ -44,6 +44,7 @@ app.use('/api/narrow-flat', narrowFlatRoutes);
 app.use('/api/narrow-tube', narrowTubeRoutes);
 app.use('/api/solar', solarRoutes);
 app.use('/api/schedule', scheduleRoutes);
+app.use('/api/enpi-settings', require('./routes/enpiSettingsRoutes'));
 app.use('/api/chat', chatRoutes);
 
 // Health Check Route
