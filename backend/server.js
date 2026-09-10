@@ -36,6 +36,7 @@ mongoose.connection.on('disconnected', () => console.log('Mongoose event: Discon
 // ==========================================
 // ROUTES MIDDLEWARE
 // ==========================================
+app.get('/api/energy-policy', (req, res) => res.json({version:'quantity-v1',cutoff:'2026-09',factors:{LNG:13.9,LPG:12.78,HSD:3.3},storedEnergyUnit:'kWh'}));
 app.use('/api/abpl', abplRoutes);
 app.use('/api/wider', widerRoutes);
 app.use('/api/utility', utilityRoutes);

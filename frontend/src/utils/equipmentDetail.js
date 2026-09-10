@@ -13,8 +13,9 @@ export function equipmentMetrics(plant,name,data) {
  const unit=String(r.enpiUnit||'').split('/')[1]||'MT';
  return [
   {key:'electricity',label:'Electricity',unit:'kWh',value:r.electricity??null},
-  {key:'fuel',label:plant==='wider'?'LNG':plant==='utility'?'LNG / LPG':'LPG / LNG',unit:'kWh',value:r.lng??r.lpg??r.lngLpg??null},
-  {key:'hsd',label:'HSD',unit:'kWh',value:r.hsd??null},
+  {key:'fuel',label:`${r.fuelType || (plant==='wider'?'LNG':plant==='utility'?'LNG / LPG':'LPG')} Energy`,unit:'kWh',value:r.lng??r.lpg??r.lngLpg??null},
+  ...(data?.inputBasis==='quantity-v1'?[{key:'fuelQuantity',label:`${r.fuelType||'Fuel'} Quantity`,unit:'kg',value:r.fuelQuantity??null},{key:'hsdLitres',label:'HSD Quantity',unit:'Ltr',value:r.hsdLitres??null}]:[]),
+  {key:'hsd',label:'HSD Energy',unit:'kWh',value:r.hsd??null},
   {key:'totalConsumption',label:'Total Consumption',unit:'kWh',value:r.totalConsumption??null},
   {key:'production',label:'Production',unit,value:r.production??null},
   {key:'enpiUnit',label:'EnPI Unit',unit:'',value:r.enpiUnit??null,text:true},

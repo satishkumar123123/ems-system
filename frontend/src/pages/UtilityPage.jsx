@@ -1,3 +1,5 @@
+import { quantityMonth, calculateRows, toInputRows, fuelType } from '../utils/fuelConversion';
+import { prepareFuelSpreadsheet, fuelSampleRows } from '../utils/fuelSpreadsheet';
 import EnpiBreakdownView from '../components/EnpiBreakdownView';
 import EnpiTargets from '../components/EnpiTargets';
 import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
@@ -92,7 +94,7 @@ export default function UtilityPage() {
             const blank = blanks.find(item => item.equipment.trim().toUpperCase() === String(row.equipment || '').trim().toUpperCase()) || { ...blanks[0], equipment: row.equipment, enpiUnit: row.enpiUnit || '' };
             return { ...blank, ...row, lngLpg: row.lngLpg ?? row.lng ?? row.lpg ?? row.lngLpg ?? blank.lngLpg };
           });
-          setRows(merged);
+          setRows(toInputRows('utility', selectedMonth, merged));
         } else {
           setNoMonthData(true);
         }
@@ -111,6 +113,10 @@ export default function UtilityPage() {
   }, [selectedMonth, reloadAttempt]);
 
   const handleCellChange = (idx, field, value) => {
+    if (quantityMonth(selectedMonth)) {
+      setRows(prev => calculateRows('utility', prev.map((row, i) => i === idx ? { ...row, [field]: value } : row)));
+      return;
+    }
     setRows(prev => {
       const next = [...prev];
       next[idx] = { ...next[idx], [field]: value === '' ? null : value };
@@ -189,7 +195,7 @@ export default function UtilityPage() {
         const wb = XLSX.read(bstr, { type: 'binary' });
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
-        const parsedData = XLSX.utils.sheet_to_json(ws);
+        const parsedData = prepareFuelSpreadsheet('utility', selectedMonth, XLSX.utils.sheet_to_json(ws, {defval: ''}));
 
         if (parsedData.length > 0) {
           const mapped = rows.map(pe => {
@@ -200,6 +206,7 @@ export default function UtilityPage() {
             if (found) {
               return {
                 equipment: pe.equipment,
+                fuelType: found['Fuel Type'] || pe.fuelType,
                 electricity: found["Electricity (Kwh)"] != null ? Number(found["Electricity (Kwh)"]) : null,
                 lngLpg: found["LNG/LPG ( Kg)"] != null || found["LNG/LPG (Kg)"] != null ? Number(found["LNG/LPG ( Kg)"] || found["LNG/LPG (Kg)"]) : null,
                 hsd: found["HSD (Ltr)"] != null ? Number(found["HSD (Ltr)"]) : null,
@@ -224,7 +231,7 @@ export default function UtilityPage() {
             };
           });
 
-          setRows(mapped);
+          setRows(quantityMonth(selectedMonth) ? calculateRows('utility', mapped) : mapped);
           setNoMonthData(false);
           setShowUploader(false);
           alert('Utility Excel Data Uploaded Successfully! Click Save to store.');
@@ -254,7 +261,7 @@ export default function UtilityPage() {
       };
     });
 
-    const ws = XLSX.utils.json_to_sheet(exportData);
+    const ws = XLSX.utils.json_to_sheet(fuelSampleRows('utility', selectedMonth, exportData, rows));
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Utility_Facility");
     XLSX.writeFile(wb, `Utility_Facility_Template_${selectedMonth}.xlsx`);
@@ -265,11 +272,16 @@ export default function UtilityPage() {
     if (loading || loadError) return;
     setSaving(true);
     try {
+      if (quantityMonth(selectedMonth)) {
+        const policy = await (await apiFetch(`${API_BASE_URL}/api/energy-policy`)).json();
+        if (policy.version !== 'quantity-v1') throw new Error('Energy conversion service is updating. Please retry shortly.');
+      }
       const res = await apiFetch(`${API_BASE_URL}/api/utility/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           monthYear: selectedMonth,
+          inputBasis: quantityMonth(selectedMonth) ? 'quantity-v1' : 'legacy-kwh',
           rows: rows.map(row => ({ ...row, lng: row.lngLpg })),
           totals: {
             ...totals,
@@ -282,6 +294,7 @@ export default function UtilityPage() {
       });
       const resData = await res.json();
       if (resData.success) {
+        if (resData.data?.rows) setRows(toInputRows('utility', selectedMonth, resData.data.rows));
         setNoMonthData(false);
         alert('Utility Data successfully saved in MongoDB Database!');
       } else {
@@ -506,6 +519,7 @@ export default function UtilityPage() {
         </div>
       )}
 
+      {quantityMonth(selectedMonth) && <div style={{padding:'14px 18px',borderRadius:'12px',background:'#e0f2fe',color:'#0c4a6e',border:'1px solid #38bdf8',fontSize:'13px'}}>September 2026 onward: Fuel in kg · HSD in litres. Total energy = Electricity + LNG × 13.9 / LPG × 12.78 + HSD × 3.3 (kWh). Select LNG or LPG for each Utility equipment. </div>}
       <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* SOLID COLORFUL TABLE WITH FIXED LAYOUT */}
       <div className="equipment-grid-shell" style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
@@ -535,8 +549,8 @@ export default function UtilityPage() {
                 <th style={{ backgroundColor: "#38bdf8", padding: "12px 8px", borderRight: "2px solid #000", textAlign: "left" }}>Process/Equipments</th>
                 <th style={{ backgroundColor: "#fde047", padding: "12px 6px", borderRight: "2px solid #000" }}>Month-Year</th>
                 <th style={{ backgroundColor: "#4ade80", padding: "12px 6px", borderRight: "2px solid #000" }}>Electricity (kWh)</th>
-                <th style={{ backgroundColor: "#fb923c", padding: "12px 4px", borderRight: "2px solid #000" }}>LNG/LPG (Kg)</th>
-                <th style={{ backgroundColor: "#c084fc", padding: "12px 6px", borderRight: "2px solid #000" }}>HSD (Ltr)</th>
+                <th style={{ backgroundColor: "#fb923c", padding: "12px 4px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "LNG/LPG (kg)" : "LNG/LPG (kWh)"}</th>
+                <th style={{ backgroundColor: "#c084fc", padding: "12px 6px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "HSD (Ltr)" : "HSD (kWh)"}</th>
                 <th style={{ backgroundColor: "#2dd4bf", padding: "12px 6px", borderRight: "2px solid #000" }}>Total Consumption</th>
                 <th style={{ backgroundColor: "#60a5fa", padding: "12px 6px", borderRight: "2px solid #000" }}>Production</th>
                 <th style={{ backgroundColor: "#a5b4fc", padding: "12px 6px", borderRight: "2px solid #000" }}>EnPI</th>
@@ -587,6 +601,7 @@ export default function UtilityPage() {
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #9a3412', borderRadius: '6px', padding: '4px 1px', fontWeight: '900', color: '#7c2d12', outline: 'none', boxSizing: 'border-box', fontSize: '11px' }}
                       />
+                      {quantityMonth(selectedMonth) && <select aria-label={`Fuel type for ${r.equipment}`} value={fuelType('utility', r)} onChange={e => handleCellChange(idx, 'fuelType', e.target.value)} style={{width:'100%',marginTop:'5px',borderRadius:'6px',padding:'4px',background:'#fff7ed',color:'#7c2d12'}}><option value="LNG">LNG × 13.9</option><option value="LPG">LPG × 12.78</option></select>}
                     </td>
 
                     {/* HSD Column */}

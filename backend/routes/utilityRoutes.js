@@ -1,3 +1,4 @@
+const {prepareSave}=require('../utils/fuelConversion');
 const { createFacilityYoYHandler } = require('../utils/facilityYoY');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -5,10 +6,12 @@ const router = express.Router();
 
 const UtilityDataSchema = new mongoose.Schema({
   monthYear: { type: String, required: true, unique: true },
+  inputBasis: String,
   type: { type: String, default: 'utility' },
   rows: [
     {
       equipment: String,
+      fuelType: String, fuelQuantity: Number, hsdLitres: Number, fuelFactor: Number, hsdFactor: Number,
       electricity: Number,
       lngLpg: Number,
       hsd: Number,
@@ -47,10 +50,10 @@ router.get('/', async (req, res) => {
 // SAVE / UPDATE Utility data
 router.post('/save', async (req, res) => {
   try {
-    const { monthYear, rows, totals } = req.body;
+    const { monthYear, rows, totals, inputBasis } = prepareSave('utility', req.body);
     const updated = await UtilityData.findOneAndUpdate(
       { monthYear, type: 'utility' },
-      { monthYear, type: 'utility', rows, totals },
+      { monthYear, type: 'utility', rows, totals, inputBasis },
       { upsert: true, new: true }
     );
     res.json({ success: true, data: updated });

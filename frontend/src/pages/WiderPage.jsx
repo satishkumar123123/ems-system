@@ -1,3 +1,5 @@
+import { quantityMonth, calculateRows, toInputRows, fuelType } from '../utils/fuelConversion';
+import { prepareFuelSpreadsheet, fuelSampleRows } from '../utils/fuelSpreadsheet';
 import EnpiBreakdownView from '../components/EnpiBreakdownView';
 import EnpiTargets from '../components/EnpiTargets';
 import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
@@ -116,7 +118,7 @@ export default function WiderPage() {
             const blank = blanks.find(item => item.equipment.trim().toUpperCase() === String(row.equipment || '').trim().toUpperCase()) || { ...blanks[0], equipment: row.equipment, enpiUnit: row.enpiUnit || '' };
             return { ...blank, ...row, lng: row.lng ?? row.lng ?? row.lpg ?? row.lngLpg ?? blank.lng };
           });
-          setRows(merged);
+          setRows(toInputRows('wider', selectedMonth, merged));
         } else {
           setNoMonthData(true);
         }
@@ -135,6 +137,10 @@ export default function WiderPage() {
   }, [selectedMonth, reloadAttempt]);
 
   const handleCellChange = (idx, field, value) => {
+    if (quantityMonth(selectedMonth)) {
+      setRows(prev => calculateRows('wider', prev.map((row, i) => i === idx ? { ...row, [field]: value } : row)));
+      return;
+    }
     setRows(prev => {
       const next = [...prev];
       next[idx] = { ...next[idx], [field]: value };
@@ -212,7 +218,7 @@ export default function WiderPage() {
         const wb = XLSX.read(bstr, { type: 'binary' });
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
-        const parsedData = XLSX.utils.sheet_to_json(ws);
+        const parsedData = prepareFuelSpreadsheet('wider', selectedMonth, XLSX.utils.sheet_to_json(ws, {defval: ''}));
 
         if (parsedData.length > 0) {
           const mapped = rows.map(pe => {
@@ -223,6 +229,7 @@ export default function WiderPage() {
             if (found) {
               return {
                 equipment: pe.equipment,
+                fuelType: found['Fuel Type'] || pe.fuelType,
                 electricity: found["Electricity (Kwh)"] ?? found["Electricity"] ?? '',
                 lng: found["LNG ( Kwh)"] ?? found["LNG (Kwh)"] ?? found["LNG"] ?? '',
                 hsd: found["HSD (Kwh)"] ?? found["HSD"] ?? '',
@@ -247,7 +254,7 @@ export default function WiderPage() {
             };
           });
 
-          setRows(mapped);
+          setRows(quantityMonth(selectedMonth) ? calculateRows('wider', mapped) : mapped);
           setNoMonthData(false);
           setShowUploader(false);
           alert('Excel Data Fetched Successfully! Click Save to store in Database.');
@@ -278,7 +285,7 @@ export default function WiderPage() {
       };
     });
 
-    const ws = XLSX.utils.json_to_sheet(exportData);
+    const ws = XLSX.utils.json_to_sheet(fuelSampleRows('wider', selectedMonth, exportData, rows));
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Wider_Facility");
     XLSX.writeFile(wb, `Wider_Facility_Template_${selectedMonth}.xlsx`);
@@ -288,11 +295,16 @@ export default function WiderPage() {
     if (loading || loadError) return;
     setSaving(true);
     try {
+      if (quantityMonth(selectedMonth)) {
+        const policy = await (await apiFetch(`${API_BASE_URL}/api/energy-policy`)).json();
+        if (policy.version !== 'quantity-v1') throw new Error('Energy conversion service is updating. Please retry shortly.');
+      }
       const res = await apiFetch(`${API_BASE_URL}/api/wider/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           monthYear: selectedMonth,
+          inputBasis: quantityMonth(selectedMonth) ? 'quantity-v1' : 'legacy-kwh',
           rows,
           totals: {
             ...totals,
@@ -302,6 +314,7 @@ export default function WiderPage() {
       });
       const resData = await res.json();
       if (resData.success) {
+        if (resData.data?.rows) setRows(toInputRows('wider', selectedMonth, resData.data.rows));
         setNoMonthData(false);
         alert('Data successfully saved in MongoDB Database!');
       } else {
@@ -603,6 +616,7 @@ export default function WiderPage() {
         </div>
       )}
 
+      {quantityMonth(selectedMonth) && <div style={{padding:'14px 18px',borderRadius:'12px',background:'#e0f2fe',color:'#0c4a6e',border:'1px solid #38bdf8',fontSize:'13px'}}>September 2026 onward: Fuel in kg · HSD in litres. Total energy = Electricity + LNG × 13.9 / LPG × 12.78 + HSD × 3.3 (kWh). </div>}
       <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* SOLID COLORFUL TABLE */}
       <div className="equipment-grid-shell" style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
@@ -632,8 +646,8 @@ export default function WiderPage() {
                 <th style={{ backgroundColor: "#38bdf8", padding: "12px 8px", borderRight: "2px solid #000", textAlign: "left" }}>Parameters / Equipment</th>
                 <th style={{ backgroundColor: "#fde047", padding: "12px 6px", borderRight: "2px solid #000" }}>Month</th>
                 <th style={{ backgroundColor: "#4ade80", padding: "12px 6px", borderRight: "2px solid #000" }}>Electricity (kWh)</th>
-                <th style={{ backgroundColor: "#fb923c", padding: "12px 4px", borderRight: "2px solid #000" }}>LNG (kWh)</th>
-                <th style={{ backgroundColor: "#c084fc", padding: "12px 6px", borderRight: "2px solid #000" }}>HSD (kWh)</th>
+                <th style={{ backgroundColor: "#fb923c", padding: "12px 4px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "LNG (kg)" : "LNG (kWh)"}</th>
+                <th style={{ backgroundColor: "#c084fc", padding: "12px 6px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "HSD (Ltr)" : "HSD (kWh)"}</th>
                 <th style={{ backgroundColor: "#2dd4bf", padding: "12px 6px", borderRight: "2px solid #000" }}>Total Consumption</th>
                 <th style={{ backgroundColor: "#60a5fa", padding: "12px 6px", borderRight: "2px solid #000" }}>Production (MT)</th>
                 <th style={{ backgroundColor: "#a5b4fc", padding: "12px 6px", borderRight: "2px solid #000" }}>EnPI Unit</th>

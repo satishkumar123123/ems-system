@@ -1,3 +1,4 @@
+const {prepareSave}=require('../utils/fuelConversion');
 const { createFacilityYoYHandler } = require('../utils/facilityYoY');
 // backend/routes/hsuRoutes.js
 const express = require('express');
@@ -7,9 +8,11 @@ const router = express.Router();
 // 1. Schema Definition (Pehle wala intact hai)
 const HsuDataSchema = new mongoose.Schema({
   monthYear: { type: String, required: true, unique: true },
+  inputBasis: String,
   rows: [
     {
       equipment: String,
+      fuelType: String, fuelQuantity: Number, hsdLitres: Number, fuelFactor: Number, hsdFactor: Number,
       electricity: Number,
       lpg: Number,
       hsd: Number,
@@ -51,10 +54,10 @@ router.get('/', async (req, res) => {
 // ----------------------------------------------------
 router.post('/save', async (req, res) => {
   try {
-    const { monthYear, rows, totals } = req.body;
+    const { monthYear, rows, totals, inputBasis } = prepareSave('hsu', req.body);
     const updated = await HsuData.findOneAndUpdate(
       { monthYear },
-      { monthYear, rows, totals },
+      { monthYear, rows, totals, inputBasis },
       { upsert: true, new: true }
     );
     res.json({ success: true, data: updated });
