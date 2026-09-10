@@ -12,3 +12,5 @@
 .plant-qr-card img{background:#fff;border:1px solid #dce3ef;border-radius:12px;padding:4px;box-sizing:content-box;box-shadow:0 6px 16px #24325412}
 .plant-qr-card h3{color:#4338ca}.plant-qr-card:nth-child(3n+2) h3{color:#0f766e}.plant-qr-card:nth-child(3n) h3{color:#9d174d}.plant-qr-card small{color:#5b5680;background:#ffffffbb;border:1px solid #ffffff;padding:6px 10px;border-radius:20px}
 .plant-qr-actions a:first-child{background:linear-gradient(120deg,#6d28d9,#4338ca)}.plant-qr-card:nth-child(3n+2) .plant-qr-actions a:first-child{background:linear-gradient(120deg,#0f766e,#0369a1)}.plant-qr-card:nth-child(3n) .plant-qr-actions a:first-child{background:linear-gradient(120deg,#be185d,#9333ea)}
+
+.plant-qr-export{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px}.plant-qr-export button{background:linear-gradient(120deg,#4338ca,#7c3aed);color:#fff}.plant-qr-export button:nth-child(2){background:linear-gradient(120deg,#0f766e,#0369a1)}.plant-qr-export button:disabled{opacity:.6;cursor:wait}.plant-qr-export span{font-size:12px;color:#575584}
