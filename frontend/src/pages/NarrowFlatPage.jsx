@@ -1,3 +1,4 @@
+import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
@@ -86,6 +87,7 @@ const PIE_COLORS = [
 const SAVE_AUTH_PASSWORD = "1234";
 
 export default function NarrowFlatPage() {
+  useEquipmentQrTarget();
   const navigate = useNavigate();
   const dateInputRef = useRef(null);
 
@@ -526,6 +528,7 @@ export default function NarrowFlatPage() {
           <span>YoY Analytics</span>
         </button>
         <ScheduleButton plant="narrow-flat" />
+        <PlantQrCodes plant="narrow-flat" />
       </div>
 
       {/* PASSWORD CONFIRMATION MODAL */}
@@ -664,7 +667,7 @@ export default function NarrowFlatPage() {
                 const config = PERMANENT_EQUIPMENTS[idx] || {};
 
                 return (
-                  <tr key={idx} style={{ borderBottom: '1px solid #000', fontWeight: 'bold' }}>
+                  <tr key={idx} data-equipment={r.equipment} style={{ borderBottom: '1px solid #000', fontWeight: 'bold' }}>
                     {/* Index */}
                     <td style={{ backgroundColor: COL_COLORS.index, padding: '10px 4px', borderRight: '2px solid #000', color: '#0f172a', fontWeight: '900' }}>
                       {idx + 1}

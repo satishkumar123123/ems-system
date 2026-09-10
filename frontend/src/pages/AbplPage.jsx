@@ -1,3 +1,4 @@
+import PlantQrCodes from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
@@ -210,6 +211,7 @@ export default function AbplPage() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <PlantQrCodes plant="abpl" />
           <button onClick={() => navigate(`/abpl/chat?month=${selectedMonth}`)} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 20px', borderRadius: '12px', border: '1px solid #a6b1ff', background: 'linear-gradient(120deg, #087f91, #7652bd)', color: '#ffffff', fontWeight: '900', fontSize: '13px', cursor: 'pointer', boxShadow: '0 4px 18px #7661c744' }}><span aria-hidden="true">✦</span> AI Chatbot</button>
           <span style={{ fontSize: '12px', fontWeight: '800', color: '#94a3b8' }}>Consolidated Plant View:</span>
           <span style={{ fontSize: '12px', fontWeight: '900', color: '#00e5ff', padding: '4px 10px', backgroundColor: 'rgba(0,229,255,0.1)', borderRadius: '8px', border: '1px solid rgba(0,229,255,0.3)' }}>

@@ -1,3 +1,4 @@
+import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
 import '../styles/solar.css';
@@ -12,6 +13,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cel
 const COLORS = ['#f59e0b', '#10b981', '#6366f1'];
 
 export default function SolarPage() {
+  useEquipmentQrTarget();
   const navigate = useNavigate();
   const [selectedMonth, setSelectedMonth] = useState(() => monthFromUrl());
   const [ctlProduction, setCtlProduction] = useState('');
@@ -131,6 +133,7 @@ export default function SolarPage() {
 
         {/* 2 Buttons */}
         <div className="solar-buttons">
+          <PlantQrCodes plant="solar" />
           <button
             onClick={handleSave}
             disabled={saving || loading || Boolean(loadError)}
@@ -152,7 +155,7 @@ export default function SolarPage() {
       {/* Row 3: 3 COLORFUL INPUT BLOCKS */}
       <div className="solar-input-row">
         {/* Block 1: CTL */}
-        <div className="solar-input-card solar-ctl">
+        <div className="solar-input-card solar-ctl" data-equipment="CTL Production">
           <div className="solar-card-top">
             <span className="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">Unit: MT</span>
             <Factory size={26} className="text-white/80" />
@@ -175,7 +178,7 @@ export default function SolarPage() {
         </div>
 
         {/* Block 2: EV Station */}
-        <div className="solar-input-card solar-ev">
+        <div className="solar-input-card solar-ev" data-equipment="EV Station">
           <div className="solar-card-top">
             <span className="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">Unit: kWh</span>
             <BatteryCharging size={26} className="text-white/80" />
@@ -198,7 +201,7 @@ export default function SolarPage() {
         </div>
 
         {/* Block 3: Solar Generation */}
-        <div className="solar-input-card solar-generation">
+        <div className="solar-input-card solar-generation" data-equipment="Solar Generation">
           <div className="solar-card-top">
             <span className="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full">Unit: kWh</span>
             <Sun size={26} className="text-white/80" />
