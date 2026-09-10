@@ -1,3 +1,4 @@
+import EnpiTargets from '../components/EnpiTargets';
 import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
@@ -515,9 +516,9 @@ export default function UtilityPage() {
             <colgroup>
               <col style={{ width: "45px" }} />  {/* # */}
               <col style={{ width: "175px" }} /> {/* Equipment */}
-              <col style={{ width: "190px" }} /> {/* Month (EXPANDED) */}
+              <col style={{ width: "150px" }} /> {/* Month (EXPANDED) */}
               <col style={{ width: "135px" }} /> {/* Electricity */}
-              <col style={{ width: "75px" }} />  {/* LNG/LPG (COMPACT) */}
+              <col style={{ width: "115px" }} />  {/* LNG/LPG (COMPACT) */}
               <col style={{ width: "110px" }} /> {/* HSD */}
               <col style={{ width: "140px" }} /> {/* Total Consumption */}
               <col style={{ width: "125px" }} /> {/* Production */}
@@ -809,6 +810,7 @@ export default function UtilityPage() {
 
         </div>
 
+        <EnpiTargets plant="utility" rows={rows} selectedMonth={selectedMonth} loading={loading} error={loadError} />
         <EquipmentBarCharts rows={rows} selectedMonth={selectedMonth} loading={loading} error={loadError} />
       </div>
 

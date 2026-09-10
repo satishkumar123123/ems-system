@@ -39,7 +39,7 @@ export default function ExpandableChart({ children, width = '100%', height = '10
       if (heading) { title = heading.textContent.trim(); break; }
       node = node.parentElement;
     }
-    setContext({ title, light: Boolean(host.current.closest('.solar-page')) });
+    setContext({ title, light: Boolean(host.current.closest('.solar-page, .enpi-targets')) });
     setExpanded(true);
   };
   return <div ref={host} className={`expandable-chart${isPie ? ' chart-pie-grow' : ''}`} style={{ width, height }}>

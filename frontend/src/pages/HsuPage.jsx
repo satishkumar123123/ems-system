@@ -1,3 +1,4 @@
+import EnpiTargets from '../components/EnpiTargets';
 import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
@@ -628,9 +629,9 @@ export default function HsuPage() {
             <colgroup>
               <col style={{ width: "45px" }} />  {/* # */}
               <col style={{ width: "185px" }} /> {/* Equipment */}
-              <col style={{ width: "190px" }} /> {/* Month (BADA KIYA GAYA) */}
+              <col style={{ width: "150px" }} /> {/* Month (BADA KIYA GAYA) */}
               <col style={{ width: "135px" }} /> {/* Electricity */}
-              <col style={{ width: "75px" }} />  {/* LPG (CHOTA KIYA GAYA) */}
+              <col style={{ width: "115px" }} />  {/* LPG (CHOTA KIYA GAYA) */}
               <col style={{ width: "110px" }} /> {/* HSD */}
               <col style={{ width: "140px" }} /> {/* Total Consumption */}
               <col style={{ width: "125px" }} /> {/* Production */}
@@ -922,6 +923,7 @@ export default function HsuPage() {
 
         </div>
 
+        <EnpiTargets plant="hsu" rows={rows} selectedMonth={selectedMonth} loading={loading} error={loadError} />
         <EquipmentBarCharts rows={rows} selectedMonth={selectedMonth} loading={loading} error={loadError} />
       </div>
 
