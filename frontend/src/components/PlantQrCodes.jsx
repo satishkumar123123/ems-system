@@ -1,23 +1,21 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import QRCode from 'qrcode';
 import catalog from '../utils/equipmentQrCatalog.json';
 import './plant-qr.css';
+// Preserve existing printed QR URLs while opening the new detail view.
 export function useEquipmentQrTarget() {
- const { search } = useLocation();
+ const { search, pathname } = useLocation();
+ const navigate = useNavigate();
  useEffect(() => {
-  const name = new URLSearchParams(search).get('equipment');
-  const node = [...document.querySelectorAll('[data-equipment]')].find(n => n.dataset.equipment === name);
-  if (!node) return;
-  node.classList.add('equipment-qr-target');
-  const frame = requestAnimationFrame(() => node.scrollIntoView({block:'center',inline:'center',behavior:'instant'}));
-  return () => {cancelAnimationFrame(frame);node.classList.remove('equipment-qr-target');};
- }, [search]);
+  const params = new URLSearchParams(search);
+  if (params.get('equipment')) navigate(`/equipment${pathname}?${params.toString()}`, { replace: true });
+ }, [search, pathname, navigate]);
 }
 function QrCard({plant,name}) {
  const [src,setSrc] = useState(''); const [error,setError] = useState(''); const [retry,setRetry] = useState(0);
- const url = new URL(`/${plant}`,window.location.origin); if(name) url.searchParams.set('equipment',name);
+ const url = new URL(name ? `/equipment/${plant}` : `/${plant}`,window.location.origin); if(name) url.searchParams.set('equipment',name);
  const link = url.href; const title = name || 'Plant Dashboard';
  useEffect(() => {let active=true;setError('');QRCode.toDataURL(link,{width:768,margin:4,errorCorrectionLevel:'M',color:{dark:'#000000',light:'#ffffff'}}).then(v=>{if(active)setSrc(v);}).catch(()=>{if(active)setError('QR generation failed.');});return()=>{active=false;};},[link,retry]);
  return <article className="plant-qr-card"><small>{plant.replaceAll('-',' ').toUpperCase()}</small><h3>{title}</h3>
@@ -32,7 +30,7 @@ export default function PlantQrCodes({plant}) {
  const entries=plants.flatMap(unit=>(catalog[unit]||[]).map(name=>({plant:unit,name}))).filter(item=>`${item.plant} ${item.name}`.toLowerCase().includes(query.toLowerCase()));
  return <><button ref={button} type="button" className="plant-qr-button" onClick={()=>setOpen(true)}>▦ QR Codes / Download</button>
  {open && createPortal(<dialog ref={dialog} className="plant-qr-dialog" aria-labelledby={id} onCancel={e=>{e.preventDefault();setOpen(false);}} onClose={()=>setOpen(false)}>
- <header><div><h2 id={id}>{plant.replaceAll('-',' ').toUpperCase()} — Equipment QR Codes</h2><p>Download labels. Scan to open the plant and highlight the equipment.</p></div><button type="button" autoFocus onClick={()=>setOpen(false)}>Close ✕</button></header>
+ <header><div><h2 id={id}>{plant.replaceAll('-',' ').toUpperCase()} — Equipment QR Codes</h2><p>Scan an equipment QR to select a month and view its parameters and charts.</p></div><button type="button" autoFocus onClick={()=>setOpen(false)}>Close ✕</button></header>
  <input className="plant-qr-search" aria-label="Search equipment" placeholder="Search equipment or plant…" value={query} onChange={e=>setQuery(e.target.value)}/>
  <div className="plant-qr-grid">{!query && <QrCard plant={plant}/>} {entries.map(item=><QrCard key={`${item.plant}-${item.name}`} {...item}/>)}</div>
  {!entries.length && query && <p role="status">No matching equipment.</p>}

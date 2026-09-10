@@ -1,3 +1,4 @@
+import EquipmentDetailPage from './pages/EquipmentDetailPage';
 import ChatPage from './pages/ChatPage';
 import SchedulePage from './pages/SchedulePage';
 import React, { useState } from 'react';
@@ -940,6 +941,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/equipment/:plant" element={<EquipmentDetailPage />} />
           <Route path="/:plant/schedule" element={<SchedulePage />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/wider" element={<WiderPage />} />
