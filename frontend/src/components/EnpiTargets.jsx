@@ -1,4 +1,5 @@
-import { trendMonths, performance } from '../utils/enpiTargets';
+import catalog from '../utils/equipmentQrCatalog.json';
+import { trendMonths, performance, canonicalEnpiUnit, averageEnpi } from '../utils/enpiTargets';
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts';
 import ExpandableChart from './ExpandableChart';
@@ -8,10 +9,20 @@ import './enpi-targets.css';
 const format=v=>v==null?'Not recorded':v.toLocaleString('en-IN',{maximumFractionDigits:3});
 export default function EnpiTargets({plant,rows,selectedMonth,loading,error}){
  const [choice,setChoice]=useState(''),[range,setRange]=useState(6),[history,setHistory]=useState([]),[busy,setBusy]=useState(false),[retry,setRetry]=useState(0),[settings,setSettings]=useState({});
- const equipment=rows.some(r=>r.equipment===choice)?choice:rows[0]?.equipment||'';
- const row=rows.find(r=>r.equipment===equipment);
- const values=settings[equipment]||{baseline:'100',target:'90'};
- const baseline=numeric(values.baseline),target=numeric(values.target),actual=loading||error?null:numeric(row?.enpiValue);
+ const [unitChoice,setUnitChoice]=useState('');
+ const knownRows=[...rows,...history.flatMap(h=>h.rows)];
+ const names=[...new Set([...(catalog[plant]||[]),...knownRows.map(r=>r.equipment)].filter(Boolean))];
+ const plantView=choice==='__plant__';
+ const equipment=plantView?'Plant Average':names.includes(choice)?choice:names[0]||'';
+ const row=knownRows.find(r=>r.equipment===equipment);
+ const units=[...new Set(knownRows.map(r=>canonicalEnpiUnit(r.enpiUnit)).filter(Boolean))];
+ const selectedUnit=units.includes(unitChoice)?unitChoice:units.includes('kwh/mt')?'kwh/mt':units[0]||'';
+ const unit=plantView?selectedUnit:row?.enpiUnit||'';
+ const settingKey=plantView?`__plant__:${unit}`:equipment;
+ const values=settings[settingKey]||{baseline:'100',target:'90'};
+ const currentRow=rows.find(r=>r.equipment===equipment);
+ const average=averageEnpi(loading||error?[]:rows,unit);
+ const baseline=numeric(values.baseline),target=numeric(values.target),actual=loading||error?null:plantView?average.value:numeric(currentRow?.enpiValue);
  useEffect(()=>{
   if(loading||error){setHistory([]);return;}
   const controller=new AbortController();let active=true;setBusy(true);setHistory([]);
@@ -24,16 +35,17 @@ export default function EnpiTargets({plant,rows,selectedMonth,loading,error}){
    if(active){setHistory(results);setBusy(false);}
   })();return()=>{active=false;controller.abort();};
  },[plant,selectedMonth,range,loading,error,retry]);
- const unit=row?.enpiUnit||'';
  const points=[...history,{month:selectedMonth,rows:loading||error?[]:rows}].map(item=>{
   const found=item.rows.find(r=>String(r.equipment).trim().toUpperCase()===equipment.trim().toUpperCase());
-  const mismatch=found?.enpiUnit&&unit&&found.enpiUnit!==unit;
-  const value=item.failed||mismatch?null:numeric(found?.enpiValue);
+  const mismatch=!plantView&&found?.enpiUnit&&unit&&canonicalEnpiUnit(found.enpiUnit)!==canonicalEnpiUnit(unit);
+  const value=item.failed||mismatch?null:plantView?averageEnpi(item.rows,unit).value:numeric(found?.enpiValue);
   return {month:item.month,value,failed:item.failed,mismatch,status:performance(value,target)};
  });
- const change=key=>event=>setSettings(prev=>({...prev,[equipment]:{...values,[key]:event.target.value}}));
+ const change=key=>event=>setSettings(prev=>({...prev,[settingKey]:{...values,[key]:event.target.value}}));
  return <section className="enpi-targets">
- <header><div><h2>EnPI Baseline & Target Tracker</h2><p className="enpi-demo">DEMO VALUES · Baseline 100 / Target 90 are illustrative, not approved targets.</p></div><label>Equipment<select value={equipment} onChange={e=>setChoice(e.target.value)}>{rows.map(r=><option key={r.equipment}>{r.equipment}</option>)}</select></label></header>
+ <header><div><h2>EnPI Baseline & Target Tracker</h2><p className="enpi-demo">DEMO VALUES · Baseline 100 / Target 90 are illustrative, not approved targets.</p></div><label>Choose equipment or plant<select value={plantView?'__plant__':equipment} onChange={e=>setChoice(e.target.value)}><option value="__plant__">★ Plant Average</option>{names.map(name=><option key={name} value={name}>{name}</option>)}</select></label></header>
+ <div className="enpi-equipment-options" aria-label="Equipment selection"><button type="button" aria-pressed={plantView} onClick={()=>setChoice('__plant__')}>★ Plant Average</button>{names.map(name=><button type="button" key={name} aria-pressed={!plantView&&equipment===name} onClick={()=>setChoice(name)}>{name}</button>)}</div>
+ {plantView&&<div className="enpi-plant-average"><label>Average unit group<select value={selectedUnit} onChange={e=>setUnitChoice(e.target.value)}>{units.map(u=><option key={u}>{u}</option>)}</select></label><p>Arithmetic average of recorded equipment EnPI in this unit group: {average.count} of {average.total} equipment included for {selectedMonth}. Missing values are excluded. This is an equipment average, not total plant energy ÷ total production.</p></div>}
  <p>Lower EnPI is treated as better. Units: {unit||'Not recorded'}. Edited demo values apply only in this page session.</p>
  <div className="enpi-summary"><label>Demo baseline<input type="number" min="0" step="any" value={values.baseline} onChange={change('baseline')}/></label><label>Demo target<input type="number" min="0" step="any" value={values.target} onChange={change('target')}/></label><div><span>Actual · {selectedMonth}</span><strong>{format(actual)}</strong></div><div className={actual!=null&&target!=null&&actual>target?'enpi-lag':'enpi-lead'}><span>Against demo target</span><strong>{performance(actual,target)}</strong><small>{actual!=null&&target!=null?`${format(Math.abs(actual-target))} ${unit} ${actual>target?'above':actual<target?'below':'difference'}`:'No numeric comparison available'}</small></div></div>
  <div className="enpi-range"><h3>{equipment} · Monthly EnPI</h3><label>Trend range<select value={range} onChange={e=>setRange(Number(e.target.value))}><option value={6}>Last 6 months</option><option value={12}>Last 12 months</option><option value={18}>Last 18 months</option></select></label></div>
