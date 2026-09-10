@@ -1,3 +1,4 @@
+import EnpiBreakdownView from '../components/EnpiBreakdownView';
 import EnpiTargets from '../components/EnpiTargets';
 import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
@@ -885,8 +886,8 @@ export default function NarrowTubePage() {
               </span>
             </div>
 
-            <div style={{ width: '100%', height: 360 }}>
-              <ResponsiveContainer width="100%" height="100%">
+            <EnpiBreakdownView data={getCategorizedData('enpiValue')} colors={PIE_COLORS}>
+<ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={getCategorizedData('enpiValue')}
@@ -916,7 +917,7 @@ export default function NarrowTubePage() {
                   />
                 </PieChart>
               </ResponsiveContainer>
-            </div>
+            </EnpiBreakdownView>
           </div>
 
         </div>
