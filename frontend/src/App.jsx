@@ -1,3 +1,4 @@
+import SeuPage from './pages/SeuPage';
 import EquipmentDetailPage from './pages/EquipmentDetailPage';
 import ChatPage from './pages/ChatPage';
 import SchedulePage from './pages/SchedulePage';
@@ -941,6 +942,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/:plant/seu" element={<SeuPage />} />
         <Route path="/equipment/:plant" element={<EquipmentDetailPage />} />
           <Route path="/:plant/schedule" element={<SchedulePage />} />
         <Route path="/" element={<Dashboard />} />

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Pie, PieChart, ResponsiveContainer } from 'recharts';
 import './expandable-chart.css';
 
-export default function ExpandableChart({ children, width = '100%', height = '100%', ...props }) {
+export default function ExpandableChart({ children, width = '100%', height = '100%', preservePieHole = false, ...props }) {
   const [expanded, setExpanded] = useState(false);
   const [context, setContext] = useState({ title: 'Chart', light: false });
   const host = useRef(null);
@@ -14,7 +14,7 @@ export default function ExpandableChart({ children, width = '100%', height = '10
   const chart = isPie ? cloneElement(children, {}, Children.map(children.props.children, child => {
     if (!isValidElement(child) || child.type !== Pie) return child;
     return cloneElement(child, {
-      innerRadius: 0,
+      innerRadius: preservePieHole ? (child.props.innerRadius || 0) : 0,
       isAnimationActive: false,
       ...(expanded ? { outerRadius: '75%', cx: '50%', cy: '48%' } : {}),
     });

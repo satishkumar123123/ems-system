@@ -1,3 +1,4 @@
+import SeuButton from '../components/SeuButton';
 import { quantityMonth, calculateRows, toInputRows, fuelType } from '../utils/fuelConversion';
 import { prepareFuelSpreadsheet, fuelSampleRows } from '../utils/fuelSpreadsheet';
 import EnpiBreakdownView from '../components/EnpiBreakdownView';
@@ -538,6 +539,7 @@ export default function HsuPage() {
           <span>YoY Analytics</span>
         </button>
         <ScheduleButton plant="hsu" />
+        <SeuButton plant="hsu" />
         <PlantQrCodes plant="hsu" />
       </div>
 

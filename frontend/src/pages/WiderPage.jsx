@@ -1,3 +1,4 @@
+import SeuButton from '../components/SeuButton';
 import { quantityMonth, calculateRows, toInputRows, fuelType } from '../utils/fuelConversion';
 import { prepareFuelSpreadsheet, fuelSampleRows } from '../utils/fuelSpreadsheet';
 import EnpiBreakdownView from '../components/EnpiBreakdownView';
@@ -522,6 +523,7 @@ export default function WiderPage() {
           <span>YoY Analytics</span>
         </button>
         <ScheduleButton plant="wider" />
+        <SeuButton plant="wider" />
         <PlantQrCodes plant="wider" />
       </div>
 

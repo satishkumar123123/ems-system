@@ -1,3 +1,4 @@
+import SeuButton from '../components/SeuButton';
 import { quantityMonth, calculateRows, toInputRows, fuelType } from '../utils/fuelConversion';
 import { prepareFuelSpreadsheet, fuelSampleRows } from '../utils/fuelSpreadsheet';
 import EnpiBreakdownView from '../components/EnpiBreakdownView';
@@ -543,6 +544,7 @@ export default function NarrowFlatPage() {
           <span>YoY Analytics</span>
         </button>
         <ScheduleButton plant="narrow-flat" />
+        <SeuButton plant="narrow-flat" />
         <PlantQrCodes plant="narrow-flat" />
       </div>
 
