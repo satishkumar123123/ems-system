@@ -9,6 +9,7 @@ const router = express.Router();
 const HsuDataSchema = new mongoose.Schema({
   monthYear: { type: String, required: true, unique: true },
   inputBasis: String,
+  formula: { ELECTRICITY:Number, LNG:Number, LPG:Number, HSD:Number },
   rows: [
     {
       equipment: String,
@@ -54,10 +55,10 @@ router.get('/', async (req, res) => {
 // ----------------------------------------------------
 router.post('/save', async (req, res) => {
   try {
-    const { monthYear, rows, totals, inputBasis } = prepareSave('hsu', req.body);
+    const { monthYear, rows, totals, inputBasis, formula } = prepareSave('hsu', req.body);
     const updated = await HsuData.findOneAndUpdate(
       { monthYear },
-      { monthYear, rows, totals, inputBasis },
+      { monthYear, rows, totals, inputBasis, formula },
       { upsert: true, new: true }
     );
     res.json({ success: true, data: updated });

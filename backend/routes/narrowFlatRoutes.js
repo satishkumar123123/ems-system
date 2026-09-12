@@ -7,6 +7,7 @@ const router = express.Router();
 const NarrowFlatDataSchema = new mongoose.Schema({
   monthYear: { type: String, required: true, unique: true },
   inputBasis: String,
+  formula: { ELECTRICITY:Number, LNG:Number, LPG:Number, HSD:Number },
   rows: [
     {
       equipment: String,
@@ -48,10 +49,10 @@ router.get('/', async (req, res) => {
 // SAVE / UPDATE Narrow Flat data
 router.post('/save', async (req, res) => {
   try {
-    const { monthYear, rows, totals, inputBasis } = prepareSave('narrow-flat', req.body);
+    const { monthYear, rows, totals, inputBasis, formula } = prepareSave('narrow-flat', req.body);
     const updated = await NarrowFlatData.findOneAndUpdate(
       { monthYear },
-      { monthYear, rows, totals, inputBasis },
+      { monthYear, rows, totals, inputBasis, formula },
       { upsert: true, new: true }
     );
     res.json({ success: true, data: updated });

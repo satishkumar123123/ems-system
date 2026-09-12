@@ -7,6 +7,7 @@ const router = express.Router();
 const WiderDataSchema = new mongoose.Schema({
   monthYear: { type: String, required: true, unique: true },
   inputBasis: String,
+  formula: { ELECTRICITY:Number, LNG:Number, LPG:Number, HSD:Number },
   type: { type: String, default: 'wider' },
   rows: [
     {
@@ -49,10 +50,10 @@ router.get('/', async (req, res) => {
 // SAVE / UPDATE Wider data
 router.post('/save', async (req, res) => {
   try {
-    const { monthYear, rows, totals, inputBasis } = prepareSave('wider', req.body);
+    const { monthYear, rows, totals, inputBasis, formula } = prepareSave('wider', req.body);
     const updated = await WiderData.findOneAndUpdate(
       { monthYear },
-      { monthYear, type: 'wider', rows, totals, inputBasis },
+      { monthYear, type: 'wider', rows, totals, inputBasis, formula },
       { upsert: true, new: true }
     );
     res.json({ success: true, data: updated });

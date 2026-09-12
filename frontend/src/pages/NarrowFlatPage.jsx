@@ -1,5 +1,6 @@
+import {FuelSelector,FuelReferenceNotice,TotalFormulaControl,useAugustFuelEquipment,formulaLabel} from '../components/FuelControls';
 import SeuButton from '../components/SeuButton';
-import { quantityMonth, calculateRows, toInputRows, fuelType } from '../utils/fuelConversion';
+import { quantityMonth, calculateRows, toInputRows, defaultFormula, validateFormula } from '../utils/fuelConversion';
 import { prepareFuelSpreadsheet, fuelSampleRows } from '../utils/fuelSpreadsheet';
 import EnpiBreakdownView from '../components/EnpiBreakdownView';
 import EnpiTargets from '../components/EnpiTargets';
@@ -103,6 +104,9 @@ export default function NarrowFlatPage() {
   const [noMonthData, setNoMonthData] = useState(false);
   const [reloadAttempt, setReloadAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [formula,setFormula]=useState(null);
+  const [formulaDirty,setFormulaDirty]=useState(false);
+  const augustFuel=useAugustFuelEquipment('narrow-flat');
   const [showUploader, setShowUploader] = useState(false);
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -114,6 +118,8 @@ export default function NarrowFlatPage() {
     let active = true;
     setLoading(true);
     setLoadError('');
+    setFormula(null);setFormulaDirty(false);
+    setShowPasswordModal(false);
     setNoMonthData(false);
     setRows(getInitialBlankRows());
     apiFetch(`${API_BASE_URL}/api/narrow-flat?month=${selectedMonth}`, { signal: controller.signal })
@@ -123,6 +129,7 @@ export default function NarrowFlatPage() {
         if (data !== null && (!data || !Array.isArray(data.rows))) {
           throw new Error('The data service returned an invalid record. Please retry.');
         }
+        setFormula(Object.keys(data?.formula||{}).length?validateFormula(data.formula):null);
         if (data?.rows?.length) {
           const blanks = getInitialBlankRows();
           // Saved equipment names are authoritative; do not discard legacy/new rows.
@@ -149,8 +156,9 @@ export default function NarrowFlatPage() {
   }, [selectedMonth, reloadAttempt]);
 
   const handleCellChange = (idx, field, value) => {
-    if (quantityMonth(selectedMonth)) {
-      setRows(prev => calculateRows('narrow-flat', prev.map((row, i) => i === idx ? { ...row, [field]: value } : row)));
+    if (field==='fuelType'&&!quantityMonth(selectedMonth)&&!formula) {setRows(prev=>prev.map((row,i)=>i===idx?{...row,fuelType:value}:row));return;}
+    if (quantityMonth(selectedMonth)||formula) {
+      setRows(prev => calculateRows('narrow-flat', prev.map((row, i) => i === idx ? { ...row, [field]: value } : row),formula||defaultFormula(selectedMonth),quantityMonth(selectedMonth)?'quantity-v1':'legacy-kwh'));
       return;
     }
     setRows(prev => {
@@ -267,7 +275,7 @@ export default function NarrowFlatPage() {
             };
           });
 
-          setRows(quantityMonth(selectedMonth) ? calculateRows('narrow-flat', mapped) : mapped);
+          setRows(quantityMonth(selectedMonth)||formula ? calculateRows('narrow-flat', mapped,formula||defaultFormula(selectedMonth),quantityMonth(selectedMonth)?'quantity-v1':'legacy-kwh') : mapped);
           setNoMonthData(false);
           setShowUploader(false);
           alert('Narrow Flat Excel Data Uploaded Successfully! Click Save to store.');
@@ -304,13 +312,13 @@ export default function NarrowFlatPage() {
     XLSX.writeFile(wb, `Narrow_Flat_Template_${selectedMonth}.xlsx`);
   };
 
-  const executeSave = async () => {
+  const executeSave = async (formulaOverride = formula) => {
     if (loading || loadError) return;
     setSaving(true);
     try {
-      if (quantityMonth(selectedMonth)) {
+      if (quantityMonth(selectedMonth)||formulaOverride) {
         const policy = await (await apiFetch(`${API_BASE_URL}/api/energy-policy`)).json();
-        if (policy.version !== 'quantity-v1') throw new Error('Energy conversion service is updating. Please retry shortly.');
+        if (policy.version !== 'quantity-v1'||policy.formulaVersion!=='factors-v1') throw new Error('Energy conversion service is updating. Please retry shortly.');
       }
       const res = await apiFetch(`${API_BASE_URL}/api/narrow-flat/save`, {
         method: 'POST',
@@ -318,7 +326,8 @@ export default function NarrowFlatPage() {
         body: JSON.stringify({
           monthYear: selectedMonth,
           inputBasis: quantityMonth(selectedMonth) ? 'quantity-v1' : 'legacy-kwh',
-          rows: rows.map(row => ({ ...row, lng: row.lpg })),
+          formula: formulaOverride || undefined,
+          rows: formulaOverride?calculateRows('narrow-flat',rows,formulaOverride,quantityMonth(selectedMonth)?'quantity-v1':'legacy-kwh'):rows,
           totals: {
             ...totals,
             lng: totals.lpg,
@@ -328,6 +337,7 @@ export default function NarrowFlatPage() {
       });
       const resData = await res.json();
       if (resData.success) {
+        setFormula(Object.keys(resData.data?.formula||{}).length?validateFormula(resData.data.formula):null);setFormulaDirty(false);
         if (resData.data?.rows) setRows(toInputRows('narrow-flat', selectedMonth, resData.data.rows));
         setNoMonthData(false);
         alert('Narrow Flat Data successfully saved in MongoDB Database!');
@@ -349,6 +359,12 @@ export default function NarrowFlatPage() {
     }
     setShowPasswordModal(false);
     await executeSave();
+  };
+
+  const saveFormula = next => {
+    setFormula(next);setFormulaDirty(true);
+    setRows(prev=>calculateRows('narrow-flat',prev,next,quantityMonth(selectedMonth)?'quantity-v1':'legacy-kwh'));
+    setPasswordError('');setEnteredPassword('');setShowPasswordModal(true);
   };
 
   return (
@@ -433,7 +449,7 @@ export default function NarrowFlatPage() {
               <input
                 ref={dateInputRef}
                 type="month"
-                value={selectedMonth}
+                disabled={saving} value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
                 style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: '12px', fontWeight: '900', color: '#38bdf8', cursor: 'pointer' }}
               />
@@ -626,7 +642,7 @@ export default function NarrowFlatPage() {
             <input
               type="file"
               accept=".xlsx, .xls"
-              onChange={handleFileUpload}
+              disabled={saving} onChange={handleFileUpload}
               style={{ fontSize: '12px', color: '#cbd5e1', cursor: 'pointer' }}
             />
             <button 
@@ -639,7 +655,9 @@ export default function NarrowFlatPage() {
         </div>
       )}
 
-      {quantityMonth(selectedMonth) && <div style={{padding:'14px 18px',borderRadius:'12px',background:'#e0f2fe',color:'#0c4a6e',border:'1px solid #38bdf8',fontSize:'13px'}}>September 2026 onward: Fuel in kg · HSD in litres. Total energy = Electricity + LNG × 13.9 / LPG × 12.78 + HSD × 3.3 (kWh). </div>}
+      <FuelReferenceNotice state={augustFuel}/>
+      {formulaDirty&&<p className="formula-draft-note" role="status">Formula changes are not saved yet. Complete Save to store the formula and recalculated data.</p>}
+      {(quantityMonth(selectedMonth)||formula)&&<p className="fuel-reference">{formulaLabel(formula,selectedMonth)}</p>}
       <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* SOLID COLORFUL TABLE */}
       <div className="equipment-grid-shell" style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
@@ -669,9 +687,9 @@ export default function NarrowFlatPage() {
                 <th style={{ backgroundColor: "#38bdf8", padding: "12px 8px", borderRight: "2px solid #000", textAlign: "left" }}>Parameters / Equipment</th>
                 <th style={{ backgroundColor: "#fde047", padding: "12px 6px", borderRight: "2px solid #000" }}>Month-Year</th>
                 <th style={{ backgroundColor: "#4ade80", padding: "12px 6px", borderRight: "2px solid #000" }}>Electricity (kWh)</th>
-                <th style={{ backgroundColor: "#fb923c", padding: "12px 4px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "LPG (kg)" : "LPG (kWh)"}</th>
+                <th style={{ backgroundColor: "#fb923c", padding: "12px 4px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "LNG/LPG (kg)" : "LNG/LPG (kWh)"}</th>
                 <th style={{ backgroundColor: "#c084fc", padding: "12px 6px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "HSD (Ltr)" : "HSD (kWh)"}</th>
-                <th style={{ backgroundColor: "#2dd4bf", padding: "12px 6px", borderRight: "2px solid #000" }}>Total Consumption</th>
+                <th style={{ backgroundColor: "#2dd4bf", padding: "12px 6px", borderRight: "2px solid #000" }}> <TotalFormulaControl plant="narrow-flat" month={selectedMonth} formula={formula} onSave={saveFormula} disabled={saving||loading||Boolean(loadError)} saving={saving}/> </th>
                 <th style={{ backgroundColor: "#60a5fa", padding: "12px 6px", borderRight: "2px solid #000" }}>Production (MT)</th>
                 <th style={{ backgroundColor: "#a5b4fc", padding: "12px 6px", borderRight: "2px solid #000" }}>EnPI Unit</th>
                 <th style={{ backgroundColor: "#f472b6", padding: "12px 6px", borderRight: "2px solid #000" }}>EnPI Value(s)</th>
@@ -705,7 +723,7 @@ export default function NarrowFlatPage() {
                     <td style={{ backgroundColor: COL_COLORS.electricity, padding: '6px', borderRight: '2px solid #000' }}>
                       <input 
                         type="number"
-                        value={r.electricity}
+                        disabled={saving} value={r.electricity}
                         onChange={(e) => handleCellChange(idx, 'electricity', e.target.value)}
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #065f46', borderRadius: '6px', padding: '4px 2px', fontWeight: '900', color: '#064e3b', outline: 'none', boxSizing: 'border-box' }}
@@ -716,18 +734,19 @@ export default function NarrowFlatPage() {
                     <td style={{ backgroundColor: COL_COLORS.lpg, padding: '4px', borderRight: '2px solid #000' }}>
                       <input 
                         type="number"
-                        value={r.lpg}
+                        disabled={saving} value={r.lpg}
                         onChange={(e) => handleCellChange(idx, 'lpg', e.target.value)}
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #9a3412', borderRadius: '6px', padding: '4px 1px', fontWeight: '900', color: '#7c2d12', outline: 'none', boxSizing: 'border-box', fontSize: '11px' }}
                       />
+                      <FuelSelector plant="narrow-flat" row={r} month={selectedMonth} formula={formula} eligible={augustFuel.allows(r.equipment)} disabled={saving||loading} onChange={value=>handleCellChange(idx,'fuelType',value)}/>
                     </td>
 
                     {/* HSD Column */}
                     <td style={{ backgroundColor: COL_COLORS.hsd, padding: '6px', borderRight: '2px solid #000' }}>
                       <input 
                         type="number"
-                        value={r.hsd}
+                        disabled={saving} value={r.hsd}
                         onChange={(e) => handleCellChange(idx, 'hsd', e.target.value)}
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #6b21a8', borderRadius: '6px', padding: '4px 2px', fontWeight: '900', color: '#581c87', outline: 'none', boxSizing: 'border-box' }}
@@ -743,7 +762,7 @@ export default function NarrowFlatPage() {
                     <td style={{ backgroundColor: COL_COLORS.production, padding: '6px', borderRight: '2px solid #000' }}>
                       <input 
                         type="number"
-                        value={r.production}
+                        disabled={saving} value={r.production}
                         onChange={(e) => handleCellChange(idx, 'production', e.target.value)}
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #0369a1', borderRadius: '6px', padding: '4px 2px', fontWeight: '900', color: '#0c4a6e', outline: 'none', boxSizing: 'border-box' }}
