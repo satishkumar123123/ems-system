@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {equipmentMetrics,numeric,lastSixMonths} from '../src/utils/equipmentDetail.js';
+import {equipmentMetrics,numeric,lastSixMonths,lastMonths} from '../src/utils/equipmentDetail.js';
 test('finds equipment case-insensitively and preserves recorded zero values',()=>{
  const data={rows:[{equipment:' CGL ',electricity:0,lng:12,hsd:3,totalConsumption:15,production:0,enpiUnit:'kWh/MT',enpiValue:'0',wrtKwh:0}]};
  const metrics=equipmentMetrics('wider','cgl',data);
@@ -14,4 +14,13 @@ test('fuel aliases, recorded EnPI text and solar parameters remain truthful',()=
 });
 test('six month trend handles calendar rollover',()=>{
  assert.deepEqual(lastSixMonths('2026-03'),['2025-10','2025-11','2025-12','2026-01','2026-02','2026-03']);
+});
+
+test('twelve month trend has ordered months across year boundaries',()=>{
+ const months=lastMonths('2026-03',12);
+ assert.equal(months.length,12);
+ assert.equal(months[0],'2025-04');
+ assert.equal(months.at(-1),'2026-03');
+ assert.equal(new Set(months).size,12);
+ assert.throws(()=>lastMonths('2026-03',7));
 });

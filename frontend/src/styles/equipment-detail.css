@@ -11,3 +11,6 @@
 .equipment-detail-charts section:nth-child(5n+5){background:linear-gradient(145deg,#452743,#713554);border-color:#f9a8d4;border-top-color:#f472b6}
 .equipment-detail-charts h3{color:#f8fafc}.equipment-detail-charts h3 small{color:#dbeafe}.equipment-detail-charts p{color:#e2e8f0}
 .equipment-detail button{background:linear-gradient(120deg,#6d28d9,#4338ca);color:#fff;border-color:#a78bfa}
+
+.equipment-range{display:flex;gap:10px;flex-wrap:wrap}.equipment-range button{cursor:pointer}.equipment-range button[aria-pressed="false"]{background:white;color:#5b21b6}.equipment-range button[aria-pressed="true"]{box-shadow:0 0 0 3px #c4b5fd}
+.equipment-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:24px}.equipment-kpis article{padding:22px;border-radius:18px;background:linear-gradient(125deg,#0369a1,#0891b2);color:white;box-shadow:0 8px 20px #33415522}.equipment-kpis article:nth-child(2){background:linear-gradient(125deg,#c2410c,#ea580c)}.equipment-kpis article:nth-child(3){background:linear-gradient(125deg,#047857,#0d9488)}.equipment-kpis article:nth-child(4){background:linear-gradient(125deg,#6d28d9,#9333ea)}.equipment-kpis article:nth-child(5){background:linear-gradient(125deg,#be185d,#db2777)}.equipment-kpis strong{display:block;font-size:26px;margin-top:12px;overflow-wrap:anywhere}
