@@ -12,7 +12,7 @@ import EquipmentBarCharts from '../components/EquipmentBarCharts';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import {
@@ -672,7 +672,7 @@ export default function WiderPage() {
 
                     {/* Parameter / Equipment Name */}
                     <td style={{ backgroundColor: config.labelBg, color: config.textCol, padding: '10px 8px', borderRight: '2px solid #000', textAlign: 'left', fontWeight: '900', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {r.equipment}
+                      <Link style={{color: 'inherit', textDecoration: 'underline', textUnderlineOffset: '4px'}} to={`/equipment/wider?${new URLSearchParams({equipment: r.equipment, month: selectedMonth})}`}>{r.equipment} ↗</Link>
                     </td>
 
                     {/* Month Column (Expanded) */}

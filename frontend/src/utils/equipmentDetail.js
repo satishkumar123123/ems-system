@@ -23,7 +23,10 @@ export function equipmentMetrics(plant,name,data) {
   {key:'wrtKwh',label:'WRT to Total',unit:'%',value:r.wrtKwh??null},
  ];
 }
-export function lastSixMonths(month) {
+export function lastMonths(month, count = 6) {
+ if (![6,12].includes(count)) throw new Error('Choose 6 or 12 months');
  const [year,m]=month.split('-').map(Number);
- return Array.from({length:6},(_,i)=>{const d=new Date(Date.UTC(year,m-1-(5-i),1));return d.toISOString().slice(0,7);});
+ return Array.from({length:count},(_,i)=>{const d=new Date(Date.UTC(year,m-1-(count-1-i),1));return d.toISOString().slice(0,7);});
 }
+
+export const lastSixMonths = month => lastMonths(month, 6);
