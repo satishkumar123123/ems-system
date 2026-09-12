@@ -1,5 +1,6 @@
+import {FuelSelector,FuelReferenceNotice,TotalFormulaControl,useAugustFuelEquipment,formulaLabel} from '../components/FuelControls';
 import SeuButton from '../components/SeuButton';
-import { quantityMonth, calculateRows, toInputRows, fuelType } from '../utils/fuelConversion';
+import { quantityMonth, calculateRows, toInputRows, defaultFormula, validateFormula } from '../utils/fuelConversion';
 import { prepareFuelSpreadsheet, fuelSampleRows } from '../utils/fuelSpreadsheet';
 import EnpiBreakdownView from '../components/EnpiBreakdownView';
 import EnpiTargets from '../components/EnpiTargets';
@@ -73,12 +74,16 @@ export default function UtilityPage() {
   const [noMonthData, setNoMonthData] = useState(false);
   const [reloadAttempt, setReloadAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [formula,setFormula]=useState(null);
+  const [formulaDirty,setFormulaDirty]=useState(false);
+  const augustFuel=useAugustFuelEquipment('utility');
 
   useEffect(() => {
     const controller = new AbortController();
     let active = true;
     setLoading(true);
     setLoadError('');
+    setFormula(null);setFormulaDirty(false);
     setNoMonthData(false);
     setRows(getInitialBlankRows());
     apiFetch(`${API_BASE_URL}/api/utility?month=${selectedMonth}`, { signal: controller.signal })
@@ -88,6 +93,7 @@ export default function UtilityPage() {
         if (data !== null && (!data || !Array.isArray(data.rows))) {
           throw new Error('The data service returned an invalid record. Please retry.');
         }
+        setFormula(Object.keys(data?.formula||{}).length?validateFormula(data.formula):null);
         if (data?.rows?.length) {
           const blanks = getInitialBlankRows();
           // Saved equipment names are authoritative; do not discard legacy/new rows.
@@ -114,8 +120,9 @@ export default function UtilityPage() {
   }, [selectedMonth, reloadAttempt]);
 
   const handleCellChange = (idx, field, value) => {
-    if (quantityMonth(selectedMonth)) {
-      setRows(prev => calculateRows('utility', prev.map((row, i) => i === idx ? { ...row, [field]: value } : row)));
+    if (field==='fuelType'&&!quantityMonth(selectedMonth)&&!formula) {setRows(prev=>prev.map((row,i)=>i===idx?{...row,fuelType:value}:row));return;}
+    if (quantityMonth(selectedMonth)||formula) {
+      setRows(prev => calculateRows('utility', prev.map((row, i) => i === idx ? { ...row, [field]: value } : row),formula||defaultFormula(selectedMonth),quantityMonth(selectedMonth)?'quantity-v1':'legacy-kwh'));
       return;
     }
     setRows(prev => {
@@ -232,7 +239,7 @@ export default function UtilityPage() {
             };
           });
 
-          setRows(quantityMonth(selectedMonth) ? calculateRows('utility', mapped) : mapped);
+          setRows(quantityMonth(selectedMonth)||formula ? calculateRows('utility', mapped,formula||defaultFormula(selectedMonth),quantityMonth(selectedMonth)?'quantity-v1':'legacy-kwh') : mapped);
           setNoMonthData(false);
           setShowUploader(false);
           alert('Utility Excel Data Uploaded Successfully! Click Save to store.');
@@ -269,13 +276,13 @@ export default function UtilityPage() {
   };
 
   // Save to DB
-  const handleSaveData = async () => {
+  const handleSaveData = async (formulaOverride = formula) => {
     if (loading || loadError) return;
     setSaving(true);
     try {
-      if (quantityMonth(selectedMonth)) {
+      if (quantityMonth(selectedMonth)||formulaOverride) {
         const policy = await (await apiFetch(`${API_BASE_URL}/api/energy-policy`)).json();
-        if (policy.version !== 'quantity-v1') throw new Error('Energy conversion service is updating. Please retry shortly.');
+        if (policy.version !== 'quantity-v1'||policy.formulaVersion!=='factors-v1') throw new Error('Energy conversion service is updating. Please retry shortly.');
       }
       const res = await apiFetch(`${API_BASE_URL}/api/utility/save`, {
         method: 'POST',
@@ -283,7 +290,8 @@ export default function UtilityPage() {
         body: JSON.stringify({
           monthYear: selectedMonth,
           inputBasis: quantityMonth(selectedMonth) ? 'quantity-v1' : 'legacy-kwh',
-          rows: rows.map(row => ({ ...row, lng: row.lngLpg })),
+          formula: formulaOverride || undefined,
+          rows: formulaOverride?calculateRows('utility',rows,formulaOverride,quantityMonth(selectedMonth)?'quantity-v1':'legacy-kwh'):rows,
           totals: {
             ...totals,
             lng: totals.lngLpg,
@@ -295,6 +303,7 @@ export default function UtilityPage() {
       });
       const resData = await res.json();
       if (resData.success) {
+        setFormula(Object.keys(resData.data?.formula||{}).length?validateFormula(resData.data.formula):null);setFormulaDirty(false);
         if (resData.data?.rows) setRows(toInputRows('utility', selectedMonth, resData.data.rows));
         setNoMonthData(false);
         alert('Utility Data successfully saved in MongoDB Database!');
@@ -306,6 +315,11 @@ export default function UtilityPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const saveFormula = next => {
+    setFormula(next);setFormulaDirty(true);
+    return handleSaveData(next);
   };
 
   return (
@@ -380,7 +394,7 @@ export default function UtilityPage() {
               <input
                 ref={dateInputRef}
                 type="month"
-                value={selectedMonth}
+                disabled={saving} value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
                 style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: '12px', fontWeight: '900', color: '#38bdf8', cursor: 'pointer' }}
               />
@@ -439,7 +453,7 @@ export default function UtilityPage() {
 
         {/* BLOCK 4: SAVE (ROYAL PURPLE GRADIENT) */}
         <button 
-          onClick={handleSaveData}
+          onClick={()=>handleSaveData()}
           disabled={saving || loading || Boolean(loadError)}
           style={{ 
             display: 'flex', 
@@ -508,7 +522,7 @@ export default function UtilityPage() {
             <input
               type="file"
               accept=".xlsx, .xls"
-              onChange={handleFileUpload}
+              disabled={saving} onChange={handleFileUpload}
               style={{ fontSize: '12px', color: '#cbd5e1', cursor: 'pointer' }}
             />
             <button 
@@ -521,7 +535,9 @@ export default function UtilityPage() {
         </div>
       )}
 
-      {quantityMonth(selectedMonth) && <div style={{padding:'14px 18px',borderRadius:'12px',background:'#e0f2fe',color:'#0c4a6e',border:'1px solid #38bdf8',fontSize:'13px'}}>September 2026 onward: Fuel in kg · HSD in litres. Total energy = Electricity + LNG × 13.9 / LPG × 12.78 + HSD × 3.3 (kWh). Select LNG or LPG for each Utility equipment. </div>}
+      <FuelReferenceNotice state={augustFuel}/>
+      {formulaDirty&&<p className="formula-draft-note" role="status">Formula changes are not saved yet. Complete Save to store the formula and recalculated data.</p>}
+      {(quantityMonth(selectedMonth)||formula)&&<p className="fuel-reference">{formulaLabel(formula,selectedMonth)}</p>}
       <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* SOLID COLORFUL TABLE WITH FIXED LAYOUT */}
       <div className="equipment-grid-shell" style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
@@ -553,7 +569,7 @@ export default function UtilityPage() {
                 <th style={{ backgroundColor: "#4ade80", padding: "12px 6px", borderRight: "2px solid #000" }}>Electricity (kWh)</th>
                 <th style={{ backgroundColor: "#fb923c", padding: "12px 4px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "LNG/LPG (kg)" : "LNG/LPG (kWh)"}</th>
                 <th style={{ backgroundColor: "#c084fc", padding: "12px 6px", borderRight: "2px solid #000" }}>{quantityMonth(selectedMonth) ? "HSD (Ltr)" : "HSD (kWh)"}</th>
-                <th style={{ backgroundColor: "#2dd4bf", padding: "12px 6px", borderRight: "2px solid #000" }}>Total Consumption</th>
+                <th style={{ backgroundColor: "#2dd4bf", padding: "12px 6px", borderRight: "2px solid #000" }}> <TotalFormulaControl plant="utility" month={selectedMonth} formula={formula} onSave={saveFormula} disabled={saving||loading||Boolean(loadError)} saving={saving}/> </th>
                 <th style={{ backgroundColor: "#60a5fa", padding: "12px 6px", borderRight: "2px solid #000" }}>Production</th>
                 <th style={{ backgroundColor: "#a5b4fc", padding: "12px 6px", borderRight: "2px solid #000" }}>EnPI</th>
                 <th style={{ backgroundColor: "#f472b6", padding: "12px 6px", borderRight: "2px solid #000" }}>EnPI Value(s)</th>
@@ -587,7 +603,7 @@ export default function UtilityPage() {
                     <td style={{ backgroundColor: COL_COLORS.electricity, padding: '6px', borderRight: '2px solid #000' }}>
                       <input 
                         type="number"
-                        value={r.electricity ?? ''}
+                        disabled={saving} value={r.electricity ?? ''}
                         onChange={(e) => handleCellChange(idx, 'electricity', e.target.value)}
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #065f46', borderRadius: '6px', padding: '4px 2px', fontWeight: '900', color: '#064e3b', outline: 'none', boxSizing: 'border-box' }}
@@ -598,19 +614,20 @@ export default function UtilityPage() {
                     <td style={{ backgroundColor: COL_COLORS.lngLpg, padding: '4px', borderRight: '2px solid #000' }}>
                       <input 
                         type="number"
-                        value={r.lngLpg ?? ''}
+                        disabled={saving} value={r.lngLpg ?? ''}
                         onChange={(e) => handleCellChange(idx, 'lngLpg', e.target.value)}
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #9a3412', borderRadius: '6px', padding: '4px 1px', fontWeight: '900', color: '#7c2d12', outline: 'none', boxSizing: 'border-box', fontSize: '11px' }}
                       />
-                      {quantityMonth(selectedMonth) && <select aria-label={`Fuel type for ${r.equipment}`} value={fuelType('utility', r)} onChange={e => handleCellChange(idx, 'fuelType', e.target.value)} style={{width:'100%',marginTop:'5px',borderRadius:'6px',padding:'4px',background:'#fff7ed',color:'#7c2d12'}}><option value="LNG">LNG × 13.9</option><option value="LPG">LPG × 12.78</option></select>}
+                      <FuelSelector plant="utility" row={r} month={selectedMonth} formula={formula} eligible={augustFuel.allows(r.equipment)} disabled={saving||loading} onChange={value=>handleCellChange(idx,'fuelType',value)}/>
+
                     </td>
 
                     {/* HSD Column */}
                     <td style={{ backgroundColor: COL_COLORS.hsd, padding: '6px', borderRight: '2px solid #000' }}>
                       <input 
                         type="number"
-                        value={r.hsd ?? ''}
+                        disabled={saving} value={r.hsd ?? ''}
                         onChange={(e) => handleCellChange(idx, 'hsd', e.target.value)}
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #6b21a8', borderRadius: '6px', padding: '4px 2px', fontWeight: '900', color: '#581c87', outline: 'none', boxSizing: 'border-box' }}
@@ -626,7 +643,7 @@ export default function UtilityPage() {
                     <td style={{ backgroundColor: COL_COLORS.production, padding: '6px', borderRight: '2px solid #000' }}>
                       <input 
                         type="number"
-                        value={r.production ?? ''}
+                        disabled={saving} value={r.production ?? ''}
                         onChange={(e) => handleCellChange(idx, 'production', e.target.value)}
                         placeholder="—"
                         style={{ width: '100%', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #0369a1', borderRadius: '6px', padding: '4px 2px', fontWeight: '900', color: '#0c4a6e', outline: 'none', boxSizing: 'border-box' }}
