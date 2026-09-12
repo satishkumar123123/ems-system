@@ -5,7 +5,7 @@ const router = express.Router();
 // GET Aggregated ABPL Data from all 5 Plants for a selected month
 router.get('/', async (req, res) => {
   try {
-    const { month = '2026-04' } = req.query;
+    const { month = '2026-08' } = req.query;
 
     // Sabhi models ko safely get karein
     const WiderData = mongoose.models.WiderData || mongoose.model('WiderData');
