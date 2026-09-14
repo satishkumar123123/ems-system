@@ -134,3 +134,21 @@
 .audit-page .sec-panel tbody tr:nth-child(even) { background: #eef3fb; }
 .audit-page .sec-panel tbody tr:hover { background: #e1ecfa; }
 .audit-page .sec-panel a { color: #164fa0; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Keep the month and every toolbar action in one horizontally scrollable row. */
+.plant-theme.audit-page > .audit-toolbar,
+.plant-theme.audit-page .solar-toolbar {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #edf2f7;
+}
+.audit-page .audit-toolbar > *,
+.audit-page .solar-toolbar > * { flex-shrink: 0 !important; }
+.audit-page .audit-toolbar > div,
+.audit-page .solar-toolbar .solar-buttons {
+  flex-wrap: nowrap !important;
+  max-width: none;
+}
+.audit-page .audit-toolbar button,
+.audit-page .solar-toolbar button { white-space: nowrap; flex-shrink: 0; }
