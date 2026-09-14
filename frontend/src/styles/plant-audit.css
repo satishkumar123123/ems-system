@@ -107,3 +107,48 @@
   .audit-page .equipment-grid thead th { position: static; }
   .audit-page .audit-chart-grid > div, .audit-page .ems-insight, .audit-page .solar-chart-card { break-inside: avoid; box-shadow: none !important; }
 }
+
+/* SEC uses explicit foregrounds so its light surface cannot inherit dark-theme text. */
+.plant-theme.audit-page .sec-panel {
+  background: linear-gradient(120deg, #eff8ff, #f5f0ff) !important;
+  border: 1px solid #bccfea !important;
+  color: #233451;
+}
+.audit-page .sec-panel .insight-heading p { color: #166577; font-weight: 800; }
+.audit-page .sec-panel .insight-heading h2 { color: #172d50; }
+.audit-page .sec-panel .insight-chip,
+.audit-page .sec-panel button { background: #165e65; color: #ffffff; border-color: #165e65; }
+.audit-page .sec-panel .insight-metrics > div { background: linear-gradient(120deg, #075768, #173653); color: #ffffff; border-color: #236e85; }
+.audit-page .sec-panel .insight-metrics > div:nth-child(2) { background: linear-gradient(120deg, #593487, #303568); border-color: #7056a0; }
+.audit-page .sec-panel .insight-metrics span { color: #ffffff; font-weight: 700; }
+.audit-page .sec-panel .insight-metrics strong { color: #ffffff; }
+.audit-page .sec-panel .insight-metrics small { color: #e2eaf7; }
+.audit-page .sec-panel .insight-note { color: #425471; background: #ffffffb8; border-left: 3px solid #647ab4; border-radius: 8px; padding: 12px 16px; }
+.audit-page .sec-panel .insight-scroll { background: #ffffff; border: 1px solid #cbd9ea; }
+.audit-page .sec-panel thead { background: #203a61; color: #ffffff; }
+.audit-page .sec-panel th, .audit-page .sec-panel td { border-bottom-color: #dce5f1; }
+.audit-page .sec-panel tbody th { color: #233451; }
+.audit-page .sec-panel tbody td { color: #354863; font-variant-numeric: tabular-nums; }
+.audit-page .sec-panel tbody td:nth-child(2) { color: #075e70; font-weight: 700; }
+.audit-page .sec-panel tbody td:nth-child(3) { color: #603299; font-weight: 700; }
+.audit-page .sec-panel tbody tr:nth-child(even) { background: #eef3fb; }
+.audit-page .sec-panel tbody tr:hover { background: #e1ecfa; }
+.audit-page .sec-panel a { color: #164fa0; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Keep the month and every toolbar action in one horizontally scrollable row. */
+.plant-theme.audit-page > .audit-toolbar,
+.plant-theme.audit-page .solar-toolbar {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #edf2f7;
+}
+.audit-page .audit-toolbar > *,
+.audit-page .solar-toolbar > * { flex-shrink: 0 !important; }
+.audit-page .audit-toolbar > div,
+.audit-page .solar-toolbar .solar-buttons {
+  flex-wrap: nowrap !important;
+  max-width: none;
+}
+.audit-page .audit-toolbar button,
+.audit-page .solar-toolbar button { white-space: nowrap; flex-shrink: 0; }
