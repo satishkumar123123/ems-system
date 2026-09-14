@@ -2,6 +2,7 @@ import SeuButton from '../components/SeuButton';
 import PlantQrCodes from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
+import '../styles/plant-audit.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import AbplScheduleOverview from '../components/AbplScheduleOverview';
 import AbplSec from '../components/AbplSec';
@@ -128,10 +129,10 @@ export default function AbplPage() {
   if (selectedMetric === 'lpg' || selectedMetric === 'hsd') chartMetrics.push(selectedMetric);
 
   return (
-    <div className="plant-theme plant-theme-abpl" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div className="audit-page plant-theme plant-theme-abpl" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
       {/* 1. TOP BRAND HEADING: BACK BUTTON + "A B P L" (PURE INLINE STYLES WITH RADIANT GLOW) */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>
+      <div className="audit-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           
           {/* Back button to return to home page */}
@@ -161,7 +162,7 @@ export default function AbplPage() {
 
       {/* 2. TOP TOOLBAR: SELECT MONTH (STRICT SINGLE ROW FORCED) */}
       <div 
-        className="no-print"
+        className="no-print audit-toolbar"
         style={{ 
           display: 'flex', 
           flexDirection: 'row', 
@@ -223,7 +224,7 @@ export default function AbplPage() {
       </div>
 
       {/* 3. 5 COLORFUL METRIC CARDS IN 1 STRICT ROW (ZERO WRAPPING) */}
-      <div 
+      <div className="audit-metrics" 
         style={{ 
           display: 'flex', 
           flexDirection: 'row', 
@@ -363,7 +364,7 @@ export default function AbplPage() {
           </div>
 
           {/* 4. CHARTS VISUALIZATION GRID: BIG 360PX HEIGHT */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+          <div className="audit-chart-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
             
             {/* 1. BAR GRAPH */}
             <div style={{ background: 'linear-gradient(180deg, #0f172a 0%, #082f49 100%)', border: '2px solid #0284c7', borderRadius: '24px', padding: '20px', boxShadow: '0 20px 30px rgba(2,132,199,0.2)', display: 'flex', flexDirection: 'column' }}>
@@ -473,7 +474,7 @@ export default function AbplPage() {
               </span>
             </div>
 
-            <div style={{ overflowX: 'auto', width: '100%' }}>
+            <div className="audit-table-scroll" style={{ overflowX: 'auto', width: '100%' }}>
               <table style={{ width: '100%', minWidth: '900px', fontSize: '12px', textAlign: 'center', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ color: '#020617', fontWeight: 900, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '2px solid #000' }}>

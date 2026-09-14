@@ -7,6 +7,7 @@ import EnpiTargets from '../components/EnpiTargets';
 import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
+import '../styles/plant-audit.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import ScheduleButton from '../components/ScheduleButton';
 import EquipmentBarCharts from '../components/EquipmentBarCharts';
@@ -361,10 +362,10 @@ export default function NarrowTubePage() {
   };
 
   return (
-    <div className="plant-theme plant-theme-narrow-tube" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div className="audit-page plant-theme plant-theme-narrow-tube" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
       {/* 1. TOP BRAND HEADING: BACK BUTTON + "N A R R O W   T U B E" */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>
+      <div className="audit-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           
           {/* Back button to return to home/first page */}
@@ -401,7 +402,7 @@ export default function NarrowTubePage() {
 
       {/* 2. 5 ACTION BLOCKS - STRICT SINGLE ROW FORCED (ZERO WRAPPING) */}
       <div 
-        className="no-print"
+        className="no-print audit-toolbar"
         style={{ 
           display: 'flex', 
           flexDirection: 'row', 
@@ -655,7 +656,7 @@ export default function NarrowTubePage() {
       {/* SOLID COLORFUL TABLE */}
       <div className="equipment-grid-shell" style={{ backgroundColor: '#020617', borderRadius: '16px', border: '2px solid #1e293b', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', overflow: 'hidden' }}>
 
-        <div style={{ overflowX: 'auto', width: '100%' }}>
+        <div className="audit-table-scroll" style={{ overflowX: 'auto', width: '100%' }}>
           <table className="equipment-grid" style={{ width: '100%', minWidth: '1300px', fontSize: '12px', textAlign: 'center', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
             
             {/* STRICT COLUMN SIZING */}
@@ -812,7 +813,7 @@ export default function NarrowTubePage() {
           <span style={{ color: '#4ade80', textShadow: '0 0 12px rgba(74,222,128,0.6)' }}>ANALYTICS</span>
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+        <div className="audit-chart-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
           
           {/* CHART 1: TOTAL CONSUMPTION BREAKDOWN */}
           <div style={{ background: 'linear-gradient(180deg, #0f172a 0%, #082f49 100%)', border: '2px solid #0284c7', borderRadius: '24px', padding: '20px', boxShadow: '0 20px 30px rgba(2,132,199,0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
