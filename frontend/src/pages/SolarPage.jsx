@@ -2,6 +2,7 @@ import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
 import '../styles/solar.css';
+import '../styles/plant-audit.css';
 import { monthFromUrl } from '../utils/monthFromUrl';
 import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
@@ -97,7 +98,7 @@ export default function SolarPage() {
   ].filter(d => d.value > 0);
 
   return (
-    <div className="solar-page plant-theme plant-theme-solar">
+    <div className="solar-page audit-page plant-theme plant-theme-solar">
       {/* Top Header */}
       <div className="solar-header">
         <button

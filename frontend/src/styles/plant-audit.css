@@ -1,0 +1,109 @@
+/* Presentation only: scoped to monthly plant pages, leaving all data flows intact. */
+.plant-theme.audit-page {
+  --audit-accent: #6366f1;
+  --audit-tint: #eef2ff;
+  background: radial-gradient(ellipse at 95% 0%, var(--audit-tint), transparent 48%), #f3f6fb !important;
+  color: #17243c !important;
+  padding: clamp(14px, 2.2vw, 36px) !important;
+  gap: 28px !important;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.audit-page.plant-theme-wider { --audit-accent: #db2777; --audit-tint: #fce7f3; }
+.audit-page.plant-theme-utility { --audit-accent: #ea580c; --audit-tint: #fff0df; }
+.audit-page.plant-theme-hsu { --audit-accent: #059669; --audit-tint: #ddf5ed; }
+.audit-page.plant-theme-narrow-flat { --audit-accent: #7c3aed; --audit-tint: #eee7ff; }
+.audit-page.plant-theme-narrow-tube { --audit-accent: #0891b2; --audit-tint: #dff6fc; }
+.audit-page.plant-theme-solar { --audit-accent: #d97706; --audit-tint: #fff3d6; }
+.audit-page > * { min-width: 0; }
+.plant-theme.audit-page > .audit-header,
+.plant-theme.audit-page > .solar-header {
+  background: radial-gradient(ellipse at top right, #334569 0%, transparent 65%), linear-gradient(115deg, #101d34, #182740) !important;
+  border: 1px solid #344563 !important;
+  border-left: 5px solid var(--audit-accent) !important;
+  border-radius: 24px !important;
+  padding: 26px !important;
+  gap: 18px;
+  flex-wrap: wrap;
+  color: #fff;
+  box-shadow: 0 14px 32px #14233d18 !important;
+}
+.audit-page .audit-header > div:first-child { gap: 5px !important; flex-wrap: wrap; }
+.audit-page .audit-header > div:first-child > span { text-shadow: none !important; letter-spacing: .5px !important; }
+.audit-page .audit-header > div:first-child > span[style*="42px"] { font-size: clamp(25px, 2.7vw, 38px) !important; }
+.audit-page .audit-header button { margin-right: 16px !important; box-shadow: none !important; min-height: 38px; }
+.plant-theme.audit-page > .audit-toolbar,
+.plant-theme.audit-page .solar-toolbar {
+  background: #fff !important;
+  border: 1px solid #dce4f0 !important;
+  padding: 16px !important;
+  border-radius: 20px !important;
+  box-shadow: 0 6px 24px #243a6010 !important;
+  display: flex;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  overflow: visible !important;
+  box-sizing: border-box;
+}
+.audit-page .audit-toolbar > div { flex-wrap: wrap; max-width: 100%; }
+.audit-page .audit-toolbar button { border-radius: 12px !important; box-shadow: 0 3px 8px #20365516 !important; min-height: 42px; }
+.audit-page button, .audit-page a, .audit-page input, .audit-page select { transition: box-shadow .18s ease, filter .18s ease; }
+.audit-page button:not(:disabled):hover { filter: brightness(1.07); }
+.audit-page :is(button, a, input, select, textarea):focus-visible { outline: 3px solid #2563eb !important; outline-offset: 3px; }
+.plant-theme.audit-page .equipment-grid-shell { border: 1px solid #d7e0ed !important; background: #fff !important; border-radius: 20px !important; box-shadow: 0 10px 30px #243a6012 !important; padding: 5px; }
+.audit-page .audit-table-scroll { max-height: 650px; overflow: auto !important; scrollbar-color: #94a3b8 #edf2f7; scrollbar-width: thin; border-radius: 15px; }
+.plant-theme.audit-page .equipment-grid { border-spacing: 4px 5px !important; font-size: 13px !important; }
+.plant-theme.audit-page .equipment-grid thead th { position: sticky; top: 0; z-index: 2; padding: 15px 7px !important; line-height: 1.5; border: 0 !important; border-radius: 10px !important; box-shadow: none !important; }
+.plant-theme.audit-page .equipment-grid tbody td { padding: 9px 7px !important; border-radius: 9px !important; border: 1px solid #ffffff !important; box-shadow: none !important; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.plant-theme.audit-page .equipment-grid tbody tr:hover > td { filter: brightness(.97); }
+.plant-theme.audit-page .equipment-grid tbody td:nth-child(2) { text-align: left !important; padding-left: 12px !important; }
+.plant-theme.audit-page .equipment-grid tbody td:nth-child(2) a { white-space: normal; text-decoration: none; line-height: 1.5; }
+.plant-theme.audit-page .equipment-grid input { min-height: 36px !important; border: 1px solid #ffffffa6 !important; border-radius: 7px !important; font-size: 13px !important; box-shadow: inset 0 1px 2px #17243c08 !important; }
+.plant-theme.audit-page .equipment-grid tbody tr:last-child > td { padding-top: 14px !important; padding-bottom: 14px !important; }
+.audit-page .fuel-reference { background: #fff; border: 1px solid #dce4f0; border-left: 4px solid var(--audit-accent); color: #475569; padding: 12px 16px; border-radius: 10px; margin: 0; }
+.audit-page .audit-chart-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr)) !important; gap: 20px !important; }
+.audit-page .audit-chart-grid > div,
+.audit-page [aria-label="Equipment bar charts"] > section {
+  min-width: 0;
+  border-width: 1px !important;
+  border-radius: 22px !important;
+  padding: 22px !important;
+  box-shadow: 0 12px 28px #152a4920 !important;
+}
+.audit-page .audit-chart-grid h3 { line-height: 1.6; letter-spacing: .4px !important; }
+.plant-theme.audit-page h2 { line-height: 1.5; flex-wrap: wrap; }
+.plant-theme.audit-page h2 span { color: #243650 !important; text-shadow: none !important; }
+.plant-theme.audit-page h2 span:first-child { color: var(--audit-accent) !important; }
+.audit-page .ems-insight,
+.audit-page .enpi-targets { background: #fff !important; border: 1px solid #dce4f0 !important; border-radius: 22px !important; padding: 24px !important; box-shadow: 0 8px 24px #243a600d !important; color: #243650; }
+.audit-page .insight-metrics > div { border-radius: 16px; border-color: #dce4f0; }
+.audit-page .insight-metrics strong { font-variant-numeric: tabular-nums; }
+.audit-page .insight-scroll { border-radius: 12px; }
+.audit-page .audit-metrics { display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)); overflow: visible !important; gap: 16px !important; }
+.audit-page .audit-metrics > div { min-width: 0 !important; border-radius: 20px !important; min-height: 108px; box-shadow: 0 8px 20px #1e305d20 !important; }
+.audit-page .solar-header h1 { color: #fff !important; margin: 0 0 8px; font-size: 30px; }
+.audit-page .solar-header p { color: #cbd5e1 !important; margin: 0; }
+.audit-page .solar-header button { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: #223550; color: white; border: 1px solid #52617b; border-radius: 12px; cursor: pointer; }
+.audit-page .solar-input-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; overflow: visible; }
+.audit-page .solar-input-card { min-width: 0; border-radius: 22px; padding: 24px; box-shadow: 0 10px 24px #243a6020; }
+.audit-page .solar-input-card input { box-sizing: border-box; width: 100%; min-height: 46px; padding: 10px 14px; border-radius: 12px; border: 1px solid #fff; background: #fff; color: #17243c; font-weight: 700; font-size: 20px; }
+.audit-page .solar-chart-row { grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 20px; }
+.audit-page .solar-chart-card { min-width: 0; border: 1px solid #dce4f0; border-radius: 22px; box-shadow: 0 10px 26px #243a6010; padding: 24px; }
+@media (max-width: 1100px) { .audit-page .audit-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .plant-theme.audit-page { gap: 18px !important; }
+  .plant-theme.audit-page > .audit-header, .plant-theme.audit-page > .solar-header { padding: 18px !important; border-radius: 18px !important; }
+  .audit-page .audit-header > div:first-child > span { margin-left: 0 !important; }
+  .audit-page .audit-metrics, .audit-page .solar-input-row { grid-template-columns: 1fr; }
+  .audit-page .audit-chart-grid > div, .audit-page .ems-insight, .audit-page .enpi-targets { padding: 16px !important; }
+  .audit-page .solar-buttons { flex-wrap: wrap; }
+  .audit-page .audit-table-scroll { max-height: 70vh; }
+}
+@media (prefers-reduced-motion: reduce) { .audit-page *, .audit-page *::before, .audit-page *::after { transition: none !important; animation: none !important; } }
+@media print {
+  .plant-theme.audit-page { background: #fff !important; padding: 0 !important; }
+  .audit-page .audit-table-scroll { max-height: none; overflow: visible !important; }
+  .audit-page .equipment-grid thead th { position: static; }
+  .audit-page .audit-chart-grid > div, .audit-page .ems-insight, .audit-page .solar-chart-card { break-inside: avoid; box-shadow: none !important; }
+}
