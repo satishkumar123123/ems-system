@@ -1,3 +1,4 @@
+import CinematicStars from './components/CinematicStars';
 import SeuPage from './pages/SeuPage';
 import EquipmentDetailPage from './pages/EquipmentDetailPage';
 import ChatPage from './pages/ChatPage';
@@ -737,6 +738,7 @@ function Dashboard() {
       `}</style>
 
       <div className="blueprint-stage">
+        <CinematicStars />
         <button type="button" className="portal-theme-toggle" onClick={toggleTheme} aria-pressed={night} aria-label="Night theme">
           <span aria-hidden="true">{night ? '☾' : '☀'}</span>{night ? 'Night' : 'Day'}
         </button>
