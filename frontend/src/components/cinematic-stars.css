@@ -1,0 +1,11 @@
+.portal-wrapper .cinematic-stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.portal-wrapper .star-motion-toggle{position:absolute;bottom:18px;right:24px;z-index:50;border:1px solid #b5c9ef60;border-radius:999px;background:#101b35dd;color:#e0edff;padding:9px 16px;font:600 12px system-ui;cursor:pointer;box-shadow:0 6px 24px #0003}
+.portal-wrapper .star-motion-toggle:focus-visible{outline:3px solid #67e8f9;outline-offset:3px}
+.portal-wrapper .blueprint-stage:has(.cinematic-stars){background:radial-gradient(ellipse at 18% 20%,#17465b99,transparent 45%),radial-gradient(ellipse at 80% 30%,#663b7b80,transparent 45%),radial-gradient(ellipse at 50% 100%,#254b7755,transparent 50%),#080f24}
+.portal-wrapper.portal-night .blueprint-stage:has(.cinematic-stars){background:radial-gradient(ellipse at 20% 30%,#16325977,transparent 46%),radial-gradient(ellipse at 85% 60%,#46266388,transparent 45%),#040915}
+.portal-wrapper .blueprint-stage:has(.cinematic-stars)::before,.portal-wrapper .blueprint-stage:has(.cinematic-stars)::after{display:none}
+.portal-wrapper:has(.cinematic-stars) .portal-landscape,.portal-wrapper:has(.cinematic-stars) .portal-leaves{opacity:.08}
+.portal-wrapper:has(.cinematic-stars) .portal-glass{background:linear-gradient(135deg,#cadcff38,#c5ceff18);border-color:#d5e4ff45;box-shadow:0 24px 80px #0003,inset 0 1px 0 #ffffff30;backdrop-filter:blur(2px)}
+.portal-wrapper:has(.cinematic-stars) .blueprint-doodles{color:#b9c9eb;opacity:.22}
+.portal-wrapper:has(.cinematic-stars) .portal-glow{background:radial-gradient(400px circle at var(--glow-x,50%) var(--glow-y,45%),#89a9ef12,transparent 75%)}
+@media(prefers-reduced-motion:reduce){.portal-wrapper .star-motion-toggle{display:none}}
