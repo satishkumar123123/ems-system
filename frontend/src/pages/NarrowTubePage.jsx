@@ -1,3 +1,4 @@
+import ConsumptionBreakdownView from '../components/ConsumptionBreakdownView';
 import ProductionBreakdownView from '../components/ProductionBreakdownView';
 import { productionChartData } from '../utils/productionChartData';
 import {FuelSelector,FuelReferenceNotice,TotalFormulaControl,useAugustFuelEquipment,formulaLabel} from '../components/FuelControls';
@@ -830,6 +831,7 @@ export default function NarrowTubePage() {
               </span>
             </div>
 
+            <ConsumptionBreakdownView data={getCategorizedData('totalConsumption')} colors={PIE_COLORS}>
             <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -862,6 +864,7 @@ export default function NarrowTubePage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
+          </ConsumptionBreakdownView>
           </div>
 
           {/* CHART 2: PRODUCTION BREAKDOWN */}
