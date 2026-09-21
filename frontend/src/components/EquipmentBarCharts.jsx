@@ -1,3 +1,4 @@
+import { isCompressor } from '../utils/productionChartData';
 import ResponsiveContainer from './ExpandableChart';
 import SecPanel from './SecPanel';
 import { useMemo } from 'react';
@@ -58,7 +59,7 @@ export default function EquipmentBarCharts({ rows, selectedMonth, loading, error
     ]));
     return METRICS.map(metric => ({
       ...metric,
-      data: rows.map(row => {
+      data: rows.filter(row => metric.key !== 'production' || !isCompressor(row.equipment)).map(row => {
         const raw = row[metric.key];
         const value = typeof raw === 'number' ? raw : Number(String(raw ?? '').replace(/,/g, '').trim());
         const name = String(row.equipment || '').trim();
