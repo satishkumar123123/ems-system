@@ -738,7 +738,7 @@ function Dashboard() {
       `}</style>
 
       <div className="blueprint-stage">
-        <CinematicStars />
+        {night && <CinematicStars />}
         <button type="button" className="portal-theme-toggle" onClick={toggleTheme} aria-pressed={night} aria-label="Night theme">
           <span aria-hidden="true">{night ? '☾' : '☀'}</span>{night ? 'Night' : 'Day'}
         </button>
