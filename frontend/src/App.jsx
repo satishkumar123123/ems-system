@@ -697,6 +697,43 @@ function Dashboard() {
           }
           .portal-wrapper .iso-3d-block::after { display: none; }
         }
+
+        /* Layered aurora backdrop: decoration only, never blocks plant controls. */
+        .portal-wrapper .blueprint-stage {
+          background: radial-gradient(ellipse at 15% 18%, #c8f3f0 0%, transparent 42%),
+            radial-gradient(ellipse at 86% 22%, #e8d6ff 0%, transparent 43%),
+            radial-gradient(ellipse at 65% 94%, #ffe3d6 0%, transparent 46%),
+            linear-gradient(135deg, #e8f1ff, #f6f4ff 52%, #eaf7f7);
+        }
+        .portal-wrapper .portal-glass {
+          background: linear-gradient(125deg, #ffffff8c, #ffffff24 55%, #edf4ff66);
+          border-color: #ffffffcc;
+          box-shadow: 0 28px 80px #4047831a, inset 0 1px 0 #fff, inset 0 -1px 0 #b5c7e54d;
+          backdrop-filter: blur(9px);
+        }
+        .portal-wrapper .blueprint-stage::before { opacity: .55; filter: blur(8px); }
+        .portal-wrapper .portal-landscape { opacity: .42; }
+        .portal-wrapper .portal-leaves { opacity: .3; }
+        .portal-wrapper .portal-glow {
+          background: radial-gradient(440px circle at var(--glow-x, 50%) var(--glow-y, 45%), #ffffff99, transparent 75%);
+        }
+        .portal-wrapper.portal-night .blueprint-stage {
+          background: radial-gradient(ellipse at 12% 16%, #14506b88, transparent 47%),
+            radial-gradient(ellipse at 90% 20%, #623b8580, transparent 45%),
+            radial-gradient(ellipse at 64% 100%, #234b6266, transparent 45%),
+            linear-gradient(135deg, #0b172c, #1c203b 60%, #182b40);
+        }
+        .portal-wrapper.portal-night .portal-glass {
+          background: linear-gradient(125deg, #9abcf013, #ffffff05 55%, #bea3f012);
+          border-color: #c5d8ff30;
+          box-shadow: 0 30px 85px #03081355, inset 0 1px 0 #e0eaff24;
+        }
+        .portal-wrapper.portal-night .portal-glow {
+          background: radial-gradient(440px circle at var(--glow-x, 50%) var(--glow-y, 45%), #91a7ff1c, transparent 75%);
+        }
+        @media (max-width: 700px) {
+          .portal-wrapper .portal-glass { backdrop-filter: blur(4px); }
+        }
       `}</style>
 
       <div className="blueprint-stage">
