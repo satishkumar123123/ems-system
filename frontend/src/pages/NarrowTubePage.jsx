@@ -1,3 +1,5 @@
+import ProductionBreakdownView from '../components/ProductionBreakdownView';
+import { productionChartData } from '../utils/productionChartData';
 import {FuelSelector,FuelReferenceNotice,TotalFormulaControl,useAugustFuelEquipment,formulaLabel} from '../components/FuelControls';
 import SeuButton from '../components/SeuButton';
 import { quantityMonth, calculateRows, toInputRows, defaultFormula, validateFormula } from '../utils/fuelConversion';
@@ -875,11 +877,12 @@ export default function NarrowTubePage() {
               </span>
             </div>
 
+            <ProductionBreakdownView data={productionChartData(rows)} colors={PIE_COLORS}>
             <div style={{ width: '100%', height: 360 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={getCategorizedData('production')}
+                    data={productionChartData(rows)}
                     dataKey="value"
                     nameKey="name"
                     cx="50%"
@@ -890,7 +893,7 @@ export default function NarrowTubePage() {
                     labelLine={{ stroke: '#34d399', strokeWidth: 1.5 }}
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
-                    {getCategorizedData('production').map((entry, index) => (
+                    {productionChartData(rows).map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={PIE_COLORS[(index + 2) % PIE_COLORS.length]} stroke="#020617" strokeWidth={2.5} />
                     ))}
                   </Pie>
@@ -907,6 +910,7 @@ export default function NarrowTubePage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
+          </ProductionBreakdownView>
           </div>
 
           {/* CHART 3: ENPI VALUE BREAKDOWN */}
