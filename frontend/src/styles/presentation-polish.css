@@ -1,0 +1,117 @@
+/* Shared presentation layer. No application state, chart data or workflow changes. */
+#root :is(.audit-page,.yoy-page,.equipment-detail,.seu-page,.schedule,.ems-chat,.solar-yoy-polish) {
+  --presentation-shadow: 0 12px 32px #152c4d14;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  padding: clamp(16px,2.4vw,38px);
+  min-width: 0;
+  box-sizing: border-box;
+}
+#root :is(.audit-page,.equipment-detail,.seu-page,.solar-yoy-polish) {
+  background: radial-gradient(ellipse at 100% 0%,#dce8ff88,transparent 45%),radial-gradient(ellipse at 0% 60%,#ede6ff66,transparent 55%),#f2f6fb;
+}
+#root :is(.yoy-page,.schedule,.ems-chat) {
+  background: radial-gradient(ellipse at 95% 0%,#253a6055,transparent 48%),radial-gradient(ellipse at 0% 55%,#35265344,transparent 55%),#101a2c;
+}
+#root :is(.audit-header,.solar-header,.yoy-header,.sch-hero,.chat-header,.equipment-detail>header) {
+  border-radius: 24px;
+  box-shadow: 0 16px 36px #142b5020;
+}
+#root :is(.yoy-header,.sch-hero,.chat-header) {
+  background: linear-gradient(115deg,#183455,#29375b 60%,#3a2e59);
+  border: 1px solid #6c8bb54d;
+  border-top: 3px solid #66c8e3;
+  padding: clamp(20px,2.5vw,32px);
+}
+#root .equipment-detail>header {
+  background: linear-gradient(115deg,#e3edff,#eee7ff 65%,#fce8f2);
+  border: 1px solid #c3d1e7;
+  border-top: 4px solid #7c3aed;
+  padding: clamp(20px,2.5vw,32px);
+}
+#root .seu-hero {
+  border-radius: 24px;
+  padding: clamp(20px,2.5vw,32px);
+  box-shadow: var(--presentation-shadow);
+  border: 1px solid #c7d3eb;
+}
+#root :is(.yoy-title,.sch-hero h1,.chat-brand h1,.equipment-detail h1) {
+  font-size: clamp(24px,2.4vw,34px);
+  letter-spacing: -.6px;
+  line-height: 1.25;
+}
+#root :is(.audit-page,.yoy-page,.equipment-detail,.seu-page,.schedule,.ems-chat) h2 { line-height: 1.4; }
+#root :is(.yoy-toolbar,.seu-filters,.equipment-range) { gap: 12px; }
+#root .yoy-toolbar { padding: 18px 22px; background: #1a2942; border: 1px solid #49638766; box-shadow: none; }
+#root :is(.yoy-card,.equipment-detail-charts>section,.seu-chart,.seu-comparison-charts>article,.chat-answer,.sch-cards>article) {
+  border-radius: 22px;
+  box-shadow: var(--presentation-shadow);
+  padding: clamp(18px,2vw,28px);
+  min-width: 0;
+}
+#root .yoy-card { border-width: 1px; margin-bottom: 22px; }
+#root .yoy-card-header { padding-bottom: 18px; margin-bottom: 22px; }
+#root .yoy-equipment-number { width: 40px; height: 40px; border-radius: 13px; }
+#root .yoy-equipment-name { font-size: 19px; line-height: 1.4; }
+#root .equipment-detail-charts { gap: 24px; margin-top: 24px; }
+#root .equipment-detail-charts h3 { font-size: 15px; line-height: 1.5; padding-bottom: 14px; border-bottom: 1px solid #ffffff26; }
+#root :is(.equipment-kpis article,.seu-cards article,.sch-stat) {
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #ffffff40;
+  box-shadow: 0 10px 24px #2136571c;
+}
+#root :is(.equipment-kpis strong,.seu-cards strong,.sch-stat strong) { font-variant-numeric: tabular-nums; letter-spacing: -.6px; }
+#root :is(.seu-register,.seu-comparison,.seu-editor) { border-radius: 22px; box-shadow: var(--presentation-shadow); }
+#root :is(.equipment-detail-table,.seu-scroll,.seu-comparison-table,.chat-table-scroll) { border-radius: 14px; scrollbar-width: thin; scrollbar-color: #94a3b8 #edf2f7; }
+#root :is(.equipment-detail-table,.seu-scroll,.chat-table-scroll) td { font-variant-numeric: tabular-nums; }
+#root .equipment-detail td { padding: 18px 12px; font-size: 14px; }
+#root .equipment-detail tbody tr:hover td { filter: brightness(.97); }
+#root .seu-register table th,#root .seu-register table td { padding: 13px 12px; }
+#root .sch-tabs { gap: 10px; padding: 8px 0; }
+#root .sch-workspace { margin-top: 24px; }
+#root .sch-cards { gap: 20px; }
+#root .sch-details { border-radius: 14px; }
+#root .sch-section-title { line-height: 1.5; }
+#root .chat-sidebar { border-radius: 22px; box-shadow: 0 10px 30px #030b1826; }
+#root .chat-answer { border-color: #5576a455; }
+#root .chat-question { border-radius: 18px; }
+#root .chat-composer { border-radius: 20px; box-shadow: 0 10px 30px #050c2033; }
+#root .chat-examples { gap: 12px; }
+#root .chat-examples button { border-radius: 16px; padding: 18px; }
+#root .chat-answer-text { font-size: 14px; line-height: 1.8; }
+#root .chat-table { border-radius: 14px; }
+#root .plant-theme.audit-page .audit-chart-grid>div { border-top-width: 4px !important; }
+#root .plant-theme.audit-page .audit-header { border-top: 1px solid #536789 !important; }
+#root .plant-theme.audit-page .equipment-grid-shell { box-shadow: 0 12px 30px #213c5c13 !important; }
+#root .plant-theme.audit-page .equipment-grid tbody td { font-size: 12px; }
+#root .plant-theme.audit-page .equipment-grid tbody tr:last-child td { font-weight: 800; }
+#root .audit-page .sec-panel { box-shadow: 0 12px 32px #233e6612 !important; }
+#root .solar-yoy-polish { min-height: 100vh; color: #243650; }
+#root .solar-yoy-polish>div:first-child { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;padding:24px;background:#fff;border:1px solid #cbd8eb;border-top:4px solid #d97706;border-radius:22px;box-shadow:var(--presentation-shadow); }
+#root .solar-yoy-polish>div:first-child>div { display:flex;flex-wrap:wrap;gap:14px;align-items:center; }
+#root .solar-yoy-polish button,#root .solar-yoy-polish select { padding:10px 14px;border:1px solid #c8d5e8;border-radius:10px;background:white;color:#243650;cursor:pointer; }
+#root .solar-yoy-polish .solar-yoy-cards { display:flex;flex-direction:column;gap:24px;margin-top:24px; }
+#root .solar-yoy-polish .solar-yoy-cards>div { background:#fff;border:1px solid #d1dcec;border-radius:22px;padding:24px;box-shadow:var(--presentation-shadow); }
+#root .portal-wrapper .iso-3d-block { outline-offset: 6px; }
+#root :is(.audit-page,.yoy-page,.equipment-detail,.seu-page,.schedule,.ems-chat,.solar-yoy-polish) :is(button,a,input,select,textarea,summary):focus-visible {
+  outline: 3px solid #38bdf8 !important;
+  outline-offset: 3px;
+}
+#root :is(.yoy-page,.equipment-detail,.seu-page,.schedule,.ems-chat) button { transition: box-shadow .18s ease, filter .18s ease; }
+@media (hover:hover) {
+  #root :is(.yoy-page,.equipment-detail,.seu-page,.schedule,.ems-chat) button:not(:disabled):hover { filter: brightness(1.06); box-shadow: 0 4px 14px #0f224822; }
+}
+@media(max-width:700px) {
+  #root :is(.yoy-header,.sch-hero,.chat-header,.equipment-detail>header,.seu-hero) { border-radius:18px;padding:18px; }
+  #root .chat-header { flex-wrap:wrap; }
+  #root .sch-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #root :is(.equipment-kpis article,.seu-cards article,.sch-stat) { padding:18px; }
+  #root .solar-yoy-polish .solar-yoy-cards>div { padding:14px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  #root :is(.audit-page,.yoy-page,.equipment-detail,.seu-page,.schedule,.ems-chat) * { transition:none !important; }
+}
+@media print {
+  #root :is(.audit-page,.yoy-page,.equipment-detail,.seu-page,.schedule,.ems-chat) { padding:0; }
+  #root :is(.yoy-card,.equipment-detail-charts>section,.seu-chart,.chat-answer,.sch-cards>article) { box-shadow:none;break-inside:avoid; }
+}
