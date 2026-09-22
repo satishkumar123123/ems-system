@@ -1,11 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './day-garden.css';
 
 // Decorative garden is mounted only in day mode; no night styles are changed.
 export default function DayGarden() {
   const [paused, setPaused] = useState(false);
+  const garden = useRef(null);
+  useEffect(() => {
+    const root = garden.current;
+    const stage = root.closest('.blueprint-stage');
+    const obstacles = [...stage.querySelectorAll('.iso-3d-block, .portal-theme-toggle')];
+    // Reserve the entire flight envelope plus hover clearance, not just the landing point.
+    const check = () => {
+      const boxes = obstacles.map(el => el.getBoundingClientRect());
+      root.querySelectorAll('.garden-butterfly').forEach(el => {
+        const b = el.getBoundingClientRect();
+        const unsafe = boxes.some(o => b.left - 32 < o.right + 16 && b.right + 32 > o.left - 16 && b.top - 38 < o.bottom + 16 && b.bottom + 26 > o.top - 16);
+        el.style.visibility = unsafe ? 'hidden' : 'visible';
+      });
+    };
+    const observer = new ResizeObserver(check);
+    observer.observe(stage);
+    obstacles.forEach(el => observer.observe(el));
+    window.addEventListener('resize', check);
+    check();
+    return () => { observer.disconnect(); window.removeEventListener('resize', check); };
+  }, []);
   return <>
-    <div className={`day-garden${paused ? ' garden-paused' : ''}`} aria-hidden="true">
+    <div ref={garden} className={`day-garden${paused ? ' garden-paused' : ''}`} aria-hidden="true">
+      <div className="garden-rainbow" />
       <div className="garden-sun" />
       <div className="garden-cloud garden-cloud-one" />
       <div className="garden-cloud garden-cloud-two" />
@@ -25,6 +47,13 @@ export default function DayGarden() {
       </div>)}
       {Array.from({length: 12}, (_, i) => <span key={i} className="garden-drifter" style={{'--i': i, left: `${(i * 17) % 100}%`, top: `${10 + (i * 23) % 75}%`}}><i /></span>)}
       {['blue', 'rose', 'amber'].map(color => <div key={color} className={`garden-butterfly garden-butterfly-${color}`}>
+        <svg className="butterfly-perch" viewBox="0 0 74 90" focusable="false">
+          <path d="M37 85Q29 64 37 45M34 70Q12 53 18 72Q25 80 34 76" fill="#78ad87" stroke="#4c8460" strokeWidth="2" />
+          <g transform="translate(37 43)" fill="var(--wing-light)">
+            {[0,60,120,180,240,300].map(angle => <ellipse key={angle} cy="-9" rx="6" ry="11" transform={`rotate(${angle})`} />)}
+            <circle r="6" fill="#eab64d" />
+          </g>
+        </svg>
         <div className="garden-butterfly-body">
           {['left', 'right'].map(side => <svg key={side} className={`garden-butterfly-wing garden-butterfly-wing-${side}`} viewBox="0 0 42 64" focusable="false">
             <path d="M39 33C26 4 2-5 3 17C3 31 13 37 26 37C7 35 3 52 16 58C29 64 38 46 39 33Z" fill="var(--wing)" stroke="#29354c" strokeWidth="2" />
