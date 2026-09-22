@@ -24,9 +24,11 @@ export default function DayGarden() {
       // Includes butterfly wings, card hover growth, and flower sway clearance.
       const boxes = cards.map(rect).map(r => ({left:r.left-34, right:r.right+34, top:r.top-34, bottom:r.bottom+34}));
       const toggle = rect(stage.querySelector('.portal-theme-toggle'));
+      const narrow = rect(stage.querySelector('.block-ntd'));
+      const wider = rect(stage.querySelector('.block-wider'));
       const specs = [
         ['blue', '.flower-pos-nf', [Math.max(42, bounds.width * .05), 76], 0],
-        ['amber', '.flower-pos-substation', [bounds.width / 2, 65], 2400],
+        ['amber', '.flower-pos-substation', [(narrow.right + wider.left) / 2, Math.max(42, (narrow.top + narrow.bottom) / 2 - 22)], 2400],
         ['rose', '.flower-pos-hsg', [(toggle.left + toggle.right) / 2, toggle.bottom + 52], 4800],
       ];
       flights = specs.map(([color, selector, home, delay]) => {
@@ -36,6 +38,14 @@ export default function DayGarden() {
         const target = [(r.left + r.right) / 2, (r.top + r.bottom) / 2 - 9];
         const route = flowerRoute(home, target, boxes, bounds.width, bounds.height);
         el.style.visibility = route.length ? 'visible' : 'hidden';
+        // Both route endpoints use the same flower artwork and blossom centre.
+        ['home', 'destination'].forEach((spot, index) => {
+          const bloom = root.querySelector(`.landing-flower-${color}-${spot}`);
+          const point = index ? target : home;
+          bloom.style.left = `${point[0]}px`;
+          bloom.style.top = `${point[1] + 9}px`;
+          bloom.style.visibility = route.length ? 'visible' : 'hidden';
+        });
         return {el, flower, route, delay, bounds};
       });
       elapsed = 0;
@@ -55,7 +65,7 @@ export default function DayGarden() {
           y = (r.top + r.bottom) / 2 - bounds.top - 9;
         }
         el.style.transform = `translate3d(${x - 37}px, ${y - 32}px, 0)`;
-        el.classList.toggle('is-landed', resting);
+        el.classList.toggle('is-landed', resting || phase >= 20000 || elapsed <= delay || reduced.matches);
       });
       frame = requestAnimationFrame(tick);
     };
@@ -87,6 +97,15 @@ export default function DayGarden() {
         </svg>)}
       </div>)}
       {Array.from({length: 12}, (_, i) => <span key={i} className="garden-drifter" style={{'--i': i, left: `${(i * 17) % 100}%`, top: `${10 + (i * 23) % 75}%`}}><i /></span>)}
+      {['blue', 'rose', 'amber'].flatMap(color => ['home', 'destination'].map(spot =>
+        <svg key={`${color}-${spot}`} className={`landing-flower landing-flower-${color} landing-flower-${color}-${spot}`} viewBox="0 0 64 64" focusable="false">
+          <g fill="var(--petal)" stroke="var(--petal-edge)" strokeWidth="1">
+            {[0,45,90,135,180,225,270,315].map(angle => <ellipse key={angle} cx="32" cy="17" rx="8" ry="14" transform={`rotate(${angle} 32 32)`} />)}
+          </g>
+          <circle cx="32" cy="32" r="10" fill="#ffcf4a" stroke="#c68a20" strokeWidth="2" />
+          <circle cx="29" cy="29" r="3" fill="#fff4af" />
+        </svg>
+      ))}
       {['blue', 'rose', 'amber'].map(color => <div key={color} className={`garden-butterfly garden-butterfly-${color}`}>
         <div className="garden-butterfly-body">
           {['left', 'right'].map(side => <svg key={side} className={`garden-butterfly-wing garden-butterfly-wing-${side}`} viewBox="0 0 42 64" focusable="false">

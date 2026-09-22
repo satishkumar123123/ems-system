@@ -93,3 +93,11 @@
 @media(prefers-reduced-motion:reduce) { .day-garden *, .day-garden::before, .day-garden::after, .day-garden *::before, .day-garden *::after { animation: none !important; } .portal-wrapper .garden-motion-toggle { display: none; } }
 
 .portal-wrapper:not(.portal-night) :is(.flower-pos-nf, .flower-pos-hsg, .flower-pos-substation) { width: 40px; height: 40px; }
+
+/* Visible petalled flowers at departure and arrival; the centre is the landing anchor. */
+.landing-flower { position: absolute; width: 48px; height: 48px; transform: translate(-50%, -50%); z-index: 1; pointer-events: none; visibility: hidden; filter: drop-shadow(0 3px 4px #42684135); }
+.landing-flower-blue { --petal: #a5ddff; --petal-edge: #559ccd; }
+.landing-flower-amber { --petal: #ffe68a; --petal-edge: #d9a639; }
+.landing-flower-rose { --petal: #ffb2da; --petal-edge: #d66ca9; }
+.portal-wrapper:not(.portal-night) :is(.flower-pos-nf, .flower-pos-hsg, .flower-pos-substation) { animation: none; transform: none; }
+.portal-wrapper:not(.portal-night) :is(.flower-pos-nf, .flower-pos-hsg, .flower-pos-substation) > * { visibility: hidden; }
