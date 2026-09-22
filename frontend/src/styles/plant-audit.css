@@ -2,7 +2,14 @@
 .plant-theme.audit-page {
   --audit-accent: #6366f1;
   --audit-tint: #eef2ff;
-  background: radial-gradient(ellipse at 95% 0%, var(--audit-tint), transparent 48%), #f3f6fb !important;
+  /* Background only: layered colour and faint contour lines behind existing panels. */
+  background:
+    radial-gradient(ellipse at 8% 8%, var(--page-bloom, #d4d9f5) 0%, transparent 52%),
+    radial-gradient(ellipse at 98% 46%, var(--page-wash, #dce8f6) 0%, transparent 56%),
+    repeating-radial-gradient(ellipse at 110% 10%, transparent 0 78px, #ffffff66 79px 80px, transparent 81px 130px),
+    linear-gradient(145deg, var(--page-base, #edf0fb), #f5f7fa 52%, var(--page-bloom, #d4d9f5)) !important;
+  background-size: 100% 100vh, 100% 100vh, 100% 100vh, 100% 100vh !important;
+  background-repeat: repeat-y !important;
   color: #17243c !important;
   padding: clamp(14px, 2.2vw, 36px) !important;
   gap: 28px !important;
@@ -16,6 +23,13 @@
 .audit-page.plant-theme-narrow-flat { --audit-accent: #7c3aed; --audit-tint: #eee7ff; }
 .audit-page.plant-theme-narrow-tube { --audit-accent: #0891b2; --audit-tint: #dff6fc; }
 .audit-page.plant-theme-solar { --audit-accent: #d97706; --audit-tint: #fff3d6; }
+.audit-page.plant-theme-wider { --page-base: #faf0f5; --page-bloom: #edc8db; --page-wash: #ded8f2; }
+.audit-page.plant-theme-utility { --page-base: #eef2fc; --page-bloom: #c8d7f2; --page-wash: #d4e6ed; }
+.audit-page.plant-theme-hsu { --page-base: #eef8f2; --page-bloom: #bfe2d4; --page-wash: #d3e7ef; }
+.audit-page.plant-theme-narrow-flat { --page-base: #f4effa; --page-bloom: #d9c9ef; --page-wash: #ead7e9; }
+.audit-page.plant-theme-narrow-tube { --page-base: #edf7fa; --page-bloom: #bfe0e8; --page-wash: #d1dcf2; }
+.audit-page.plant-theme-solar { --page-base: #fff8eb; --page-bloom: #f3deb1; --page-wash: #f0d7cb; }
+.audit-page.plant-theme-abpl { --page-base: #eff1fb; --page-bloom: #ccd0ed; --page-wash: #cde5e5; }
 .audit-page > * { min-width: 0; }
 .plant-theme.audit-page > .audit-header,
 .plant-theme.audit-page > .solar-header {
