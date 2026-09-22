@@ -37,7 +37,26 @@
 .portal-wrapper .garden-motion-toggle { position: absolute; bottom: 14px; right: 20px; z-index: 50; padding: 8px 13px; border: 1px solid #a1bfa9; border-radius: 999px; background: #fffffff0; color: #28533e; font: 600 12px system-ui; cursor: pointer; }
 .garden-motion-toggle:focus-visible { outline: 3px solid #15803d; outline-offset: 3px; }
 /* Three day-only butterflies. Flight stays at the garden edges, beneath plant cards. */
-.garden-butterfly { position: absolute; z-index: 1; width: 74px; height: 64px; pointer-events: none; animation: butterfly-flight 17s ease-in-out infinite; }
+.garden-butterfly { --visit: 17s; --arrival: -4s; position: absolute; z-index: 1; width: 74px; height: 64px; pointer-events: none; visibility: hidden; }
+.garden-butterfly-rose { --visit: 21s; --arrival: -11s; }
+.garden-butterfly-amber { --visit: 19s; --arrival: -7s; }
+.garden-rainbow { position: absolute; left: -55px; top: -100px; width: min(560px, 70vw); aspect-ratio: 1; border-radius: 50%; opacity: .25; background: radial-gradient(circle, transparent 51%, #ad91d7 52% 54%, #81bbdb 55% 57%, #8dcca2 58% 60%, #f7dd92 61% 63%, #efb796 64% 66%, #e6a4b3 67% 69%, transparent 70%); filter: blur(3px); pointer-events: none; }
+.butterfly-perch { position: absolute; left: 0; top: 0; width: 74px; height: 90px; }
+.garden-butterfly .garden-butterfly-body { animation: butterfly-landing var(--visit) ease-in-out infinite; animation-delay: var(--arrival); }
+.garden-butterfly .garden-butterfly-wing { animation: butterfly-visit-wings var(--visit) linear infinite; animation-delay: var(--arrival); }
+@keyframes butterfly-landing {
+  0%,100% { transform: translate(0,-20px) rotate(-18deg) scale(.8); }
+  18% { transform: translate(16px,-26px) rotate(8deg) scale(.8); }
+  35% { transform: translate(-10px,-12px) rotate(-12deg) scale(.8); }
+  45%,70% { transform: translate(0,5px) rotate(-4deg) scale(.8); }
+  82% { transform: translate(-14px,-18px) rotate(-20deg) scale(.8); }
+}
+@keyframes butterfly-visit-wings {
+  0%,6%,12%,18%,24%,30%,36%,42%,76%,82%,88%,94%,100% { transform: perspective(180px) rotateY(8deg); }
+  3%,9%,15%,21%,27%,33%,39%,73%,79%,85%,91%,97% { transform: perspective(180px) rotateY(68deg); }
+  45%,57%,70% { transform: perspective(180px) rotateY(45deg); }
+  51%,64% { transform: perspective(180px) rotateY(18deg); }
+}
 .garden-butterfly-blue { --wing: #168ad4; --wing-light: #91ecff; left: 5%; top: 55px; animation-delay: -4s; }
 .garden-butterfly-rose { --wing: #c33898; --wing-light: #ffb9e2; right: 45px; top: 94px; animation-duration: 21s; animation-delay: -11s; }
 /* Plant grid is 600px high at scale .82: its top is viewport centre -246px. */
