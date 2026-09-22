@@ -6,6 +6,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const { month = '2026-08' } = req.query;
+    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return res.status(400).json({ error: 'Use YYYY-MM for month.' });
 
     // Sabhi models ko safely get karein
     const WiderData = mongoose.models.WiderData || mongoose.model('WiderData');
@@ -76,7 +77,19 @@ router.get('/', async (req, res) => {
       },
     ];
 
-    // Grand Totals across all plants
+    // Preserve missing records/metrics instead of turning them into recorded zeros.
+    const documents = [wider, utility, hsu, narrowFlat, narrowTube];
+    const keys = ['electricity', 'lpg', 'hsd', 'totalConsumption', 'production'];
+    plantsList.forEach((plant, index) => {
+      const doc = documents[index];
+      plant.available = Boolean(doc);
+      const totals = doc?.totals || {};
+      keys.forEach(key => {
+        const raw = key === 'lpg' ? totals.lngLpg ?? totals.lng ?? totals.lpg : totals[key];
+        plant[key] = raw == null || String(raw).trim() === '' || !Number.isFinite(Number(raw)) ? null : Number(raw);
+      });
+    });
+    // Only complete corporate totals can be compared across months.
     const grandTotals = plantsList.reduce(
       (acc, curr) => ({
         electricity: acc.electricity + curr.electricity,
@@ -87,11 +100,15 @@ router.get('/', async (req, res) => {
       }),
       { electricity: 0, lpg: 0, hsd: 0, totalConsumption: 0, production: 0 }
     );
+    keys.forEach(key => {
+      if (plantsList.some(plant => plant[key] == null)) grandTotals[key] = null;
+    });
 
     res.json({
       monthYear: month,
       totals: grandTotals,
       plants: plantsList,
+      availability: { available: plantsList.filter(p => p.available).length, expected: plantsList.length },
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

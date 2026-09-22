@@ -1,3 +1,4 @@
+import AbplTrends from '../components/AbplTrends';
 import SeuButton from '../components/SeuButton';
 import PlantQrCodes from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
@@ -32,6 +33,8 @@ import {
   Cell, 
   Legend 
 } from 'recharts';
+
+const displayValue = value => value == null ? 'Unavailable' : Number(value).toLocaleString('en-IN');
 
 export default function AbplPage() {
   const navigate = useNavigate();
@@ -80,7 +83,7 @@ export default function AbplPage() {
       shadowColor: 'rgba(2, 132, 199, 0.45)',
       borderColor: '#38bdf8',
       barColor: '#00e5ff',
-      totalVal: abplData?.totals?.electricity || 0,
+      totalVal: abplData?.totals?.electricity ?? null,
     },
     lpg: {
       title: 'LPG / LNG',
@@ -90,7 +93,7 @@ export default function AbplPage() {
       shadowColor: 'rgba(245, 158, 11, 0.45)',
       borderColor: '#fbbf24',
       barColor: '#ffab00',
-      totalVal: abplData?.totals?.lpg || 0,
+      totalVal: abplData?.totals?.lpg ?? null,
     },
     hsd: {
       title: 'HSD',
@@ -100,7 +103,7 @@ export default function AbplPage() {
       shadowColor: 'rgba(244, 63, 94, 0.45)',
       borderColor: '#fb7185',
       barColor: '#ff1744',
-      totalVal: abplData?.totals?.hsd || 0,
+      totalVal: abplData?.totals?.hsd ?? null,
     },
     totalConsumption: {
       title: 'Total Consumption',
@@ -110,7 +113,7 @@ export default function AbplPage() {
       shadowColor: 'rgba(147, 51, 234, 0.45)',
       borderColor: '#c084fc',
       barColor: '#d500f9',
-      totalVal: abplData?.totals?.totalConsumption || 0,
+      totalVal: abplData?.totals?.totalConsumption ?? null,
     },
     production: {
       title: 'Production',
@@ -120,7 +123,7 @@ export default function AbplPage() {
       shadowColor: 'rgba(16, 185, 129, 0.45)',
       borderColor: '#34d399',
       barColor: '#00e676',
-      totalVal: abplData?.totals?.production || 0,
+      totalVal: abplData?.totals?.production ?? null,
     },
   };
 
@@ -223,6 +226,12 @@ export default function AbplPage() {
         </div>
       </div>
 
+      <section className="abpl-availability" aria-label="Plant data availability">
+        <strong>Data availability · {selectedMonth}</strong>
+        {loading ? <span>Loading…</span> : loadError ? <span>Unavailable</span> : abplData?.plants?.map(p => <span key={p.id} className={p.available === true ? 'available' : p.available === false ? 'missing' : ''}>{p.name}: {p.available === true ? 'Record available' : p.available === false ? 'Missing record' : 'Not verified'}</span>)}
+        <small>Record availability does not guarantee complete readings. Corporate totals show Unavailable when any plant lacks that metric.</small>
+      </section>
+      <AbplTrends month={selectedMonth} current={abplData} loading={loading} error={loadError} />
       {/* 3. 5 COLORFUL METRIC CARDS IN 1 STRICT ROW (ZERO WRAPPING) */}
       <div className="audit-metrics" 
         style={{ 
@@ -303,7 +312,7 @@ export default function AbplPage() {
                   </h3>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px', marginTop: '2px' }}>
                     <span style={{ fontSize: '18px', fontWeight: 900, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>
-                      {conf.totalVal.toLocaleString()}
+                      {loading ? 'Loading…' : loadError ? 'Unavailable' : displayValue(conf.totalVal)}
                     </span>
                     <span style={{ fontSize: '10px', fontWeight: 700, color: 'rgba(255, 255, 255, 0.85)', flexShrink: 0 }}>
                       {conf.unit}
@@ -344,7 +353,7 @@ export default function AbplPage() {
             const activeConf = metricConfigs[metric];
             const chartData = (abplData?.plants || []).map(plant => ({
               name: plant.name,
-              value: Number(plant[metric]) || 0,
+              value: Number(plant[metric]) ?? null,
               color: plant.color,
             }));
             const pieData = chartData.filter(item => item.value > 0);
@@ -359,7 +368,7 @@ export default function AbplPage() {
               </h2>
             </div>
             <div style={{ fontSize: '12px', fontWeight: 800, color: '#94a3b8' }}>
-              Consolidated Total: <span style={{ color: '#ffffff', fontWeight: 900, fontSize: '14px' }}>{activeConf.totalVal.toLocaleString()} {activeConf.unit}</span>
+              Consolidated Total: <span style={{ color: '#ffffff', fontWeight: 900, fontSize: '14px' }}>{displayValue(activeConf.totalVal)} {activeConf.unit}</span>
             </div>
           </div>
 
@@ -470,7 +479,7 @@ export default function AbplPage() {
                 Consolidated Breakdown Table — {selectedMonth}
               </h3>
               <span style={{ fontSize: '11px', fontWeight: 800, color: '#94a3b8' }}>
-                All Facilities Active
+                {abplData?.availability ? `${abplData.availability.available}/${abplData.availability.expected} plant records available` : 'Availability not verified'}
               </span>
             </div>
 
@@ -493,11 +502,11 @@ export default function AbplPage() {
                         <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: p.color, display: 'inline-block' }}></span>
                         {p.name}
                       </td>
-                      <td style={{ padding: '12px 6px', borderRight: '1px solid #1e293b', color: '#86efac' }}>{p.electricity ? p.electricity.toLocaleString() : '-'}</td>
-                      <td style={{ padding: '12px 6px', borderRight: '1px solid #1e293b', color: '#fdba74' }}>{p.lpg ? p.lpg.toLocaleString() : '-'}</td>
-                      <td style={{ padding: '12px 6px', borderRight: '1px solid #1e293b', color: '#d8b4fe' }}>{p.hsd ? p.hsd.toLocaleString() : '-'}</td>
-                      <td style={{ padding: '12px 6px', borderRight: '1px solid #1e293b', color: '#67e8f9', fontWeight: 900 }}>{p.totalConsumption ? p.totalConsumption.toLocaleString() : '-'}</td>
-                      <td style={{ padding: '12px 6px', color: '#7dd3fc' }}>{p.production ? p.production.toLocaleString() : '-'}</td>
+                      <td style={{ padding: '12px 6px', borderRight: '1px solid #1e293b', color: '#86efac' }}>{displayValue(p.electricity)}</td>
+                      <td style={{ padding: '12px 6px', borderRight: '1px solid #1e293b', color: '#fdba74' }}>{displayValue(p.lpg)}</td>
+                      <td style={{ padding: '12px 6px', borderRight: '1px solid #1e293b', color: '#d8b4fe' }}>{displayValue(p.hsd)}</td>
+                      <td style={{ padding: '12px 6px', borderRight: '1px solid #1e293b', color: '#67e8f9', fontWeight: 900 }}>{displayValue(p.totalConsumption)}</td>
+                      <td style={{ padding: '12px 6px', color: '#7dd3fc' }}>{displayValue(p.production)}</td>
                     </tr>
                   ))}
                   
@@ -507,19 +516,19 @@ export default function AbplPage() {
                       TOTAL ABPL CONSOLIDATED
                     </td>
                     <td style={{ backgroundColor: '#bbf7d0', padding: '12px 6px', borderRight: '2px solid #000' }}>
-                      {abplData?.totals?.electricity ? abplData.totals.electricity.toLocaleString() : '-'}
+                      {displayValue(abplData?.totals?.electricity)}
                     </td>
                     <td style={{ backgroundColor: '#fed7aa', padding: '12px 6px', borderRight: '2px solid #000' }}>
-                      {abplData?.totals?.lpg ? abplData.totals.lpg.toLocaleString() : '-'}
+                      {displayValue(abplData?.totals?.lpg)}
                     </td>
                     <td style={{ backgroundColor: '#e9d5ff', padding: '12px 6px', borderRight: '2px solid #000' }}>
-                      {abplData?.totals?.hsd ? abplData.totals.hsd.toLocaleString() : '-'}
+                      {displayValue(abplData?.totals?.hsd)}
                     </td>
                     <td style={{ backgroundColor: '#a7f3d0', padding: '12px 6px', borderRight: '2px solid #000', fontSize: '14px' }}>
-                      {abplData?.totals?.totalConsumption ? abplData.totals.totalConsumption.toLocaleString() : '-'}
+                      {displayValue(abplData?.totals?.totalConsumption)}
                     </td>
                     <td style={{ backgroundColor: '#bae6fd', padding: '12px 6px' }}>
-                      {abplData?.totals?.production ? abplData.totals.production.toLocaleString() : '-'}
+                      {displayValue(abplData?.totals?.production)}
                     </td>
                   </tr>
                 </tbody>
