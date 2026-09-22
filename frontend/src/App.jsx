@@ -474,13 +474,13 @@ function Dashboard() {
         }
 
         /* Coordinated jewel palette for all seven home destinations. */
-        .portal-wrapper .gem-abpl { --tile-start: #635bdf; --tile-end: #312477; --tile-shadow: #4338ca55; --tile-ink: #ffffff; }
-        .portal-wrapper .block-ntd { --tile-start: #a5f3fc; --tile-end: #22b8cf; --tile-shadow: #0891b244; --tile-ink: #083344; }
-        .portal-wrapper .block-wider { --tile-start: #fbcfe8; --tile-end: #f472b6; --tile-shadow: #db277744; --tile-ink: #500724; }
-        .portal-wrapper .block-solar { --tile-start: #ef795f; --tile-end: #bf3c51; --tile-shadow: #be405044; --tile-ink: #ffffff; }
-        .portal-wrapper .block-substation { --tile-start: #b85c17; --tile-end: #78350f; --tile-shadow: #b4530944; --tile-ink: #ffffff; }
-        .portal-wrapper .block-hsg { --tile-start: #16886c; --tile-end: #075943; --tile-shadow: #04785744; --tile-ink: #ffffff; }
-        .portal-wrapper .block-nf { --tile-start: #a34a9e; --tile-end: #672b7b; --tile-shadow: #86198f44; --tile-ink: #ffffff; }
+        .portal-wrapper .gem-abpl { --tile-start: #4f46b8; --tile-end: #28205c; --tile-shadow: #4338ca55; --tile-ink: #fff5cf; }
+        .portal-wrapper .block-ntd { --tile-start: #086c8b; --tile-end: #12425d; --tile-shadow: #0891b244; --tile-ink: #ffffff; }
+        .portal-wrapper .block-wider { --tile-start: #b02669; --tile-end: #691d50; --tile-shadow: #be185d44; --tile-ink: #ffffff; }
+        .portal-wrapper .block-solar { --tile-start: #f5cf72; --tile-end: #eba445; --tile-shadow: #d9770644; --tile-ink: #422006; }
+        .portal-wrapper .block-substation { --tile-start: #315baf; --tile-end: #243268; --tile-shadow: #2563eb44; --tile-ink: #ffffff; }
+        .portal-wrapper .block-hsg { --tile-start: #087a61; --tile-end: #064c43; --tile-shadow: #05966944; --tile-ink: #ffffff; }
+        .portal-wrapper .block-nf { --tile-start: #7941ad; --tile-end: #45266d; --tile-shadow: #9333ea44; --tile-ink: #ffffff; }
         .portal-wrapper .iso-3d-block {
           background: linear-gradient(145deg, var(--tile-start), var(--tile-end));
           border: 2px solid #ffffff99;
