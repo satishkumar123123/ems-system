@@ -24,6 +24,17 @@ export default function DayGarden() {
         </svg>)}
       </div>)}
       {Array.from({length: 12}, (_, i) => <span key={i} className="garden-drifter" style={{'--i': i, left: `${(i * 17) % 100}%`, top: `${10 + (i * 23) % 75}%`}}><i /></span>)}
+      {['blue', 'rose', 'amber'].map(color => <div key={color} className={`garden-butterfly garden-butterfly-${color}`}>
+        <div className="garden-butterfly-body">
+          {['left', 'right'].map(side => <svg key={side} className={`garden-butterfly-wing garden-butterfly-wing-${side}`} viewBox="0 0 42 64" focusable="false">
+            <path d="M39 33C26 4 2-5 3 17C3 31 13 37 26 37C7 35 3 52 16 58C29 64 38 46 39 33Z" fill="var(--wing)" stroke="#29354c" strokeWidth="2" />
+            <path d="M36 32C23 12 11 8 10 18C10 26 23 31 36 32ZM35 39C21 39 13 48 19 51C25 55 32 45 35 39Z" fill="var(--wing-light)" />
+            <path d="M37 34L13 17M37 36L17 47" fill="none" stroke="#29354c" strokeWidth="1" opacity=".5" />
+            <circle cx="8" cy="19" r="2" fill="#fff" /><circle cx="13" cy="28" r="1.5" fill="#fff" /><circle cx="17" cy="53" r="1.5" fill="#fff" />
+          </svg>)}
+          <span className="garden-butterfly-spine" />
+        </div>
+      </div>)}
     </div>
     <button type="button" className="garden-motion-toggle" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? '▶ Resume garden' : 'Ⅱ Pause garden'}</button>
   </>;
