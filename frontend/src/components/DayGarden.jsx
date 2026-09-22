@@ -1,29 +1,70 @@
 import { useEffect, useRef, useState } from 'react';
 import './day-garden.css';
+import { flowerRoute, pointOnRoute } from './butterfly-routes';
 
 // Decorative garden is mounted only in day mode; no night styles are changed.
 export default function DayGarden() {
   const [paused, setPaused] = useState(false);
   const garden = useRef(null);
+  const motionPaused = useRef(false);
+  useEffect(() => { motionPaused.current = paused; }, [paused]);
   useEffect(() => {
     const root = garden.current;
     const stage = root.closest('.blueprint-stage');
-    const obstacles = [...stage.querySelectorAll('.iso-3d-block, .portal-theme-toggle')];
-    // Reserve the entire flight envelope plus hover clearance, not just the landing point.
-    const check = () => {
-      const boxes = obstacles.map(el => el.getBoundingClientRect());
-      root.querySelectorAll('.garden-butterfly').forEach(el => {
-        const b = el.getBoundingClientRect();
-        const unsafe = boxes.some(o => b.left - 32 < o.right + 16 && b.right + 32 > o.left - 16 && b.top - 38 < o.bottom + 16 && b.bottom + 26 > o.top - 16);
-        el.style.visibility = unsafe ? 'hidden' : 'visible';
+    const cards = [...stage.querySelectorAll('.iso-3d-block, .portal-theme-toggle')];
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let flights = [], frame, elapsed = 0, previous;
+    const layout = () => {
+      const bounds = root.getBoundingClientRect();
+      const rect = el => {
+        const r = el.getBoundingClientRect();
+        return { left: r.left - bounds.left, right: r.right - bounds.left,
+          top: r.top - bounds.top, bottom: r.bottom - bounds.top };
+      };
+      // Includes butterfly wings, card hover growth, and flower sway clearance.
+      const boxes = cards.map(rect).map(r => ({left:r.left-34, right:r.right+34, top:r.top-34, bottom:r.bottom+34}));
+      const toggle = rect(stage.querySelector('.portal-theme-toggle'));
+      const specs = [
+        ['blue', '.flower-pos-nf', [Math.max(42, bounds.width * .05), 76], 0],
+        ['amber', '.flower-pos-substation', [bounds.width / 2, 65], 2400],
+        ['rose', '.flower-pos-hsg', [(toggle.left + toggle.right) / 2, toggle.bottom + 52], 4800],
+      ];
+      flights = specs.map(([color, selector, home, delay]) => {
+        const el = root.querySelector(`.garden-butterfly-${color}`);
+        const flower = stage.querySelector(selector);
+        const r = rect(flower);
+        const target = [(r.left + r.right) / 2, (r.top + r.bottom) / 2 - 9];
+        const route = flowerRoute(home, target, boxes, bounds.width, bounds.height);
+        el.style.visibility = route.length ? 'visible' : 'hidden';
+        return {el, flower, route, delay, bounds};
       });
+      elapsed = 0;
     };
-    const observer = new ResizeObserver(check);
+    const tick = now => {
+      if (previous !== undefined && !motionPaused.current && !reduced.matches) elapsed += Math.min(now - previous, 50);
+      previous = now;
+      flights.forEach(({el, flower, route, delay, bounds}) => {
+        if (!route.length) return;
+        const phase = Math.max(0, elapsed - delay) % 22000;
+        const resting = phase >= 8000 && phase < 12000;
+        const progress = phase < 8000 ? phase / 8000 : phase < 12000 ? 1 : phase < 20000 ? 1 - (phase - 12000) / 8000 : 0;
+        let [x, y] = pointOnRoute(route, progress);
+        if (resting) {
+          const r = flower.getBoundingClientRect();
+          x = (r.left + r.right) / 2 - bounds.left;
+          y = (r.top + r.bottom) / 2 - bounds.top - 9;
+        }
+        el.style.transform = `translate3d(${x - 37}px, ${y - 32}px, 0)`;
+        el.classList.toggle('is-landed', resting);
+      });
+      frame = requestAnimationFrame(tick);
+    };
+    const observer = new ResizeObserver(layout);
     observer.observe(stage);
-    obstacles.forEach(el => observer.observe(el));
-    window.addEventListener('resize', check);
-    check();
-    return () => { observer.disconnect(); window.removeEventListener('resize', check); };
+    window.addEventListener('resize', layout);
+    layout();
+    frame = requestAnimationFrame(tick);
+    return () => { cancelAnimationFrame(frame); observer.disconnect(); window.removeEventListener('resize', layout); };
   }, []);
   return <>
     <div ref={garden} className={`day-garden${paused ? ' garden-paused' : ''}`} aria-hidden="true">
@@ -47,13 +88,6 @@ export default function DayGarden() {
       </div>)}
       {Array.from({length: 12}, (_, i) => <span key={i} className="garden-drifter" style={{'--i': i, left: `${(i * 17) % 100}%`, top: `${10 + (i * 23) % 75}%`}}><i /></span>)}
       {['blue', 'rose', 'amber'].map(color => <div key={color} className={`garden-butterfly garden-butterfly-${color}`}>
-        <svg className="butterfly-perch" viewBox="0 0 74 90" focusable="false">
-          <path d="M37 85Q29 64 37 45M34 70Q12 53 18 72Q25 80 34 76" fill="#78ad87" stroke="#4c8460" strokeWidth="2" />
-          <g transform="translate(37 43)" fill="var(--wing-light)">
-            {[0,60,120,180,240,300].map(angle => <ellipse key={angle} cy="-9" rx="6" ry="11" transform={`rotate(${angle})`} />)}
-            <circle r="6" fill="#eab64d" />
-          </g>
-        </svg>
         <div className="garden-butterfly-body">
           {['left', 'right'].map(side => <svg key={side} className={`garden-butterfly-wing garden-butterfly-wing-${side}`} viewBox="0 0 42 64" focusable="false">
             <path d="M39 33C26 4 2-5 3 17C3 31 13 37 26 37C7 35 3 52 16 58C29 64 38 46 39 33Z" fill="var(--wing)" stroke="#29354c" strokeWidth="2" />
