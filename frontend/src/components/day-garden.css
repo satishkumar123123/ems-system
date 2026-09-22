@@ -38,9 +38,10 @@
 .garden-motion-toggle:focus-visible { outline: 3px solid #15803d; outline-offset: 3px; }
 /* Three day-only butterflies. Flight stays at the garden edges, beneath plant cards. */
 .garden-butterfly { position: absolute; z-index: 1; width: 74px; height: 64px; pointer-events: none; animation: butterfly-flight 17s ease-in-out infinite; }
-.garden-butterfly-blue { --wing: #168ad4; --wing-light: #91ecff; left: 7%; top: 55%; animation-delay: -4s; }
-.garden-butterfly-rose { --wing: #c33898; --wing-light: #ffb9e2; right: 9%; top: 48%; animation-duration: 21s; animation-delay: -11s; }
-.garden-butterfly-amber { --wing: #eb8a23; --wing-light: #ffe391; left: 27%; bottom: 9%; animation-duration: 19s; animation-delay: -7s; }
+.garden-butterfly-blue { --wing: #168ad4; --wing-light: #91ecff; left: 5%; top: 55px; animation-delay: -4s; }
+.garden-butterfly-rose { --wing: #c33898; --wing-light: #ffb9e2; right: 45px; top: 94px; animation-duration: 21s; animation-delay: -11s; }
+/* Plant grid is 600px high at scale .82: its top is viewport centre -246px. */
+.garden-butterfly-amber { --wing: #eb8a23; --wing-light: #ffe391; left: calc(50% - 37px); top: max(28px, calc(50% - 290px)); animation-duration: 19s; animation-delay: -7s; }
 .garden-butterfly-body { position: relative; width: 100%; height: 100%; filter: drop-shadow(0 4px 3px #243c442b); transform: rotate(-18deg) scale(.8); }
 .garden-butterfly-wing { position: absolute; width: 42px; height: 64px; overflow: visible; animation: butterfly-flutter .65s ease-in-out infinite alternate; }
 .garden-butterfly-wing-left { left: -3px; transform-origin: 39px 33px; }
@@ -52,7 +53,7 @@
 .garden-butterfly-spine::before { right: 1px; rotate: 45deg; }
 .garden-butterfly-spine::after { left: 1px; rotate: -45deg; }
 @keyframes butterfly-flutter { from { transform: perspective(180px) rotateY(0deg); } to { transform: perspective(180px) rotateY(68deg); } }
-@keyframes butterfly-flight { 0%,100% { transform: translate(0,0) rotate(-8deg); } 25% { transform: translate(35px,-65px) rotate(12deg); } 50% { transform: translate(-18px,-105px) rotate(-15deg); } 75% { transform: translate(-24px,-30px) rotate(6deg); } }
+@keyframes butterfly-flight { 0%,100% { transform: translate(0,0) rotate(-8deg); } 25% { transform: translate(16px,-12px) rotate(12deg); } 50% { transform: translate(-12px,8px) rotate(-15deg); } 75% { transform: translate(-10px,15px) rotate(6deg); } }
 @media(max-width:700px) { .garden-butterfly { width: 60px; scale: .7; } .garden-butterfly-blue { left: 2%; } .garden-butterfly-rose { right: 3%; } }
 .garden-paused *, .garden-paused::before, .garden-paused::after, .garden-paused *::before, .garden-paused *::after { animation-play-state: paused !important; }
 @keyframes garden-pan { from { transform: translate3d(-4%, -3%, 0) scale(1); } to { transform: translate3d(5%, 4%, 0) scale(1.12); } }
