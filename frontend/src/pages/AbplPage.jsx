@@ -226,12 +226,6 @@ export default function AbplPage() {
         </div>
       </div>
 
-      <section className="abpl-availability" aria-label="Plant data availability">
-        <strong>Data availability · {selectedMonth}</strong>
-        {loading ? <span>Loading…</span> : loadError ? <span>Unavailable</span> : abplData?.plants?.map(p => <span key={p.id} className={p.available === true ? 'available' : p.available === false ? 'missing' : ''}>{p.name}: {p.available === true ? 'Record available' : p.available === false ? 'Missing record' : 'Not verified'}</span>)}
-        <small>Record availability does not guarantee complete readings. Corporate totals show Unavailable when any plant lacks that metric.</small>
-      </section>
-      <AbplTrends month={selectedMonth} current={abplData} loading={loading} error={loadError} />
       {/* 3. 5 COLORFUL METRIC CARDS IN 1 STRICT ROW (ZERO WRAPPING) */}
       <div className="audit-metrics" 
         style={{ 
@@ -538,6 +532,12 @@ export default function AbplPage() {
         </>
       )}
 
+      <section className="abpl-availability" aria-label="Plant data availability">
+        <strong className="abpl-color-title"><span>Data</span> <span>availability</span> <span>· {selectedMonth}</span></strong>
+        {loading ? <span>Loading…</span> : loadError ? <span>Unavailable</span> : abplData?.plants?.map(p => <span key={p.id} className={p.available === true ? 'available' : p.available === false ? 'missing' : ''}>{p.name}: {p.available === true ? 'Record available' : p.available === false ? 'Missing record' : 'Not verified'}</span>)}
+        <small>Record availability does not guarantee complete readings. Corporate totals show Unavailable when any plant lacks that metric.</small>
+      </section>
+      <AbplTrends month={selectedMonth} current={abplData} loading={loading} error={loadError} />
       <AbplSec selectedMonth={selectedMonth} />
       <AbplScheduleOverview />
     </div>
