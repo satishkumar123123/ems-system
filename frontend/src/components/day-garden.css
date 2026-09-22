@@ -1,0 +1,36 @@
+/* Every selector is day-only or belongs to the day-only mounted component. */
+.portal-wrapper:not(.portal-night) .blueprint-stage:has(.day-garden) {
+  background: radial-gradient(ellipse at 78% 12%, #fff6d6, transparent 45%), linear-gradient(160deg, #dbeee7, #f5f8ed 55%, #d9ecde);
+}
+.portal-wrapper:not(.portal-night):has(.day-garden) .portal-landscape,
+.portal-wrapper:not(.portal-night):has(.day-garden) .portal-leaves,
+.portal-wrapper:not(.portal-night):has(.day-garden) .blueprint-doodles { opacity: 0; }
+.portal-wrapper:not(.portal-night):has(.day-garden) .portal-glass {
+  background: linear-gradient(125deg, #fffffff0, #ffffffa8 60%, #f1faefc9);
+  border-color: #ffffff;
+  box-shadow: 0 25px 75px #28543b18, inset 0 1px #fff;
+}
+.day-garden { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.garden-sun { position: absolute; width: 380px; height: 380px; right: -90px; top: -130px; border-radius: 50%; background: radial-gradient(circle, #fffce8 15%, #fbe7a66b 48%, transparent 70%); animation: garden-sunlight 12s ease-in-out infinite alternate; }
+.garden-cloud { position: absolute; width: 36vw; height: 110px; border-radius: 50%; background: #ffffff7a; filter: blur(25px); animation: garden-clouds 28s ease-in-out infinite alternate; }
+.garden-cloud-one { left: -12%; top: 12%; }
+.garden-cloud-two { right: 10%; top: 28%; width: 22vw; animation-delay: -15s; }
+.garden-meadow { position: absolute; inset: 0; width: 110%; height: 100%; left: -5%; animation: garden-meadow 18s ease-in-out infinite alternate; }
+.garden-border { position: absolute; bottom: -16px; display: flex; align-items: flex-end; width: min(36vw, 440px); }
+.garden-border-left { left: -25px; }
+.garden-border-right { right: -25px; transform: scaleX(-1); }
+.garden-stem { width: 24%; flex-shrink: 0; margin-right: -11%; overflow: visible; transform-origin: 50% 100%; animation: garden-sway calc(5s + var(--i) * .4s) ease-in-out infinite alternate; animation-delay: calc(var(--i) * -.8s); }
+.garden-drifter { position: absolute; animation: garden-drift calc(16s + var(--i) * 1.2s) ease-in-out infinite alternate; animation-delay: calc(var(--i) * -2s); }
+.garden-drifter i { display: block; width: 13px; height: 22px; border-radius: 80% 0 80% 0; background: #6da98888; animation: garden-turn 6s ease-in-out infinite alternate; animation-delay: calc(var(--i) * -.5s); }
+.garden-drifter:nth-child(even) i { background: #e7a8bf88; width: 10px; height: 16px; }
+.portal-wrapper .garden-motion-toggle { position: absolute; bottom: 14px; right: 20px; z-index: 50; padding: 8px 13px; border: 1px solid #a1bfa9; border-radius: 999px; background: #fffffff0; color: #28533e; font: 600 12px system-ui; cursor: pointer; }
+.garden-motion-toggle:focus-visible { outline: 3px solid #15803d; outline-offset: 3px; }
+.garden-paused *, .garden-paused *::before, .garden-paused *::after { animation-play-state: paused !important; }
+@keyframes garden-sway { from { transform: rotate(-5deg); } to { transform: rotate(7deg); } }
+@keyframes garden-drift { from { transform: translate3d(-30px,-25px,0); } to { transform: translate3d(100px,140px,0); } }
+@keyframes garden-turn { from { transform: rotate(-40deg) rotateY(0deg); } to { transform: rotate(100deg) rotateY(130deg); } }
+@keyframes garden-clouds { to { transform: translate3d(90px,12px,0); } }
+@keyframes garden-meadow { to { transform: translate3d(20px,8px,0); } }
+@keyframes garden-sunlight { to { transform: scale(1.16) translate(-12px,12px); opacity: .7; } }
+@media(max-width:700px) { .garden-border { width: 40vw; opacity: .7; } .garden-stem { max-height: 170px; } .garden-drifter:nth-child(even) { display: none; } }
+@media(prefers-reduced-motion:reduce) { .day-garden *, .day-garden *::before, .day-garden *::after { animation: none !important; } .portal-wrapper .garden-motion-toggle { display: none; } }
