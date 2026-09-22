@@ -51,10 +51,10 @@ export default function AbplTrends({ month, current, loading, error }) {
   const points = [...history, { month, data: current }].map(item => ({ month: item.month, value: value(item.data, metric, plant) }));
   const Chart = kind === 'line' ? LineChart : BarChart;
   return <section className="abpl-trends">
-    <h2>Monthly performance & trends</h2>
+    <h2 className="abpl-color-title"><span>Monthly</span> <span>performance</span> <span>&</span> <span>trends</span></h2>
     <p>Corporate totals require all five plants for each metric. Missing months stay gaps; recorded zero stays zero. A rise or fall alone does not indicate efficiency.</p>
     {loading || error ? <p role="status">{loading ? 'Loading selected month…' : 'Reload selected month to view comparisons.'}</p> : <>
-      <h3>Previous month comparison</h3>
+      <h3 className="abpl-color-title"><span>Previous</span> <span>month</span> <span>comparison</span></h3>
       <div className="abpl-change-grid">{Object.entries(metrics).map(([key, [label, unit]]) => <article key={key}><h4>{label}</h4><strong>{fmt(value(current, key))} {unit}</strong><p>{busy ? 'Loading comparison…' : comparison(value(current, key), value(previous, key))}</p><small>Previous: {busy ? 'Loading…' : fmt(value(previous, key))} {unit}</small></article>)}</div>
       <div className="abpl-trend-controls">
         <label>Metric<select value={metric} onChange={e => setMetric(e.target.value)}>{Object.entries(metrics).map(([k, [label]]) => <option key={k} value={k}>{label}</option>)}</select></label>
