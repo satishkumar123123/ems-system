@@ -736,16 +736,26 @@ function Dashboard() {
         @media (max-width: 700px) {
           .portal-wrapper .portal-glass { backdrop-filter: blur(4px); }
         }
+        /* Explicit theme layers: scenery below navigation, never under an opaque panel. */
+        .portal-wrapper .portal-theme-toggle { position: fixed; top: 16px; right: 16px; z-index: 100; }
+        .portal-wrapper .diagram-scaler { z-index: 2; background: transparent; }
+        .portal-wrapper:not(.portal-night) .schematic-grid::before { display: none; }
+        .portal-wrapper:not(.portal-night) .schematic-grid { background: transparent; box-shadow: none; }
+        .portal-wrapper.portal-night .blueprint-stage {
+          background: radial-gradient(ellipse at 20% 30%, #16325977, transparent 46%),
+            radial-gradient(ellipse at 85% 60%, #46266388, transparent 45%), #040915;
+        }
+        .portal-wrapper.portal-night .cinematic-stars { z-index: 1; opacity: 1; visibility: visible; }
       `}</style>
 
       <div className="blueprint-stage">
         {night && <CinematicStars />}
         {!night && <DayGarden />}
-        <button type="button" className="portal-theme-toggle" onClick={toggleTheme} aria-pressed={night} aria-label="Night theme">
-          <span aria-hidden="true">{night ? '☾' : '☀'}</span>{night ? 'Night' : 'Day'}
+        <button type="button" className="portal-theme-toggle" onClick={toggleTheme} aria-pressed={night} aria-label={night ? 'Switch to day mode' : 'Switch to night mode'}>
+          <span aria-hidden="true">{night ? '☀' : '☾'}</span>{night ? 'Switch to Day' : 'Switch to Night'}
         </button>
-        <div className="portal-glow" aria-hidden="true" />
-        <div className="portal-glass" aria-hidden="true" />
+        {night && <div className="portal-glow" aria-hidden="true" />}
+        {night && <div className="portal-glass" aria-hidden="true" />}
         {['left', 'right'].map(side => (
           <svg key={side} className={`portal-leaves portal-leaves-${side}`} viewBox="0 0 200 280" aria-hidden="true" focusable="false">
             <path d="M25 280 Q65 180 160 25" fill="none" stroke="currentColor" strokeWidth="3" />
