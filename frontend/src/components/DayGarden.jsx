@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './day-garden.css';
-import { flowerRoute, pointOnRoute } from './butterfly-routes';
+import { flowerRoute, pointOnRoute, visiblePerch } from './butterfly-routes';
 
 // Decorative garden is mounted only in day mode; no night styles are changed.
 export default function DayGarden() {
@@ -31,22 +31,26 @@ export default function DayGarden() {
         ['amber', '.flower-pos-substation', [(narrow.right + wider.left) / 2, Math.max(42, (narrow.top + narrow.bottom) / 2 - 22)], 2400],
         ['rose', '.flower-pos-hsg', [(toggle.left + toggle.right) / 2, toggle.bottom + 52], 4800],
       ];
-      flights = specs.map(([color, selector, home, delay]) => {
+      flights = specs.map(([color, selector, requestedHome, delay]) => {
         const el = root.querySelector(`.garden-butterfly-${color}`);
         const flower = stage.querySelector(selector);
         const r = rect(flower);
-        const target = [(r.left + r.right) / 2, (r.top + r.bottom) / 2 - 9];
-        const route = flowerRoute(home, target, boxes, bounds.width, bounds.height);
-        el.style.visibility = route.length ? 'visible' : 'hidden';
+        const home = visiblePerch(requestedHome, boxes, bounds.width, bounds.height);
+        const target = visiblePerch([(r.left + r.right) / 2, (r.top + r.bottom) / 2 - 9], boxes, bounds.width, bounds.height);
+        const planned = flowerRoute(home, target, boxes, bounds.width, bounds.height);
+        // A blocked flight must never make the butterfly disappear.
+        const route = planned.length ? planned : [home];
+        el.style.transform = `translate3d(${home[0]-37}px, ${home[1]-32}px, 0)`;
+        el.style.visibility = 'visible';
         // Both route endpoints use the same flower artwork and blossom centre.
         ['home', 'destination'].forEach((spot, index) => {
           const bloom = root.querySelector(`.landing-flower-${color}-${spot}`);
           const point = index ? target : home;
           bloom.style.left = `${point[0]}px`;
           bloom.style.top = `${point[1] + 9}px`;
-          bloom.style.visibility = route.length ? 'visible' : 'hidden';
+          bloom.style.visibility = 'visible';
         });
-        return {el, flower, route, delay, bounds, heading: 0,
+        return {el, route, delay, heading: 0,
           homeBloom: root.querySelector(`.landing-flower-${color}-home`),
           destinationBloom: root.querySelector(`.landing-flower-${color}-destination`)};
       });
@@ -57,14 +61,14 @@ export default function DayGarden() {
       elapsed += dt;
       previous = now;
       flights.forEach(flight => {
-        const {el, flower, route, delay, bounds, homeBloom, destinationBloom} = flight;
+        const {el, route, delay, homeBloom, destinationBloom} = flight;
         if (!route.length) return;
         const phase = Math.max(0, elapsed - delay) % 22000;
-        const resting = phase >= 8000 && phase < 12000;
+        const resting = route.length > 1 && phase >= 8000 && phase < 12000;
         const progress = phase < 8000 ? phase / 8000 : phase < 12000 ? 1 : phase < 20000 ? 1 - (phase - 12000) / 8000 : 0;
         const eased = progress * progress * (3 - 2 * progress);
         let [x, y] = pointOnRoute(route, eased);
-        const atHome = phase >= 20000 || elapsed <= delay;
+        const atHome = route.length === 1 || phase >= 20000 || elapsed <= delay;
         const landed = resting || atHome;
         const ahead = pointOnRoute(route, Math.max(0, Math.min(1, eased + (phase < 12000 ? .003 : -.003))));
         const dx = ahead[0] - x, dy = ahead[1] - y;
@@ -74,11 +78,6 @@ export default function DayGarden() {
         el.style.setProperty('--flight-heading', `${flight.heading}deg`);
         homeBloom.classList.toggle('has-butterfly', atHome);
         destinationBloom.classList.toggle('has-butterfly', resting);
-        if (resting) {
-          const r = flower.getBoundingClientRect();
-          x = (r.left + r.right) / 2 - bounds.left;
-          y = (r.top + r.bottom) / 2 - bounds.top - 9;
-        }
         el.style.transform = `translate3d(${x - 37}px, ${y - 32}px, 0)`;
         el.classList.toggle('is-landed', landed || reduced.matches);
       });
@@ -86,6 +85,7 @@ export default function DayGarden() {
     };
     const observer = new ResizeObserver(layout);
     observer.observe(stage);
+    observer.observe(stage.querySelector('.schematic-grid'));
     window.addEventListener('resize', layout);
     layout();
     frame = requestAnimationFrame(tick);
