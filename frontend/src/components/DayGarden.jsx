@@ -102,6 +102,28 @@ export default function DayGarden() {
   }, []);
   return <>
     <div ref={garden} className={`day-garden${paused ? ' garden-paused' : ''}`} aria-hidden="true">
+      <style>{`
+        .day-garden .landing-flower:has(.landing-twig) { overflow: visible; }
+        .garden-drizzle { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+        .garden-rain-drop {
+          position: absolute; top: -28px; width: 1px; height: var(--drop-length);
+          border-radius: 999px; opacity: 0;
+          background: linear-gradient(transparent, #699eaf99);
+          animation: garden-drizzle-fall var(--fall-time) linear infinite;
+          animation-delay: var(--rain-delay);
+        }
+        @keyframes garden-drizzle-fall {
+          0% { transform: translate3d(0, -28px, 0) rotate(12deg); opacity: 0; }
+          12%, 85% { opacity: .45; }
+          100% { transform: translate3d(-15vh, 105vh, 0) rotate(12deg); opacity: 0; }
+        }
+        @media (max-width: 700px) {
+          .garden-rain-drop:nth-child(even) { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .garden-drizzle { display: none; }
+        }
+      `}</style>
       <div className="garden-rainbow" />
       <div className="garden-sun" />
       <div className="garden-cloud garden-cloud-one" />
@@ -121,9 +143,22 @@ export default function DayGarden() {
           </g>
         </svg>)}
       </div>)}
+      <div className="garden-drizzle">
+        {Array.from({length: 42}, (_, i) => <i key={i} className="garden-rain-drop" style={{
+          left: `${(i * 37) % 115}%`,
+          '--drop-length': `${10 + (i % 4) * 3}px`,
+          '--fall-time': `${3.4 + (i % 7) * .3}s`,
+          '--rain-delay': `${-i * .47}s`,
+        }} />)}
+      </div>
       {Array.from({length: 12}, (_, i) => <span key={i} className="garden-drifter" style={{'--i': i, left: `${(i * 17) % 100}%`, top: `${10 + (i * 23) % 75}%`}}><i /></span>)}
       {['blue', 'rose', 'amber'].flatMap(color => ['home', 'destination'].map(spot =>
         <svg key={`${color}-${spot}`} className={`landing-flower landing-flower-${color} landing-flower-${color}-${spot}`} viewBox="0 0 64 64" focusable="false">
+          {spot === 'home' && <g className="landing-twig">
+            <path d="M32 34 C27 61 43 89 34 145" fill="none" stroke="#397b60" strokeWidth="3.5" strokeLinecap="round" />
+            <path d="M34 88 Q8 82 10 64 Q30 65 34 88 M37 108 Q63 100 60 83 Q40 87 37 108 M36 130 Q15 125 16 110 Q33 112 36 130" fill="#69a979" stroke="#397b60" strokeWidth="1" />
+            <path d="M13 68 L34 88 M57 87 L37 108 M19 114 L36 130" fill="none" stroke="#b3d49b" strokeWidth="1" />
+          </g>}
           <g className="landing-petals" fill="var(--petal)" stroke="var(--petal-edge)" strokeWidth="1">
             {[0,45,90,135,180,225,270,315].map(angle => <ellipse key={angle} cx="32" cy="17" rx="8" ry="14" transform={`rotate(${angle} 32 32)`} />)}
           </g>
