@@ -90,3 +90,33 @@
   100% { transform: translate(-50%, -50%) rotate(3deg) scaleY(.97); }
 }
 @media(prefers-reduced-motion:reduce) { .landing-flower { transition: none; } }
+
+/* Dew glints and floral hover accents belong only to the day garden. */
+.garden-dew { pointer-events: none; }
+.garden-dew-glint { opacity: .25; animation: garden-dew-shimmer 7s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -.8s); }
+.landing-flower-rose .garden-dew-glint { animation-delay: -2.5s; }
+.landing-flower-amber .garden-dew-glint { animation-delay: -4.5s; }
+.landing-petals { transform-box: fill-box; transform-origin: center; transition: scale .45s ease; }
+@keyframes garden-dew-shimmer {
+  0%, 65%, 100% { opacity: .25; }
+  78% { opacity: 1; }
+  90% { opacity: .5; }
+}
+.portal-wrapper:not(.portal-night) .iso-3d-block:is(:hover, :focus-visible) {
+  border-color: #fff7cc;
+  box-shadow: 0 15px 32px var(--tile-shadow), inset 0 0 0 2px #fff3b8aa, inset 0 0 24px var(--tile-start);
+}
+.portal-wrapper:not(.portal-night):has(.block-ntd:is(:hover, :focus-visible)) .landing-flower-blue-home { filter: drop-shadow(0 0 9px var(--petal-edge)) drop-shadow(0 0 15px var(--petal)); }
+.portal-wrapper:not(.portal-night):has(.block-ntd:is(:hover, :focus-visible)) .landing-flower-blue-home .landing-petals { scale: 1.08; }
+.portal-wrapper:not(.portal-night):has(.block-nf:is(:hover, :focus-visible)) .landing-flower-blue-destination { filter: drop-shadow(0 0 9px var(--petal-edge)) drop-shadow(0 0 15px var(--petal)); }
+.portal-wrapper:not(.portal-night):has(.block-nf:is(:hover, :focus-visible)) .landing-flower-blue-destination .landing-petals { scale: 1.08; }
+.portal-wrapper:not(.portal-night):has(.block-wider:is(:hover, :focus-visible)) .landing-flower-amber-home { filter: drop-shadow(0 0 9px var(--petal-edge)) drop-shadow(0 0 15px var(--petal)); }
+.portal-wrapper:not(.portal-night):has(.block-wider:is(:hover, :focus-visible)) .landing-flower-amber-home .landing-petals { scale: 1.08; }
+.portal-wrapper:not(.portal-night):has(.block-substation:is(:hover, :focus-visible)) .landing-flower-amber-destination { filter: drop-shadow(0 0 9px var(--petal-edge)) drop-shadow(0 0 15px var(--petal)); }
+.portal-wrapper:not(.portal-night):has(.block-substation:is(:hover, :focus-visible)) .landing-flower-amber-destination .landing-petals { scale: 1.08; }
+.portal-wrapper:not(.portal-night):has(.block-hsg:is(:hover, :focus-visible)) .landing-flower-rose-destination { filter: drop-shadow(0 0 9px var(--petal-edge)) drop-shadow(0 0 15px var(--petal)); }
+.portal-wrapper:not(.portal-night):has(.block-hsg:is(:hover, :focus-visible)) .landing-flower-rose-destination .landing-petals { scale: 1.08; }
+.portal-wrapper:not(.portal-night):has(.gem-abpl:is(:hover, :focus-visible)) .landing-flower-rose-destination { filter: drop-shadow(0 0 9px var(--petal-edge)) drop-shadow(0 0 15px var(--petal)); }
+.portal-wrapper:not(.portal-night):has(.gem-abpl:is(:hover, :focus-visible)) .landing-flower-rose-destination .landing-petals { scale: 1.08; }
+.portal-wrapper:not(.portal-night):has(.block-solar:is(:hover, :focus-visible)) .garden-border-left { filter: drop-shadow(0 0 8px #f5cf7280); }
+@media(prefers-reduced-motion:reduce) { .landing-petals { transition: none; } }
