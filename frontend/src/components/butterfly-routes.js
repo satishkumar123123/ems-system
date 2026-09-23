@@ -11,7 +11,7 @@ export function flowerRoute(start, end, boxes, width, height) {
     }
     return true;
   };
-  const points = [start,end,...boxes.flatMap(b => [[b.left-1,b.top-1],[b.right+1,b.top-1],[b.left-1,b.bottom+1],[b.right+1,b.bottom+1]]).filter(valid)];
+  const points = [start,end,...boxes.flatMap(b => [[b.left-18,b.top-18],[b.right+18,b.top-18],[b.left-18,b.bottom+18],[b.right+18,b.bottom+18]]).filter(valid)];
   const distance = points.map(() => Infinity), previous = [], visited = new Set();
   distance[0] = 0;
   while (visited.size < points.length) {
@@ -21,7 +21,24 @@ export function flowerRoute(start, end, boxes, width, height) {
     if (current === 1) {
       const route = [];
       for (let i=1; i!==undefined; i=previous[i]) route.unshift(points[i]);
-      return route;
+      // Round each bend only if every sampled segment keeps card clearance.
+      const rounded = [route[0]];
+      for (let j=1; j<route.length-1; j++) {
+        const a=route[j-1], corner=route[j], b=route[j+1];
+        const incoming=Math.hypot(corner[0]-a[0],corner[1]-a[1]);
+        const outgoing=Math.hypot(b[0]-corner[0],b[1]-corner[1]);
+        const radius=Math.min(28,incoming/3,outgoing/3);
+        const entry=corner.map((v,k)=>v+(a[k]-v)*radius/incoming);
+        const exit=corner.map((v,k)=>v+(b[k]-v)*radius/outgoing);
+        const curve=Array.from({length:17},(_,k)=>{
+          const t=k/16;
+          return corner.map((v,axis)=>(1-t)**2*entry[axis]+2*(1-t)*t*v+t*t*exit[axis]);
+        });
+        if (curve.every((point,k)=>!k || clear(curve[k-1],point))) rounded.push(...curve);
+        else rounded.push(corner);
+      }
+      rounded.push(route.at(-1));
+      return rounded;
     }
     visited.add(current);
     points.forEach((p,i) => {

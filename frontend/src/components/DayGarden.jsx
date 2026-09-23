@@ -46,26 +46,41 @@ export default function DayGarden() {
           bloom.style.top = `${point[1] + 9}px`;
           bloom.style.visibility = route.length ? 'visible' : 'hidden';
         });
-        return {el, flower, route, delay, bounds};
+        return {el, flower, route, delay, bounds, heading: 0,
+          homeBloom: root.querySelector(`.landing-flower-${color}-home`),
+          destinationBloom: root.querySelector(`.landing-flower-${color}-destination`)};
       });
       elapsed = 0;
     };
     const tick = now => {
-      if (previous !== undefined && !motionPaused.current && !reduced.matches) elapsed += Math.min(now - previous, 50);
+      const dt = previous === undefined || motionPaused.current || reduced.matches ? 0 : Math.min(now - previous, 50);
+      elapsed += dt;
       previous = now;
-      flights.forEach(({el, flower, route, delay, bounds}) => {
+      flights.forEach(flight => {
+        const {el, flower, route, delay, bounds, homeBloom, destinationBloom} = flight;
         if (!route.length) return;
         const phase = Math.max(0, elapsed - delay) % 22000;
         const resting = phase >= 8000 && phase < 12000;
         const progress = phase < 8000 ? phase / 8000 : phase < 12000 ? 1 : phase < 20000 ? 1 - (phase - 12000) / 8000 : 0;
-        let [x, y] = pointOnRoute(route, progress);
+        const eased = progress * progress * (3 - 2 * progress);
+        let [x, y] = pointOnRoute(route, eased);
+        const atHome = phase >= 20000 || elapsed <= delay;
+        const landed = resting || atHome;
+        const ahead = pointOnRoute(route, Math.max(0, Math.min(1, eased + (phase < 12000 ? .003 : -.003))));
+        const dx = ahead[0] - x, dy = ahead[1] - y;
+        const desired = landed ? 0 : Math.atan2(dy, dx) * 180 / Math.PI + 90;
+        const delta = ((desired - flight.heading + 540) % 360) - 180;
+        if (dt) flight.heading += delta * (1 - Math.exp(-dt / 180));
+        el.style.setProperty('--flight-heading', `${flight.heading}deg`);
+        homeBloom.classList.toggle('has-butterfly', atHome);
+        destinationBloom.classList.toggle('has-butterfly', resting);
         if (resting) {
           const r = flower.getBoundingClientRect();
           x = (r.left + r.right) / 2 - bounds.left;
           y = (r.top + r.bottom) / 2 - bounds.top - 9;
         }
         el.style.transform = `translate3d(${x - 37}px, ${y - 32}px, 0)`;
-        el.classList.toggle('is-landed', resting || phase >= 20000 || elapsed <= delay || reduced.matches);
+        el.classList.toggle('is-landed', landed || reduced.matches);
       });
       frame = requestAnimationFrame(tick);
     };
