@@ -2,6 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import './day-garden.css';
 import { flowerRoute, pointOnRoute, visiblePerch } from './butterfly-routes';
 
+function DewDrops({ x = 0, y = 0 }) {
+  return <g className="garden-dew" transform={`translate(${x} ${y})`}>
+    <ellipse cx="-12" cy="-10" rx="3" ry="4" fill="#d9f5ff" fillOpacity=".8" stroke="#fff" strokeWidth=".7" />
+    <circle cx="-13" cy="-12" r="1" fill="#fff" />
+    <ellipse cx="14" cy="5" rx="2.5" ry="3.5" fill="#c9f2ff" fillOpacity=".8" stroke="#fff" strokeWidth=".7" />
+    <path className="garden-dew-glint" d="M-12-17v10m-5-5h10" fill="none" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" />
+  </g>;
+}
+
 // Decorative garden is mounted only in day mode; no night styles are changed.
 export default function DayGarden() {
   const [paused, setPaused] = useState(false);
@@ -108,17 +117,19 @@ export default function DayGarden() {
           <g transform="translate(54 40)" fill={['#e8acc2','#f5d782','#c8b6e8'][i % 3]}>
             {[0,60,120,180,240,300].map(angle => <ellipse key={angle} cy="-13" rx="8" ry="14" transform={`rotate(${angle})`} />)}
             <circle r="7" fill="#b87923" />
+            <DewDrops />
           </g>
         </svg>)}
       </div>)}
       {Array.from({length: 12}, (_, i) => <span key={i} className="garden-drifter" style={{'--i': i, left: `${(i * 17) % 100}%`, top: `${10 + (i * 23) % 75}%`}}><i /></span>)}
       {['blue', 'rose', 'amber'].flatMap(color => ['home', 'destination'].map(spot =>
         <svg key={`${color}-${spot}`} className={`landing-flower landing-flower-${color} landing-flower-${color}-${spot}`} viewBox="0 0 64 64" focusable="false">
-          <g fill="var(--petal)" stroke="var(--petal-edge)" strokeWidth="1">
+          <g className="landing-petals" fill="var(--petal)" stroke="var(--petal-edge)" strokeWidth="1">
             {[0,45,90,135,180,225,270,315].map(angle => <ellipse key={angle} cx="32" cy="17" rx="8" ry="14" transform={`rotate(${angle} 32 32)`} />)}
           </g>
           <circle cx="32" cy="32" r="10" fill="#ffcf4a" stroke="#c68a20" strokeWidth="2" />
           <circle cx="29" cy="29" r="3" fill="#fff4af" />
+          <DewDrops x={32} y={32} />
         </svg>
       ))}
       {['blue', 'rose', 'amber'].map(color => <div key={color} className={`garden-butterfly garden-butterfly-${color}`}>
