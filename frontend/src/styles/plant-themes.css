@@ -137,24 +137,24 @@
 .plant-theme .equipment-grid tbody tr:nth-child(11n+11) > td:nth-child(2) { --tile-bright:#b45309;--tile-dark:#78350f;background:linear-gradient(135deg,#b45309,#78350f) !important;color:#fff !important;box-shadow:inset 3px 0 0 #ffffff66; }
 .plant-theme .equipment-grid tbody tr:last-child > td { background:linear-gradient(135deg,var(--tile-bright),var(--tile-dark)) !important;color:#fff !important;border-top:2px solid #fff !important;border-bottom:0 !important;text-shadow:none; }
 
-/* Wider garden visible through page and section gaps only. */
-#root .audit-page.plant-theme-wider {
+/* Shared garden visible through all plant page and section gaps only. */
+#root .audit-page.plant-theme {
   position: relative;
   isolation: isolate;
   background: radial-gradient(ellipse at 78% 12%, #fff6d6, transparent 45%), linear-gradient(160deg, #dbeee7, #f5f8ed 55%, #d9ecde) !important;
 }
-#root .audit-page.plant-theme-wider::before,
-#root .audit-page.plant-theme-wider::after {
+#root .audit-page.plant-theme::before,
+#root .audit-page.plant-theme::after {
   content: ''; position: fixed; inset: 0; pointer-events: none;
 }
-#root .audit-page.plant-theme-wider::before {
+#root .audit-page.plant-theme::before {
   z-index: -2;
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201440%20900%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M-100%20840Q220%20660%20570%20830T1540%20760V950H-100Z%22%20fill%3D%22%23b7dbc4%22%2F%3E%3Cpath%20d%3D%22M-100%20900Q330%20770%20700%20890T1540%20850V950H-100Z%22%20fill%3D%22%2383bea7%22%20opacity%3D%22.6%22%2F%3E%3Cg%20transform%3D%22translate%2824%20660%29%20scale%281.1%29%22%3E%3Cpath%20d%3D%22M0%20180%20Q-18%2095%200%200%22%20fill%3D%22none%22%20stroke%3D%22%23589276%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M-4%20100Q-48%2059-32%2052Q0%2064-4%20100M-4%20128Q42%2078%2036%2073Q-4%2081-4%20128%22%20fill%3D%22%2381b891%22%2F%3E%3Cg%20fill%3D%22%23e8acc2%22%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%280%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%2860%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28120%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28180%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28240%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28300%29%22%2F%3E%3C%2Fg%3E%3Ccircle%20r%3D%229%22%20fill%3D%22%23d6a43e%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%2880%20790%29%20scale%281.3%29%22%3E%3Cpath%20d%3D%22M0%20180%20Q-18%2095%200%200%22%20fill%3D%22none%22%20stroke%3D%22%23589276%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M-4%20100Q-48%2059-32%2052Q0%2064-4%20100M-4%20128Q42%2078%2036%2073Q-4%2081-4%20128%22%20fill%3D%22%2381b891%22%2F%3E%3Cg%20fill%3D%22%23f5d782%22%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%280%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%2860%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28120%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28180%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28240%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28300%29%22%2F%3E%3C%2Fg%3E%3Ccircle%20r%3D%229%22%20fill%3D%22%23d6a43e%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281420%20640%29%20scale%281.2%29%22%3E%3Cpath%20d%3D%22M0%20180%20Q-18%2095%200%200%22%20fill%3D%22none%22%20stroke%3D%22%23589276%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M-4%20100Q-48%2059-32%2052Q0%2064-4%20100M-4%20128Q42%2078%2036%2073Q-4%2081-4%20128%22%20fill%3D%22%2381b891%22%2F%3E%3Cg%20fill%3D%22%23c8b6e8%22%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%280%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%2860%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28120%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28180%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28240%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28300%29%22%2F%3E%3C%2Fg%3E%3Ccircle%20r%3D%229%22%20fill%3D%22%23d6a43e%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281350%20780%29%20scale%281%29%22%3E%3Cpath%20d%3D%22M0%20180%20Q-18%2095%200%200%22%20fill%3D%22none%22%20stroke%3D%22%23589276%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M-4%20100Q-48%2059-32%2052Q0%2064-4%20100M-4%20128Q42%2078%2036%2073Q-4%2081-4%20128%22%20fill%3D%22%2381b891%22%2F%3E%3Cg%20fill%3D%22%23efbad6%22%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%280%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%2860%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28120%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28180%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28240%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28300%29%22%2F%3E%3C%2Fg%3E%3Ccircle%20r%3D%229%22%20fill%3D%22%23d6a43e%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%2815%20370%29%20scale%280.85%29%22%3E%3Cpath%20d%3D%22M0%20180%20Q-18%2095%200%200%22%20fill%3D%22none%22%20stroke%3D%22%23589276%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M-4%20100Q-48%2059-32%2052Q0%2064-4%20100M-4%20128Q42%2078%2036%2073Q-4%2081-4%20128%22%20fill%3D%22%2381b891%22%2F%3E%3Cg%20fill%3D%22%23c8b6e8%22%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%280%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%2860%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28120%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28180%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28240%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28300%29%22%2F%3E%3C%2Fg%3E%3Ccircle%20r%3D%229%22%20fill%3D%22%23d6a43e%22%2F%3E%3C%2Fg%3E%3Cg%20transform%3D%22translate%281430%20310%29%20scale%280.9%29%22%3E%3Cpath%20d%3D%22M0%20180%20Q-18%2095%200%200%22%20fill%3D%22none%22%20stroke%3D%22%23589276%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M-4%20100Q-48%2059-32%2052Q0%2064-4%20100M-4%20128Q42%2078%2036%2073Q-4%2081-4%20128%22%20fill%3D%22%2381b891%22%2F%3E%3Cg%20fill%3D%22%23f5d782%22%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%280%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%2860%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28120%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28180%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28240%29%22%2F%3E%3Cellipse%20cy%3D%22-17%22%20rx%3D%2211%22%20ry%3D%2219%22%20transform%3D%22rotate%28300%29%22%2F%3E%3C%2Fg%3E%3Ccircle%20r%3D%229%22%20fill%3D%22%23d6a43e%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"), radial-gradient(ellipse at 18% 25%, #70b89455, transparent 42%), radial-gradient(ellipse at 80% 30%, #ffe29588, transparent 40%);
   background-size: 100% 100%, 130% 130%, 130% 130%;
   background-repeat: no-repeat;
   animation: plant-garden-breeze 18s ease-in-out infinite alternate;
 }
-#root .audit-page.plant-theme-wider::after {
+#root .audit-page.plant-theme::after {
   z-index: -1;
   background: radial-gradient(circle at 0 0, transparent 220px, #ad91d72b 224px 232px, #81bbdb2b 236px 244px, #8dcca22b 248px 256px, #f7dd922b 260px 268px, #efb7962b 272px 280px, #e6a4b32b 284px 292px, transparent 298px), radial-gradient(ellipse at 90% 0, #fffce899, transparent 36%), radial-gradient(ellipse at 15% 30%, #ffffff66, transparent 30%);
   animation: plant-garden-light 22s ease-in-out infinite alternate;
@@ -168,25 +168,25 @@
   to { opacity: 1; }
 }
 @media(prefers-reduced-motion:reduce) {
-  #root .audit-page.plant-theme-wider::before, #root .audit-page.plant-theme-wider::after { animation: none; }
+  #root .audit-page.plant-theme::before, #root .audit-page.plant-theme::after { animation: none; }
 }
 @media print {
-  #root .audit-page.plant-theme-wider { background: #fff !important; }
-  #root .audit-page.plant-theme-wider::before, #root .audit-page.plant-theme-wider::after { display: none; }
+  #root .audit-page.plant-theme { background: #fff !important; }
+  #root .audit-page.plant-theme::before, #root .audit-page.plant-theme::after { display: none; }
 }
 
 /* Clear only layout shells; inner cards, fields, charts and tables stay opaque. */
-#root .audit-page.plant-theme-wider .enpi-targets,
-#root .audit-page.plant-theme-wider .sec-panel {
+#root .audit-page.plant-theme .enpi-targets,
+#root .audit-page.plant-theme .sec-panel {
   background: transparent !important;
   box-shadow: none !important;
   border-color: transparent !important;
 }
-#root .audit-page.plant-theme-wider .enpi-targets::after { display: none; }
-#root .audit-page.plant-theme-wider :is(.audit-chart-grid, .enpi-summary, .enpi-months, .insight-metrics),
-#root .audit-page.plant-theme-wider > div:has(> .enpi-targets) {
+#root .audit-page.plant-theme .enpi-targets::after { display: none; }
+#root .audit-page.plant-theme :is(.audit-chart-grid, .enpi-summary, .enpi-months, .insight-metrics),
+#root .audit-page.plant-theme > div:has(> .enpi-targets) {
   background: transparent !important;
 }
-#root .audit-page.plant-theme-wider > div:has(> .enpi-targets) > h2 {
+#root .audit-page.plant-theme > div:has(> .enpi-targets) > h2 {
   background: #18304b; padding: 14px 18px; border-radius: 14px;
 }
