@@ -723,3 +723,26 @@
 @media print {
   #root .seu-page :is(thead th, tbody th) { backdrop-filter: none; background: #edf2ed !important; }
 }
+
+/* Let the actual garden show through every SEU register/chart block and cell. */
+@media screen {
+  #root .seu-page :is(.seu-register, .seu-comparison, .seu-chart, .seu-editor,
+    .seu-scroll, .seu-comparison-table, .seu-comparison-charts, .seu-charts,
+    .seu-register table, .seu-comparison-table table,
+    table thead, table tbody, table tfoot, table tr, table th, table td,
+    table td.positive, table td.negative, .seu-hero > strong,
+    .seu-editor fieldset, .seu-edit-grid label, input, select, textarea) {
+    background: transparent !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+  /* Transparent cells scroll together to avoid overlapping text. */
+  #root .seu-page :is(table thead th, table tbody th) { position: static; }
+  #root .seu-page table th { color: #30483c; }
+  #root .seu-page table td { border-color: #54786055; }
+  #root .seu-page :is(.seu-register, .seu-comparison, .seu-chart, .seu-editor) {
+    border-color: #718e8290;
+  }
+  #root .seu-page option { background: #f2f7ed; color: #203e38; }
+}
