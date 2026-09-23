@@ -696,3 +696,30 @@
     break-inside: avoid;
   }
 }
+
+/* Transparent SEU surfaces: retain coloured outlines and readable dark text. */
+#root .seu-page :is(.seu-hero, .seu-year-toggle, .seu-filters, .seu-filters label,
+  .seu-note, .seu-source-note, .seu-alert, .seu-cards article, .seu-comparison,
+  .seu-comparison > header, .seu-comparison-charts article, .seu-chart,
+  .seu-register, .seu-scroll, .seu-comparison-table, .seu-editor, .seu-edit-grid label) {
+  background: transparent !important;
+  backdrop-filter: none;
+  box-shadow: 0 5px 18px #244c3410;
+}
+#root .seu-page .seu-cards article { border-color: #718e8290; border-top-color: var(--seu-accent); }
+#root .seu-page .seu-cards article::after { display: none; }
+#root .seu-page :is(.seu-hero, .seu-hero h1, .seu-hero p, .seu-hero > strong, .seu-cards span, .seu-cards strong) { color: #203e38; }
+#root .seu-page :is(.seu-hero a, .seu-hero h1 span) { color: #563280; }
+#root .seu-page .seu-hero > strong { background: transparent; backdrop-filter: none; border-color: #718e8290; }
+#root .seu-page :is(table, tbody, tr) { background: transparent !important; }
+#root .seu-page tbody td { background: #ffffff24 !important; color: #233e39; }
+#root .seu-page tbody td.positive { color: #065f46; background: #b8efcf40 !important; }
+#root .seu-page tbody td.negative { color: #9f1239; background: #fecdd340 !important; }
+/* Sticky headings need a translucent backing when rows scroll underneath. */
+#root .seu-page thead th { background: #e0eadeeb !important; color: #263e39; backdrop-filter: blur(8px); }
+#root .seu-page tbody th { background: #e9efe6d9 !important; color: #49306b; backdrop-filter: blur(8px); }
+#root .seu-page :is(input, select, textarea) { background: #ffffff99; color: #203e38; }
+#root .seu-page option { background: #fff; color: #203e38; }
+@media print {
+  #root .seu-page :is(thead th, tbody th) { backdrop-filter: none; background: #edf2ed !important; }
+}
