@@ -11,7 +11,7 @@ export function flowerRoute(start, end, boxes, width, height) {
     }
     return true;
   };
-  const points = [start,end,...boxes.flatMap(b => [[b.left-18,b.top-18],[b.right+18,b.top-18],[b.left-18,b.bottom+18],[b.right+18,b.bottom+18]]).filter(valid)];
+  const points = [start,end,...boxes.flatMap(b => [1,18].flatMap(gap => [[b.left-gap,b.top-gap],[b.right+gap,b.top-gap],[b.left-gap,b.bottom+gap],[b.right+gap,b.bottom+gap]])).filter(valid)];
   const distance = points.map(() => Infinity), previous = [], visited = new Set();
   distance[0] = 0;
   while (visited.size < points.length) {
@@ -61,4 +61,20 @@ export function pointOnRoute(route, progress) {
     remaining -= lengths[i];
   }
   return route.at(-1);
+}
+
+// Keep a visible, card-free perch even when a narrow viewport clips a destination.
+export function visiblePerch(point, boxes, width, height) {
+  const free = ([x,y]) => x >= 26 && x <= width-26 && y >= 26 && y <= height-35 &&
+    !boxes.some(b => x > b.left && x < b.right && y > b.top && y < b.bottom);
+  const clamped = [Math.max(26,Math.min(width-26,point[0])),Math.max(26,Math.min(height-35,point[1]))];
+  if (free(clamped)) return clamped;
+  for (let radius=8; radius<Math.max(width,height); radius+=8) {
+    for (let i=0;i<48;i++) {
+      const angle=i*Math.PI/24;
+      const candidate=[clamped[0]+Math.cos(angle)*radius,clamped[1]+Math.sin(angle)*radius];
+      if (free(candidate)) return candidate;
+    }
+  }
+  return clamped;
 }
