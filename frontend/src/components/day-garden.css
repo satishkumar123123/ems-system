@@ -120,3 +120,32 @@
 .portal-wrapper:not(.portal-night):has(.gem-abpl:is(:hover, :focus-visible)) .landing-flower-rose-destination .landing-petals { scale: 1.08; }
 .portal-wrapper:not(.portal-night):has(.block-solar:is(:hover, :focus-visible)) .garden-border-left { filter: drop-shadow(0 0 8px #f5cf7280); }
 @media(prefers-reduced-motion:reduce) { .landing-petals { transition: none; } }
+
+/* Wing-shaped soft shadow contracts when the butterfly lands. */
+.garden-butterfly .garden-butterfly-body {
+  filter: drop-shadow(7px 12px 6px #243c4433);
+  transition: filter .65s ease;
+}
+.garden-butterfly.is-landed .garden-butterfly-body {
+  filter: drop-shadow(1px 3px 1.5px #243c4452);
+}
+/* Opacity-only entrance preserves card geometry and measured flight clearance. */
+.portal-wrapper:not(.portal-night) .iso-3d-block {
+  animation: garden-card-welcome .75s ease-out both;
+  animation-iteration-count: 1;
+}
+.portal-wrapper:not(.portal-night) .gem-abpl { animation-delay: 0s; }
+.portal-wrapper:not(.portal-night) .block-ntd { animation-delay: .12s; }
+.portal-wrapper:not(.portal-night) .block-wider { animation-delay: .24s; }
+.portal-wrapper:not(.portal-night) .block-solar { animation-delay: .36s; }
+.portal-wrapper:not(.portal-night) .block-substation { animation-delay: .48s; }
+.portal-wrapper:not(.portal-night) .block-nf { animation-delay: .60s; }
+.portal-wrapper:not(.portal-night) .block-hsg { animation-delay: .72s; }
+.portal-wrapper:not(.portal-night) .iso-3d-block:focus-visible { animation: none; }
+@keyframes garden-card-welcome { from { opacity: 0; } to { opacity: 1; } }
+.portal-wrapper:has(.garden-paused) .iso-3d-block { animation-play-state: paused; }
+.garden-paused .garden-butterfly .garden-butterfly-body { transition: none; }
+@media(prefers-reduced-motion:reduce) {
+  .portal-wrapper:not(.portal-night) .iso-3d-block { animation: none; }
+  .garden-butterfly .garden-butterfly-body { transition: none; }
+}
