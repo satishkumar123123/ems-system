@@ -5,6 +5,7 @@
 [![Deployment](https://img.shields.io/badge/Frontend-Vercel-black)](https://frontend-nu-five-12.vercel.app/)
 ![Build](https://img.shields.io/badge/Build-Vite_8-646cff)
 ![Stack](https://img.shields.io/badge/Stack-React_19_%7C_Express_5_%7C_MongoDB-149eca)
+[![ABPL AI Chatbot](https://img.shields.io/badge/ABPL_AI-Chatbot-7c3aed)](#-abpl-ai-chatbot--ems-ai-assistant)
 
 EMS brings energy consumption, fuel inputs, production, equipment performance and improvement follow-up into one application. Electrical and energy-management teams can maintain monthly facility records, compare April–March financial years, review efficiency indicators and prepare reports for management discussions.
 
@@ -14,6 +15,112 @@ EMS brings energy consumption, fuel inputs, production, equipment performance an
 - **Detailed chatbot configuration:** [backend/CHAT_SETUP.md](backend/CHAT_SETUP.md)
 
 This is a repository containing both applications: `frontend/` is deployed on Vercel, while `backend/` runs as a Node service. Badges describe the configured platform and toolchain; they are not monitored uptime or CI-status badges.
+
+
+## 🤖 ABPL AI Chatbot — EMS AI Assistant
+
+> **Featured capability:** Ask questions about saved ABPL energy, production, equipment and schedule records, then review calculated tables, visualizations and linked evidence. The assistant supports follow-up questions and optional conversational AI.
+
+**Open the assistant:** ABPL dashboard → top toolbar → chatbot. The page is `/abpl/chat?month=YYYY-MM`; the month parameter supplies the initial period.
+
+[**💬 Open ABPL Chatbot**](https://frontend-nu-five-12.vercel.app/abpl/chat) · [Backend setup and technical notes](backend/CHAT_SETUP.md)
+
+### What you can ask
+
+| Capability | Example question | What the assistant uses |
+| --- | --- | --- |
+| Plant comparison | “Compare electricity consumption of all plants” | Saved monthly electricity totals for the five ABPL plants |
+| Equipment consumption | “Top 10 equipment electricity consumption” | Equipment-month electricity values; the ranking is per equipment-month |
+| Production | “Show production for Wider in June 2026” | Saved production values and equipment output units |
+| Efficiency | “Show SEC for the selected plant” | Calculated energy/production ratios for compatible tonne-based rows |
+| Hindi / Hinglish questions | “June 2026 mein Wider ka electricity consumption kitna tha?” | Supported month, plant and metric wording, with optional AI interpretation |
+| Follow-up comparison | After a June electricity answer: “May se kitna badha?” | Previous scope, period totals, absolute change and percentage change |
+| Improvement tracking | “Which improvement actions are overdue?” | Saved action records, dates, owners and statuses |
+| Meeting review | “Show meeting decisions” | Matching meeting records and saved decision notes |
+| Related evidence | After a consumption answer: “Iska reason kya hai?” | Scoped audit findings, meeting notes and action notes; observations are not proof of causation |
+
+Use the **plant, start month, end month and equipment filters** to make the requested scope explicit. **All five plants** includes Wider, Utility, HSU, Narrow Flat and Narrow Tube; **Solar is selected separately**. Explicit supported month/year or financial-year wording can override the date filters.
+
+### Conversation and dashboard experience
+
+- **Context-aware follow-ups:** the page passes the previous answer's scope into the next question. Common metric, period and equipment follow-ups work in Saved-data mode; changing filters resets inherited context.
+- **Clarification for ambiguity:** unclear month comparisons or unmatched equipment can produce a clarification instead of an assumed answer.
+- **Visible interpretation:** “How your question was understood” shows scope and assumptions, alongside missing-record coverage.
+- **Calculated evidence:** expandable tables, chart visualizations and inline source references such as `[S1]` let users inspect the result and open the associated saved record.
+- **Report and copy tools:** copy an answer or open a report for printing / saving as PDF. **New chat** clears the current conversation; chat messages are held in page state rather than a persisted chat-history collection.
+- **Keyboard support:** Enter sends a question; Shift+Enter inserts a new line. Questions are limited to 1,500 characters.
+- **Mode visibility:** the interface labels **Saved-data mode** or **AI + saved records**, with loading, failure and retry feedback.
+
+### Saved-data mode vs. conversational AI
+
+| Mode | Configuration | Behavior |
+| --- | --- | --- |
+| **Saved-data mode** | No AI credentials required | Deterministic interpretation of supported energy, production, SEC, comparison and schedule questions; returns calculated results, tables and sources |
+| **AI + saved records** | Backend `OPENAI_API_KEY` **and** `OPENAI_MODEL` | Optional AI plans supported questions and explains retrieved evidence; the server validates the plan and computes the numbers |
+| **Fallback** | AI unavailable, invalid plan or invalid explanation citations | Uses supported deterministic planning / calculated results and discloses the fallback |
+
+**The assistant reads saved database records when a question is submitted.** It is not a continuous monitoring service. It cannot edit records, execute arbitrary model-generated MongoDB queries or answer unsupported questions reliably in Saved-data mode.
+
+### Data sources and answer pipeline
+
+The chat service reads monthly `WiderData`, `UtilityData`, `HsuData`, `NarrowFlatData`, `NarrowTubeData` and `SolarData` documents. Schedule queries and related evidence use `ScheduleItem` objectives, audits, meetings and improvement actions. Its scope is these records; it is not a general search across every collection.
+
+1. Validate the question and filters, resolve supported wording and inherit applicable follow-up scope.
+2. If AI is configured, request a structured query plan. Validate allowed plants, metrics, date bounds and comparison periods before retrieval.
+3. Read the scoped MongoDB records and calculate totals, SEC, period differences and percentages on the backend.
+4. Attach bounded schedule evidence for relevant reason questions, source IDs, missing-record coverage and interpretation assumptions.
+5. Optionally generate an AI explanation from the retrieved evidence. Invalid or missing required source references trigger a calculated-result fallback.
+6. Return the answer, tables, record links, scope, mode and generation timestamp to the chat page.
+
+The backend uses the OpenAI Responses API through native Fetch with `store: false`. When AI is enabled, selected records and recent conversation turns are sent to the provider. Attachment bytes, environment values and MongoDB credentials are excluded from model context. Source-ID validation checks references; users should still review the tables and supporting records for interpretation accuracy.
+
+### Enable AI on the existing backend
+
+Add these variables to the **Render backend service**, then redeploy:
+
+```dotenv
+OPENAI_API_KEY=your_backend_only_api_key
+OPENAI_MODEL=your_responses_compatible_model_id
+```
+
+Choose a Responses API model available to your OpenAI project and enable API billing. Keep the key in the backend environment; never place it in GitHub, frontend variables or chat messages. No frontend AI key is required.
+
+- `GET /api/chat/status` reports configuration presence, mode and capabilities. **Configured does not mean provider credentials have been verified.**
+- `POST /api/chat` accepts a question, plant/date/equipment scope and optional conversation context.
+- Each question can make up to two provider calls: planning and explanation, with separate 12-second and 25-second timeouts. Configure provider spending limits separately.
+
+Example request to a locally running backend:
+
+```bash
+curl -X POST http://localhost:5000/api/chat \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "message": "Show electricity consumption",
+    "plant": "wider",
+    "from": "2026-06",
+    "to": "2026-06",
+    "equipment": "",
+    "history": []
+  }'
+```
+
+Results depend on records actually saved for the requested period; this request does not create sample data. See [Getting Started](#-getting-started-local-setup) and [Environment Variables](#-environment-variables) for the complete application setup.
+
+### Accuracy, coverage and operating limits
+
+- **Missing records are N/A, never zero.** Missing-month coverage is displayed.
+- **SEC uses compatible tonne-based production.** Period SEC is a ratio of energy and production sums. Mixed production units prevent meaningful aggregate production rankings.
+- **Zero comparison baseline:** percentage change is undefined rather than an invented percentage.
+- **Bounded retrieval:** up to 24 months; equipment tables show up to 100 rows. Schedule retrieval uses the latest 200 scoped records and discloses truncation; AI context includes the last five history events per schedule item.
+- **Current-work views:** pending, overdue and upcoming questions use current status/date rules; ordinary dated schedule questions use the selected period.
+- **Request limits:** 30 chat requests per minute and three concurrent requests **per server instance**, shared across callers. These are not per-user quotas.
+- **Access model:** chat follows the application's existing API access model; it does not add user authentication.
+
+Chat regression checks from the repository root:
+
+```bash
+node --test backend/test/chat.test.js backend/test/chatUnderstanding.test.js
+```
 
 ## ✨ Features & Capabilities
 
@@ -29,7 +136,7 @@ This is a repository containing both applications: `frontend/` is deployed on Ve
 - EnPI baseline/target versions effective from a selected month, plus monthly remarks.
 - SEU performance registers with baseline, target, monthly values, tolerance, direction and year comparisons.
 - Objectives, audits, review meetings and improvement actions with linked records and history.
-- Read-only questions about saved records through an optional conversational AI assistant.
+- **[ABPL AI Chatbot](#-abpl-ai-chatbot--ems-ai-assistant):** read-only questions, follow-up comparisons, calculated evidence and optional conversational AI over saved records.
 
 ### Dashboard / UI
 
