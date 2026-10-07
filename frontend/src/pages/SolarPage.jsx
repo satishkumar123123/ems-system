@@ -1,3 +1,4 @@
+import PlantPageHeader, { PlantToolbar } from '../components/PlantPageChrome';
 import PlantQrCodes, { useEquipmentQrTarget } from '../components/PlantQrCodes';
 import ResponsiveContainer from '../components/ExpandableChart';
 import '../styles/plant-themes.css';
@@ -8,7 +9,7 @@ import DataLoadNotice from '../components/DataLoadNotice';
 import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, TrendingUp, Sun, BatteryCharging, Factory, Calendar } from 'lucide-react';
+import { Save, TrendingUp, Sun, BatteryCharging, Factory, Calendar } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, Legend } from 'recharts';
 
 const COLORS = ['#f59e0b', '#10b981', '#6366f1'];
@@ -100,26 +101,10 @@ export default function SolarPage() {
   return (
     <div className="solar-page audit-page plant-theme plant-theme-solar">
       {/* Top Header */}
-      <div className="solar-header">
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 rounded-xl font-semibold border border-slate-300 transition shadow-sm cursor-pointer"
-        >
-          <ArrowLeft size={18} /> Back
-        </button>
-        <div>
-          <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <span className="p-1.5 bg-amber-100 text-amber-600 rounded-xl border border-amber-300">
-              <Sun size={24} />
-            </span>
-            Solar Facility Dashboard
-          </h1>
-          <p className="text-xs text-slate-500">CTL Production, EV Charging & Solar Energy Monitoring</p>
-        </div>
-      </div>
+      <PlantPageHeader title="Solar" subtitle="CTL Production · EV Charging · Solar Generation" month={selectedMonth} />
 
       {/* Row 2: Date Selector + 2 Colorful Rectangular Buttons (Save & YoY) */}
-      <div className="solar-toolbar">
+      <PlantToolbar solar>
         {/* Date Selector */}
         <div className="solar-month">
           <Calendar size={18} className="text-slate-500" />
@@ -138,7 +123,7 @@ export default function SolarPage() {
           <button
             onClick={handleSave}
             disabled={saving || loading || Boolean(loadError)}
-            className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-md shadow-indigo-200 transition cursor-pointer"
+            className="plant-primary-action flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-md shadow-indigo-200 transition cursor-pointer"
           >
             <Save size={18} /> Save Data
           </button>
@@ -150,7 +135,7 @@ export default function SolarPage() {
             <TrendingUp size={18} /> YoY Comparison
           </button>
         </div>
-      </div>
+      </PlantToolbar>
 
       <DataLoadNotice loading={loading} error={loadError} empty={noMonthData} period={selectedMonth} onRetry={() => setReloadAttempt(attempt => attempt + 1)} />
       {/* Row 3: 3 COLORFUL INPUT BLOCKS */}

@@ -1,0 +1,132 @@
+/* Shared monthly dashboard presentation. Existing calculations and inputs stay in place. */
+#root .audit-page.plant-theme {
+  --dashboard-ink: #1e293b;
+  --dashboard-muted: #64748b;
+  background: linear-gradient(150deg, #f4f7f6, #f8fafc 65%, #f0f5f3) !important;
+  color: var(--dashboard-ink) !important;
+  gap: 24px !important;
+  padding: clamp(14px, 2vw, 32px) !important;
+}
+#root .audit-page.plant-theme::before { opacity: .14; animation: none; }
+#root .audit-page.plant-theme::after { opacity: .18; animation: none; }
+#root .audit-page .monthly-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  background: linear-gradient(115deg, #142238, #23364d) !important;
+  color: #fff;
+  border: 1px solid #30435c !important;
+  border-left: 5px solid var(--audit-accent, #6366f1) !important;
+  border-radius: 18px !important;
+  padding: 24px !important;
+  box-shadow: 0 8px 24px #17243c12 !important;
+}
+#root .audit-page .monthly-brand { display: flex; align-items: center; gap: 16px !important; min-width: 0; }
+#root .audit-page .monthly-back {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; flex-shrink: 0;
+  color: #e2e8f0; background: #ffffff0a;
+  border: 1px solid #ffffff30; border-radius: 10px;
+}
+.monthly-back:hover { background: #ffffff18 !important; }
+#root .audit-page .monthly-plant-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px; flex-shrink: 0;
+  color: var(--audit-accent, #a5b4fc); background: #fff;
+  border-radius: 14px;
+}
+.monthly-title { min-width: 0; }
+#root .audit-page .monthly-title h1 { margin: 3px 0 0; color: #fff; font-size: clamp(24px, 2.4vw, 32px); font-weight: 750; line-height: 1.2; letter-spacing: -.6px; }
+#root .audit-page .monthly-title p { margin: 0; color: #cbd5e1; font-size: 12px; font-weight: 500; letter-spacing: .3px; }
+.monthly-period { display: flex; align-items: center; gap: 12px; color: #cbd5e1; }
+.monthly-period div { display: grid; gap: 4px; }
+.monthly-period span { font-size: 11px; }
+.monthly-period strong { color: #fff; font-size: 15px; font-weight: 600; }
+#root .audit-page .monthly-toolbar {
+  display: flex; align-items: center; flex-wrap: wrap !important;
+  justify-content: space-between; gap: 14px !important;
+  padding: 16px !important; background: #fff !important;
+  border: 1px solid #e2e8f0 !important; border-radius: 16px !important;
+  overflow: visible !important; box-shadow: 0 4px 16px #17243c06 !important;
+}
+#root .audit-page .monthly-month { flex-shrink: 1 !important; min-width: 0; max-width: 100%; }
+#root .audit-page .monthly-month > div { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; box-shadow: none !important; border-radius: 10px !important; padding: 8px 12px !important; }
+#root .audit-page .monthly-month > div > div { min-width: 0; }
+#root .audit-page .monthly-month div div[style*="cursor"] { background: #fff !important; border-color: #e2e8f0 !important; margin-top: 4px !important; }
+#root .audit-page .monthly-month span { color: #475569 !important; font-weight: 600 !important; }
+#root .audit-page .monthly-month input { color: #1e293b !important; font-size: 13px !important; font-weight: 600 !important; color-scheme: light; max-width: 100%; }
+#root .audit-page .monthly-month svg { color: #64748b !important; }
+#root .audit-page .monthly-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap !important; flex-shrink: 1 !important; min-width: 0; }
+#root .audit-page .monthly-actions > div { display: flex; flex-wrap: wrap !important; align-items: center; gap: 10px !important; max-width: 100%; }
+#root .audit-page .monthly-toolbar button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 42px; padding: 10px 14px !important; border-radius: 10px !important;
+  background: #fff !important; color: #334155 !important; border: 1px solid #cbd5e1 !important;
+  line-height: 1.4; font-family: inherit; font-size: 12px !important; font-weight: 600 !important;
+  box-shadow: none !important; cursor: pointer;
+}
+#root .audit-page .monthly-toolbar button svg { color: currentColor !important; }
+#root .audit-page .monthly-toolbar button:hover:not(:disabled) { background: #f1f5f9 !important; border-color: #94a3b8 !important; filter: none; }
+#root .audit-page .monthly-toolbar button.plant-primary-action { background: var(--audit-accent, #4f46e5) !important; border-color: var(--audit-accent, #4f46e5) !important; color: #fff !important; }
+#root .audit-page .monthly-toolbar button.plant-primary-action:hover:not(:disabled) { filter: brightness(.92); }
+#root .audit-page .monthly-toolbar button:disabled { opacity: .5; cursor: not-allowed; }
+#root .audit-page .monthly-toolbar .monthly-actions-toggle { display: none; }
+#root .audit-page .equipment-grid-shell { border: 1px solid #dce4ec !important; border-radius: 16px !important; padding: 4px; box-shadow: 0 6px 20px #17243c08 !important; }
+#root .audit-page .equipment-grid { border-spacing: 0 !important; padding: 0; }
+#root .audit-page .equipment-grid thead th { background: #edf2f7 !important; color: #334155 !important; font-size: 11px; font-weight: 650 !important; border-radius: 0 !important; border-right: 1px solid #e2e8f0 !important; border-bottom: 2px solid var(--tile-bright, #cbd5e1) !important; text-shadow: none; }
+#root .audit-page .equipment-grid tbody td { background: #fff !important; color: #334155 !important; border-radius: 0 !important; border: 0 !important; border-right: 1px solid #edf2f7 !important; border-bottom: 1px solid #e2e8f0 !important; font-weight: 500 !important; text-align: right !important; }
+#root .audit-page .equipment-grid tbody tr:nth-child(even) td { background: #f8fafc !important; }
+#root .audit-page .equipment-grid tbody tr:hover td, #root .audit-page .equipment-grid tbody tr:focus-within td { background: #eef2ff !important; filter: none; box-shadow: none !important; }
+#root .audit-page .equipment-grid :is(th, td):nth-child(2) { position: sticky; left: 0; z-index: 3; box-shadow: 3px 0 8px #17243c0d !important; }
+#root .audit-page .equipment-grid thead th:nth-child(2) { z-index: 5; }
+#root .audit-page .equipment-grid tbody td:nth-child(2) { background: var(--tile-soft, #eef2ff) !important; color: #1e293b !important; text-align: left !important; font-weight: 650 !important; }
+#root .audit-page .equipment-grid tbody td:nth-child(2) a { color: #334155 !important; display: block; padding: 4px 0; }
+#root .audit-page .equipment-grid tbody :is(td:nth-child(1), td:nth-child(3), td:nth-child(9)) { text-align: center !important; }
+#root .audit-page .equipment-grid tbody td:nth-child(7) { background: #f0fdfa !important; font-weight: 650 !important; }
+#root .audit-page .equipment-grid input { background: #fff !important; color: #1e293b !important; border: 1px solid #cbd5e1 !important; border-radius: 6px !important; box-shadow: none !important; text-align: right; font-weight: 500 !important; }
+#root .audit-page .equipment-grid tbody tr:last-child td { background: #e8eef7 !important; color: #17243c !important; border-top: 2px solid #94a3b8 !important; font-weight: 750 !important; }
+#root .audit-page .equipment-grid :is(input, select):focus-visible { outline-color: var(--audit-accent) !important; }
+#root .audit-page .audit-chart-grid > div, #root .audit-page [aria-label="Equipment bar charts"] > section, #root .audit-page .solar-chart-card {
+  background: #fff !important; border: 1px solid #dce4ec !important; border-radius: 16px !important;
+  padding: 22px !important; box-shadow: 0 6px 20px #17243c08 !important;
+}
+#root .audit-page .audit-chart-grid h3, #root .audit-page [aria-label="Equipment bar charts"] h3, #root .audit-page .solar-chart-card h3 { color: #1e293b !important; font-weight: 650 !important; letter-spacing: 0 !important; text-transform: none !important; }
+#root .audit-page :is(.audit-chart-grid, [aria-label="Equipment bar charts"], .solar-chart-card) h3 span { color: #64748b !important; }
+#root .audit-page :is(.audit-chart-grid, [aria-label="Equipment bar charts"], .solar-chart-card) svg text { fill: #475569 !important; }
+#root .audit-page [aria-label="Equipment bar charts"] > section > p { color: #64748b !important; }
+#root .audit-page [aria-label="Equipment bar charts"] > section > div:first-child { border-color: #e2e8f0 !important; }
+#root .audit-page [aria-label="Equipment bar charts"] > section > div:first-child > span { color: #475569 !important; border-color: #e2e8f0 !important; background: #f8fafc !important; }
+#root .audit-page .audit-chart-grid .recharts-legend-item-text { color: #475569 !important; }
+#root .audit-page .audit-chart-grid .enpi-breakdown-canvas > p { color: #64748b; }
+#root .audit-page .audit-chart-grid .enpi-breakdown-toggle button { background: #f8fafc; color: #475569; border-color: #cbd5e1; font-weight: 600; box-shadow: none; }
+#root .audit-page .audit-chart-grid .enpi-breakdown-toggle button[aria-pressed="true"] { background: var(--audit-accent); border-color: var(--audit-accent); color: #fff; }
+#root .audit-page .audit-chart-grid > div > div:first-child { border-color: #e2e8f0 !important; }
+#root .audit-page .audit-chart-grid > div > div:first-child > span { background: #f8fafc !important; border-color: #e2e8f0 !important; color: #475569 !important; }
+#root .audit-page .audit-metrics > div { border-radius: 16px !important; min-height: 112px; padding: 20px !important; box-shadow: 0 4px 14px #17243c12 !important; }
+#root .audit-page .audit-metrics > div h3 { font-size: 11px !important; font-weight: 600 !important; }
+#root .audit-page .audit-metrics > div h3 + div > span:first-child { font-size: clamp(20px, 2vw, 26px) !important; font-variant-numeric: tabular-nums; }
+#root .audit-page .solar-input-card { border-radius: 16px !important; box-shadow: 0 4px 14px #17243c12 !important; }
+@media (max-width: 700px) {
+  #root .audit-page .monthly-header { padding: 18px !important; gap: 18px; }
+  #root .audit-page .monthly-brand { gap: 10px !important; }
+  #root .audit-page .monthly-plant-icon { width: 38px; height: 38px; border-radius: 10px; }
+  #root .audit-page .monthly-plant-icon svg { width: 22px; }
+  .monthly-period { width: 100%; border-top: 1px solid #ffffff20; padding-top: 14px; }
+  .monthly-period div { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  #root .audit-page .monthly-toolbar { gap: 10px !important; padding: 12px !important; }
+  #root .audit-page .monthly-toolbar .monthly-actions-toggle { display: inline-flex; }
+  #root .audit-page .monthly-actions { flex-basis: 100%; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+  #root .audit-page .monthly-actions[data-open="false"] { display: none; }
+  #root .audit-page .monthly-actions button { flex-grow: 1; }
+  #root .audit-page .monthly-actions > div { width: 100%; justify-content: flex-start !important; }
+  #root .audit-page .solar-month { flex-wrap: wrap; gap: 6px; }
+  #root .audit-page .audit-chart-grid > div { padding: 16px !important; }
+}
+@media print {
+  #root .audit-page.plant-theme { background: #fff !important; }
+  #root .audit-page.plant-theme::before, #root .audit-page.plant-theme::after { display: none; }
+  #root .audit-page .monthly-back, #root .audit-page .monthly-toolbar { display: none !important; }
+  #root .audit-page .equipment-grid :is(th, td):nth-child(2) { position: static; box-shadow: none !important; }
+}

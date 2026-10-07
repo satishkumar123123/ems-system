@@ -1,3 +1,4 @@
+import PlantPageHeader, { PlantToolbar } from '../components/PlantPageChrome';
 import AbplTrends from '../components/AbplTrends';
 import SeuButton from '../components/SeuButton';
 import PlantQrCodes from '../components/PlantQrCodes';
@@ -12,7 +13,6 @@ import { API_BASE_URL, apiFetch } from '../config/api';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, 
   Zap, 
   Flame, 
   Fuel, 
@@ -135,53 +135,10 @@ export default function AbplPage() {
     <div className="audit-page plant-theme plant-theme-abpl" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
       {/* 1. TOP BRAND HEADING: BACK BUTTON + "A B P L" (PURE INLINE STYLES WITH RADIANT GLOW) */}
-      <div className="audit-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          
-          {/* Back button to return to home page */}
-          <button 
-            onClick={() => navigate('/')}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '7px 14px', color: '#38bdf8', fontSize: '12px', fontWeight: '900', cursor: 'pointer', marginRight: '6px', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }}
-          >
-            <ArrowLeft size={16} color="#38bdf8" /> Back
-          </button>
-
-          {/* Letter by Letter Colorful Logo */}
-          <span style={{ fontSize: '42px', fontWeight: '900', letterSpacing: '3px', color: '#00e5ff', textShadow: '0 0 16px rgba(0,229,255,0.8)' }}>A</span>
-          <span style={{ fontSize: '42px', fontWeight: '900', letterSpacing: '3px', color: '#00e676', textShadow: '0 0 16px rgba(0,230,118,0.8)' }}>B</span>
-          <span style={{ fontSize: '42px', fontWeight: '900', letterSpacing: '3px', color: '#ffea00', textShadow: '0 0 16px rgba(255,234,0,0.8)' }}>P</span>
-          <span style={{ fontSize: '42px', fontWeight: '900', letterSpacing: '3px', color: '#ff1744', textShadow: '0 0 16px rgba(255,23,68,0.8)' }}>L</span>
-
-          <span style={{ marginLeft: '14px', padding: '4px 12px', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', borderRadius: '8px', backgroundColor: '#1e1b4b', border: '1px solid #6366f1', color: '#a5b4fc', letterSpacing: '1px' }}>
-            Master Facility
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '12px', fontSize: '12px', fontWeight: '900' }}>
-          <Activity size={16} color="#00e676" />
-          <span style={{ color: '#2dd4bf', textTransform: 'uppercase', letterSpacing: '1px' }}>Live Intelligence</span>
-        </div>
-      </div>
+      <PlantPageHeader title="ABPL" subtitle="Consolidated Plant Overview" month={selectedMonth} />
 
       {/* 2. TOP TOOLBAR: SELECT MONTH (STRICT SINGLE ROW FORCED) */}
-      <div 
-        className="no-print audit-toolbar"
-        style={{ 
-          display: 'flex', 
-          flexDirection: 'row', 
-          flexWrap: 'nowrap', 
-          alignItems: 'center', 
-          justifyContent: 'space-between',
-          gap: '12px', 
-          width: '100%', 
-          backgroundColor: '#0f172a', 
-          padding: '12px 18px', 
-          borderRadius: '16px', 
-          border: '1px solid #1e293b',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-          boxSizing: 'border-box'
-        }}
-      >
+      <PlantToolbar>
         {/* SELECT MONTH BLOCK (CYAN/BLUE GRADIENT) */}
         <div 
           style={{ 
@@ -224,7 +181,7 @@ export default function AbplPage() {
             {selectedMonth}
           </span>
         </div>
-      </div>
+      </PlantToolbar>
 
       {/* 3. 5 COLORFUL METRIC CARDS IN 1 STRICT ROW (ZERO WRAPPING) */}
       <div className="audit-metrics" 

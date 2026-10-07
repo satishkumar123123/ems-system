@@ -1,3 +1,4 @@
+import PlantPageHeader, { PlantToolbar } from '../components/PlantPageChrome';
 import ConsumptionBreakdownView from '../components/ConsumptionBreakdownView';
 import ProductionBreakdownView from '../components/ProductionBreakdownView';
 import { productionChartData } from '../utils/productionChartData';
@@ -21,8 +22,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import {
-  ArrowLeft, UploadCloud, Download, Save, TrendingUp,
-  FileSpreadsheet, X, Calendar, Lock, XCircle, Activity
+  UploadCloud, Download, Save, TrendingUp,
+  FileSpreadsheet, X, Calendar, Lock, XCircle
 } from 'lucide-react';
 
 // Permanent 25 Process / Equipments list with Distinct Vibrant Badges
@@ -82,16 +83,10 @@ const getInitialBlankRows = () => {
   }));
 };
 
-// Radiant Glowing Palette for Big Charts
+// Consistent, readable equipment palette on light chart cards.
 const PIE_COLORS = [
-  '#00e5ff', // Neon Cyan
-  '#00e676', // Bright Green
-  '#ffab00', // Amber
-  '#ff1744', // Hot Red
-  '#d500f9', // Vivid Purple
-  '#00b0ff', // Vivid Blue
-  '#f50057', // Deep Pink
-  '#76ff03'  // Lime Accent
+  '#2563eb', '#0d9488', '#d97706', '#7c3aed',
+  '#db2777', '#0891b2', '#65a30d', '#64748b'
 ];
 
 const SAVE_AUTH_PASSWORD = "1234";
@@ -375,60 +370,10 @@ export default function NarrowFlatPage() {
     <div className="audit-page plant-theme plant-theme-narrow-flat" style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px', backgroundColor: '#020617', minHeight: '100vh', color: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
       {/* 1. TOP BRAND HEADING: BACK BUTTON + "N A R R O W   F L A T" */}
-      <div className="audit-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '2px solid #1e293b' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          
-          {/* Back button to return to home page */}
-          <button 
-            onClick={() => navigate('/')}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '7px 14px', color: '#38bdf8', fontSize: '12px', fontWeight: '900', cursor: 'pointer', marginRight: '6px', boxShadow: '0 4px 10px rgba(0,0,0,0.3)' }}
-          >
-            <ArrowLeft size={16} color="#38bdf8" /> Back
-          </button>
-
-          {/* Letter by Letter Colorful Logo */}
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#00e5ff', textShadow: '0 0 16px rgba(0,229,255,0.8)' }}>N</span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#00e676', textShadow: '0 0 16px rgba(0,230,118,0.8)' }}>A</span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#ffea00', textShadow: '0 0 16px rgba(255,234,0,0.8)' }}>R</span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#ff6d00', textShadow: '0 0 16px rgba(255,109,0,0.8)' }}>R</span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#ff1744', textShadow: '0 0 16px rgba(255,23,68,0.8)' }}>O</span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#d500f9', textShadow: '0 0 16px rgba(213,0,249,0.8)' }}>W</span>
-          <span style={{ margin: '0 6px' }}></span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#38bdf8', textShadow: '0 0 16px rgba(56,189,248,0.8)' }}>F</span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#4ade80', textShadow: '0 0 16px rgba(74,222,128,0.8)' }}>L</span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#facc15', textShadow: '0 0 16px rgba(250,204,21,0.8)' }}>A</span>
-          <span style={{ fontSize: '38px', fontWeight: '900', letterSpacing: '2px', color: '#fb923c', textShadow: '0 0 16px rgba(251,146,60,0.8)' }}>T</span>
-
-          <span style={{ marginLeft: '12px', padding: '4px 12px', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', borderRadius: '8px', backgroundColor: '#1e1b4b', border: '1px solid #6366f1', color: '#a5b4fc', letterSpacing: '1px' }}>
-            Narrow Flat Facility
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '12px', fontSize: '12px', fontWeight: '900' }}>
-          <Activity size={16} color="#00e676" />
-          <span style={{ color: '#2dd4bf', textTransform: 'uppercase', letterSpacing: '1px' }}>Live Monitoring</span>
-        </div>
-      </div>
+      <PlantPageHeader title="Narrow Flat" subtitle="Facility Operations" month={selectedMonth} />
 
       {/* 2. 5 ACTION BLOCKS - STRICT SINGLE ROW FORCED (ZERO WRAPPING) */}
-      <div 
-        className="no-print audit-toolbar"
-        style={{ 
-          display: 'flex', 
-          flexDirection: 'row', 
-          flexWrap: 'nowrap', 
-          alignItems: 'center', 
-          gap: '12px', 
-          width: '100%', 
-          overflowX: 'auto', 
-          backgroundColor: '#0f172a', 
-          padding: '12px', 
-          borderRadius: '16px', 
-          border: '1px solid #1e293b',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-          boxSizing: 'border-box'
-        }}
-      >
+      <PlantToolbar>
         {/* BLOCK 1: SELECT MONTH (CYAN / BLUE GRADIENT) */}
         <div 
           style={{ 
@@ -511,7 +456,7 @@ export default function NarrowFlatPage() {
         </button>
 
         {/* BLOCK 4: SAVE (ROYAL PURPLE GRADIENT) */}
-        <button 
+        <button className="plant-primary-action"
           onClick={() => {
             setPasswordError("");
             setEnteredPassword("");
@@ -566,7 +511,7 @@ export default function NarrowFlatPage() {
         <ScheduleButton plant="narrow-flat" />
         <SeuButton plant="narrow-flat" />
         <PlantQrCodes plant="narrow-flat" />
-      </div>
+      </PlantToolbar>
 
       {/* PASSWORD CONFIRMATION MODAL */}
       {showPasswordModal && (
@@ -855,7 +800,7 @@ export default function NarrowFlatPage() {
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {getCategorizedData('totalConsumption').map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} stroke="#020617" strokeWidth={2.5} />
+                      <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} stroke="#ffffff" strokeWidth={2.5} />
                     ))}
                   </Pie>
                   <Tooltip 
@@ -904,7 +849,7 @@ export default function NarrowFlatPage() {
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {productionChartData(rows).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[(index + 2) % PIE_COLORS.length]} stroke="#020617" strokeWidth={2.5} />
+                      <Cell key={`cell-${index}`} fill={PIE_COLORS[(index + 2) % PIE_COLORS.length]} stroke="#ffffff" strokeWidth={2.5} />
                     ))}
                   </Pie>
                   <Tooltip 
@@ -952,7 +897,7 @@ export default function NarrowFlatPage() {
                     label={({ percent }) => `${(percent * 100).toFixed(1)}%`}
                   >
                     {getCategorizedData('enpiValue').map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[(index + 4) % PIE_COLORS.length]} stroke="#020617" strokeWidth={2.5} />
+                      <Cell key={`cell-${index}`} fill={PIE_COLORS[(index + 4) % PIE_COLORS.length]} stroke="#ffffff" strokeWidth={2.5} />
                     ))}
                   </Pie>
                   <Tooltip 
