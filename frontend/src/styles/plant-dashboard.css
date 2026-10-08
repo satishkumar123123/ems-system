@@ -130,3 +130,82 @@
   #root .audit-page .monthly-back, #root .audit-page .monthly-toolbar { display: none !important; }
   #root .audit-page .equipment-grid :is(th, td):nth-child(2) { position: static; box-shadow: none !important; }
 }
+
+/* Colourful matrix and actions: restricted to the five individual plant pages. */
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :is(button, a) {
+  background: hsl(var(--action-hue, 210) 75% 88%) !important;
+  color: hsl(var(--action-hue, 210) 70% 23%) !important; border: 1px solid hsl(var(--action-hue, 210) 65% 26%) !important;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 42px; padding: 10px 14px !important; border-radius: 10px;
+  font-size: 12px; font-weight: 650; text-decoration: none; box-shadow: 0 3px 8px #17243c12 !important;
+}
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :nth-child(1) { --action-hue: 145; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :nth-child(2) { --action-hue: 35; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :nth-child(3) { --action-hue: 275; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :nth-child(4) { --action-hue: 215; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :nth-child(5) { --action-hue: 175; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :nth-child(6) { --action-hue: 330; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :nth-child(7) { --action-hue: 195; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-actions > :is(button, a):hover:not(:disabled) { background: hsl(var(--action-hue, 210) 75% 82%) !important; color: hsl(var(--action-hue, 210) 70% 20%) !important; filter: none; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-month > div { background: #dbeafe !important; border-color: #93c5fd !important; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-month span, #root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .monthly-month input { color: #1e40af !important; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr { --row-hue: 0; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+1) { --row-hue: 0; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+2) { --row-hue: 13.7; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+3) { --row-hue: 27.4; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+4) { --row-hue: 41.099999999999994; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+5) { --row-hue: 54.8; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+6) { --row-hue: 68.5; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+7) { --row-hue: 82.19999999999999; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+8) { --row-hue: 95.89999999999999; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+9) { --row-hue: 109.6; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+10) { --row-hue: 123.3; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+11) { --row-hue: 137; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+12) { --row-hue: 150.7; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+13) { --row-hue: 164.39999999999998; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+14) { --row-hue: 178.1; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+15) { --row-hue: 191.79999999999998; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+16) { --row-hue: 205.5; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+17) { --row-hue: 219.2; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+18) { --row-hue: 232.89999999999998; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+19) { --row-hue: 246.6; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+20) { --row-hue: 260.3; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+21) { --row-hue: 274; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+22) { --row-hue: 287.7; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+23) { --row-hue: 301.4; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+24) { --row-hue: 315.09999999999997; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+25) { --row-hue: 328.79999999999995; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+26) { --row-hue: 342.5; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+27) { --row-hue: 356.2; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+28) { --row-hue: 369.9; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+29) { --row-hue: 383.59999999999997; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+30) { --row-hue: 397.29999999999995; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+31) { --row-hue: 411; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(32n+32) { --row-hue: 424.7; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(1) { --column-hue: 0; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(2) { --column-hue: 31.3; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(3) { --column-hue: 62.6; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(4) { --column-hue: 93.9; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(5) { --column-hue: 125.2; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(6) { --column-hue: 156.5; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(7) { --column-hue: 187.8; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(8) { --column-hue: 219.1; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(9) { --column-hue: 250.4; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(10) { --column-hue: 281.7; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tr > :nth-child(11) { --column-hue: 313; --cell-hue: calc(var(--column-hue) + var(--row-hue)); }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid thead th { background: hsl(var(--column-hue) 60% 24%) !important; color: hsl(var(--column-hue) 85% 95%) !important; border-bottom: 3px solid hsl(var(--column-hue) 65% 60%) !important; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody td,
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:nth-child(even) td,
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody td:nth-child(2),
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody td:nth-child(7) {
+  background: hsl(var(--cell-hue) 75% 93%) !important;
+  color: hsl(var(--cell-hue) 65% 24%) !important;
+  border-right: 2px solid #fff !important; border-bottom: 3px solid #fff !important;
+  box-shadow: inset 0 3px 0 hsl(var(--cell-hue) 62% 72%) !important;
+}
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody td:nth-child(2) a { color: inherit !important; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:hover td,
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:focus-within td { background: hsl(var(--cell-hue) 75% 88%) !important; color: hsl(var(--cell-hue) 65% 22%) !important; box-shadow: inset 0 3px 0 hsl(var(--cell-hue) 62% 58%) !important; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid td input,
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid td select { background: hsl(var(--cell-hue) 65% 97%) !important; color: hsl(var(--cell-hue) 65% 24%) !important; border: 1px solid hsl(var(--cell-hue) 45% 65%) !important; font-variant-numeric: tabular-nums; }
+#root .audit-page:is(.plant-theme-wider, .plant-theme-utility, .plant-theme-hsu, .plant-theme-narrow-flat, .plant-theme-narrow-tube) .equipment-grid tbody tr:last-child td { background: hsl(var(--cell-hue) 60% 27%) !important; color: hsl(var(--cell-hue) 85% 95%) !important; border-top: 2px solid hsl(var(--cell-hue) 60% 65%) !important; box-shadow: none !important; font-weight: 750 !important; }
